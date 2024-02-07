@@ -1,7 +1,7 @@
 import './App.css';
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, XMarkIcon, LightBulbIcon } from '@heroicons/react/24/outline';
 
 const user = {
   name: 'Tom Cook',
@@ -37,11 +37,8 @@ export default function App() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
-                      />
+                      <LightBulbIcon className={classNames('block h-10 w-10', 'text-white')} aria-hidden="true"
+                                     color="white" alt="ExamMe"/>
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
