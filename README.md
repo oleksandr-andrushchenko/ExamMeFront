@@ -3,6 +3,7 @@
 1. React.js
 2. Typescript
 3. Vite
+4. Tailwind
 
 # Local deployment
 
