@@ -2,10 +2,7 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, LightBulbIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+import classNames from "../utils/classNames";
 
 const navigation = [
   { name: 'Home', href: '/' },
