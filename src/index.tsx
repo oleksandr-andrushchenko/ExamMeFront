@@ -6,13 +6,16 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import ThemeProvider from "./components/ThemeProvider";
+import Category from "./pages/Category";
 import categoriesLoader from "./loaders/categoriesLoader";
+import categoryLoader from "./loaders/categoryLoader";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
       <Route path="/" element={<Home/>}/>
       <Route path="/categories" element={<Categories/>} loader={categoriesLoader}/>
+      <Route path="/categories/:categoryId" element={<Category/>} loader={categoryLoader}/>
     </Route>
   )
 );
