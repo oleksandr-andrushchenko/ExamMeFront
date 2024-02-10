@@ -9,6 +9,8 @@ import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
 import categoriesLoader from "./loaders/categoriesLoader";
 import categoryLoader from "./loaders/categoryLoader";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +18,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home/>}/>
       <Route path="/categories" element={<Categories/>} loader={categoriesLoader}/>
       <Route path="/categories/:categoryId" element={<Category/>} loader={categoryLoader}/>
+      <Route path="/login" element={<Login/>}/>
+      <Route path="/register" element={<Register/>}/>
     </Route>
   )
 );
