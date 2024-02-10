@@ -1,10 +1,10 @@
-import loaderClient from "./loaderClient";
+import apiClient from "../api/apiClient";
 import { AxiosResponse } from "axios";
 
 export default async function categoryLoader({ params }) {
   const response: AxiosResponse[] = await Promise.all([
-    loaderClient.get(`/categories/${params.categoryId}`),
-    loaderClient.get(`/categories/${params.categoryId}/questions`)
+    apiClient.get(`/categories/${params.categoryId}`),
+    apiClient.get(`/categories/${params.categoryId}/questions`)
   ]);
 
   return {
