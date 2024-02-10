@@ -52,13 +52,17 @@ export default function NavBar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Button
-          variant="filled"
-          color="pink"
-          size="md"
+        <Link
+          to="/login"
         >
-          <span>Log In</span>
-        </Button>
+          <Button
+            variant="filled"
+            color="pink"
+            size="md"
+          >
+            <span>Log In</span>
+          </Button>
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -66,12 +70,16 @@ export default function NavBar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Button
-          variant="filled"
-          size="sm"
+        <Link
+          to="/register"
         >
-          <span>Sign in</span>
-        </Button>
+          <Button
+            variant="filled"
+            size="sm"
+          >
+            <span>Sign in</span>
+          </Button>
+        </Link>
       </Typography>
     </ul>
   );
