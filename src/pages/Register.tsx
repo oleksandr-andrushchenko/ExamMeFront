@@ -1,5 +1,18 @@
 import { Form } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
+import apiClient from "../api/apiClient.ts";
+
+export async function registerAction({ request }) {
+  const formData = await request.formData();
+  const response = await apiClient.post('/me', {
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+
+  console.log(response.data);
+
+  return response.data;
+}
 
 export default function Register() {
   return (
