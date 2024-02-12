@@ -1,5 +1,6 @@
 import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ArrowRightEndOnRectangleIcon } from "@heroicons/react/16/solid";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
 import React from "react";
@@ -49,35 +50,33 @@ export default function NavBar() {
       <Typography
         as="li"
         variant="small"
-        color="blue-gray"
         className="p-1 font-normal"
       >
         <Link
           to="/login"
         >
           <Button
-            variant="filled"
-            color="pink"
             size="md"
+            className="rounded capitalize"
           >
-            <span>Log In</span>
+
+            <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
           </Button>
         </Link>
       </Typography>
       <Typography
         as="li"
         variant="small"
-        color="blue-gray"
         className="p-1 font-normal"
       >
         <Link
           to="/register"
         >
           <Button
-            variant="filled"
             size="sm"
+            className="rounded capitalize"
           >
-            <span>Sign in</span>
+            <PlusIcon className="inline-block h-4 w-4"/> Register
           </Button>
         </Link>
       </Typography>
