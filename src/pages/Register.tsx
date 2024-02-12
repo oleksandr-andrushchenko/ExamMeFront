@@ -1,4 +1,4 @@
-import { Form } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -67,9 +67,9 @@ export default function Register() {
         </Button>
         <Typography variant="small" color="gray" className="mt-4 font-normal">
           Already have an account?{" "}
-          <a href="/login" className="font-medium text-gray-900">
+          <Link to="/login" className="font-medium text-gray-900">
             Login
-          </a>
+          </Link>
         </Typography>
       </Form>
     </Card>

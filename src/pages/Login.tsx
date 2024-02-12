@@ -1,4 +1,4 @@
-import { Form } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import apiClient from "../api/apiClient";
@@ -49,9 +49,9 @@ export default function Login() {
         </Button>
         <Typography variant="small" color="gray" className="mt-4 font-normal">
           Don't have an account?{" "}
-          <a href="/register" className="font-medium text-gray-900">
+          <Link to="/register" className="font-medium text-gray-900">
             Register
-          </a>
+          </Link>
         </Typography>
       </Form>
     </Card>
