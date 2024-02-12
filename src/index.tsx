@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, redirect } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
@@ -9,8 +9,14 @@ import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
 import categoriesLoader from "./loaders/categoriesLoader";
 import categoryLoader from "./loaders/categoryLoader";
-import Login from "./pages/Login";
+import Login, { loginAction } from "./pages/Login";
 import Register from "./pages/Register";
+
+const login = async (request) => {
+  await loginAction(request);
+
+  return redirect('/categories');
+};
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,7 +24,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home/>}/>
       <Route path="/categories" element={<Categories/>} loader={categoriesLoader}/>
       <Route path="/categories/:categoryId" element={<Category/>} loader={categoryLoader}/>
-      <Route path="/login" element={<Login/>}/>
+      <Route path="/login" element={<Login/>} action={login}/>
       <Route path="/register" element={<Register/>}/>
     </Route>
   )
