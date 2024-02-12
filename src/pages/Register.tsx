@@ -1,6 +1,7 @@
 import { Form } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
-import apiClient from "../api/apiClient.ts";
+import apiClient from "../api/apiClient";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
 export async function registerAction({ request }) {
   const formData = await request.formData();
@@ -18,7 +19,7 @@ export default function Register() {
   return (
     <Card color="transparent" shadow={false}>
       <Typography variant="h4" color="blue-gray">
-        Sign up
+        <PlusIcon className="inline-block h-6 w-6"/> Register
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Nice to meet you! Enter your details to register.
@@ -62,12 +63,12 @@ export default function Register() {
           required
         />
         <Button className="block rounded capitalize" type="submit">
-          Sign up
+          Register
         </Button>
         <Typography variant="small" color="gray" className="mt-4 font-normal">
           Already have an account?{" "}
-          <a href="#" className="font-medium text-gray-900">
-            Sign in
+          <a href="/login" className="font-medium text-gray-900">
+            Login
           </a>
         </Typography>
       </Form>
