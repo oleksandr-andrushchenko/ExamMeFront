@@ -1,6 +1,19 @@
 import { Form } from 'react-router-dom';
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
+import apiClient from "../api/apiClient";
+
+export async function loginAction({ request }) {
+  const formData = await request.formData();
+  const response = await apiClient.post('/auth', {
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+
+  console.log(response.data);
+
+  return response.data;
+}
 
 export default function Login() {
   return (
