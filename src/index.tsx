@@ -11,6 +11,7 @@ import categoriesLoader from "./loaders/categoriesLoader";
 import categoryLoader from "./loaders/categoryLoader";
 import Login, { loginAction } from "./pages/Login";
 import Register, { registerAction } from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
 const register = async (request) => {
   await registerAction(request);
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path="/categories/:categoryId" element={<Category/>} loader={categoryLoader}/>
       <Route path="/login" element={<Login/>} action={login}/>
       <Route path="/register" element={<Register/>} action={register}/>
+      <Route path="*" element={<NotFound/>}/>
     </Route>
   )
 );
