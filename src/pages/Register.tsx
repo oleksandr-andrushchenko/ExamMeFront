@@ -19,7 +19,10 @@ export async function registerAction({ request }) {
 export default function Register() {
 
   const [ password, setPassword ] = useState('');
+  const [ passwordFocused, setPasswordFocused ] = useState(false);
+
   const [ confirmPassword, setConfirmPassword ] = useState('');
+
   const [ passwordsMatches, setPasswordsMatches ] = useState(false);
 
   useEffect(() => {
@@ -58,12 +61,14 @@ export default function Register() {
               size="lg"
               label="Password"
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
               value={password}
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Typography variant="h6" color={passwordsMatches ? "blue-gray" : "red"}>
+            <Typography variant="h6" color={!passwordFocused && !passwordsMatches ? "red" : "blue-gray"}>
               Confirm Password
             </Typography>
             <Input
@@ -75,11 +80,11 @@ export default function Register() {
               value={confirmPassword}
               aria-invalid={passwordsMatches ? "false" : "true"}
               aria-describedby="confirmnote"
-              error={!passwordsMatches}
+              error={!passwordFocused && !passwordsMatches}
             />
             <Typography
               variant="small"
-              color={passwordsMatches ? "gray" : "red"}
+              color={!passwordFocused && !passwordsMatches ? "red" : "gray"}
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="inline-block h-6 w-6"/>
