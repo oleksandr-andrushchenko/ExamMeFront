@@ -25,52 +25,63 @@ export default function Register() {
         Enter your details to register
       </Typography>
       <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" method="post">
-        <div className="mb-1 flex flex-col gap-6">
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Your Email
-          </Typography>
-          <Input
-            name="email"
-            size="lg"
-            label="Email Address"
-          />
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Password
-          </Typography>
-          <Input
-            name="password"
-            type="password"
-            size="lg"
-            label="Password"
-          />
-        </div>
-        <Checkbox
-          label={
-            <Typography
-              variant="small"
-              color="gray"
-              className="flex items-center font-normal"
-            >
-              I agree the
-              <a
-                href="#"
-                className="font-medium transition-colors hover:text-gray-900"
-              >
-                &nbsp;Terms and Conditions
-              </a>
+        <div className="flex flex-col gap-6">
+
+          <div className="flex flex-col gap-2">
+            <Typography variant="h6" color="blue-gray">
+              Your Email
             </Typography>
-          }
-          required
-        />
-        <Button className="block rounded capitalize" type="submit">
-          Register
-        </Button>
-        <Typography variant="small" color="gray" className="mt-4 font-normal">
-          Already have an account?{" "}
-          <Link to="/login" className="font-medium text-gray-900">
-            Login
-          </Link>
-        </Typography>
+            <Input
+              name="email"
+              size="lg"
+              label="Email Address"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Typography variant="h6" color="blue-gray">
+              Password
+            </Typography>
+            <Input
+              name="password"
+              type="password"
+              size="lg"
+              label="Password"
+            />
+          </div>
+
+          <Checkbox
+            label={
+              <Typography
+                variant="small"
+                color="gray"
+                className="flex items-center font-normal"
+              >
+                I agree the
+                <a
+                  href="#"
+                  className="font-medium transition-colors hover:text-gray-900"
+                >
+                  &nbsp;Terms and Conditions
+                </a>
+              </Typography>
+            }
+            required
+          />
+
+          <div>
+            <Button className="block rounded capitalize" type="submit">
+              Register
+            </Button>
+
+            <Typography variant="small" color="gray" className="mt-4 font-normal">
+              Already have an account?{" "}
+              <Link to="/login" className="font-medium text-gray-900">
+                Login
+              </Link>
+            </Typography>
+          </div>
+        </div>
       </Form>
     </Card>
   );
