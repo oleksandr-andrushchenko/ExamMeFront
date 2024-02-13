@@ -1,7 +1,8 @@
 import { Form, Link } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import { useEffect, useState } from "react";
 
 export async function registerAction({ request }) {
   const formData = await request.formData();
@@ -16,6 +17,15 @@ export async function registerAction({ request }) {
 }
 
 export default function Register() {
+
+  const [ password, setPassword ] = useState('');
+  const [ confirmPassword, setConfirmPassword ] = useState('');
+  const [ passwordsMatches, setPasswordsMatches ] = useState(false);
+
+  useEffect(() => {
+    setPasswordsMatches(password === confirmPassword);
+  }, [ password, confirmPassword ]);
+
   return (
     <Card color="transparent" shadow={false}>
       <Typography variant="h4" color="blue-gray">
@@ -47,7 +57,34 @@ export default function Register() {
               type="password"
               size="lg"
               label="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
             />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Typography variant="h6" color={passwordsMatches ? "blue-gray" : "red"}>
+              Confirm Password
+            </Typography>
+            <Input
+              name="confirm-password"
+              type="password"
+              size="lg"
+              label="Confirm Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+              aria-invalid={passwordsMatches ? "false" : "true"}
+              aria-describedby="confirmnote"
+              error={!passwordsMatches}
+            />
+            <Typography
+              variant="small"
+              color={passwordsMatches ? "gray" : "red"}
+              className="flex items-center gap-1 font-normal"
+            >
+              <ExclamationCircleIcon className="inline-block h-6 w-6"/>
+              Must match the first password input field
+            </Typography>
           </div>
 
           <Checkbox
@@ -70,7 +107,7 @@ export default function Register() {
           />
 
           <div>
-            <Button className="block rounded capitalize" type="submit">
+            <Button className="block rounded capitalize" type="submit" disabled={!passwordsMatches}>
               Register
             </Button>
 
