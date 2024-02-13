@@ -22,7 +22,7 @@ export default function Register() {
         <PlusIcon className="inline-block h-6 w-6"/> Register
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
-        Nice to meet you! Enter your details to register.
+        Enter your details to register
       </Typography>
       <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" method="post">
         <div className="mb-1 flex flex-col gap-6">
