@@ -145,12 +145,7 @@ export default function Register() {
                 className="flex items-center font-normal"
               >
                 I agree the
-                <a
-                  href="#"
-                  className="font-medium transition-colors hover:text-gray-900"
-                >
-                  &nbsp;Terms and Conditions
-                </a>
+                <Link to="/terms-and-conditions">Terms and Conditions</Link>
               </Typography>
             }
             required
