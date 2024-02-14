@@ -90,7 +90,7 @@ export default function Register() {
             >
               <ExclamationCircleIcon className="w-1/12"/>
               <div className="w-11/12">
-                8 to 24 characters, uppercase and lowercase letters, a number and a special character
+                Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special character
               </div>
             </Typography>
           </div>
@@ -117,7 +117,7 @@ export default function Register() {
             >
               <ExclamationCircleIcon className="w-1/12"/>
               <div className="w-11/12">
-                Must match the first password input field
+                Should match the password
               </div>
             </Typography>
           </div>
