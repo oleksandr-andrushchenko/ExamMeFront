@@ -2,7 +2,7 @@ import { Form, Link } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
 import { PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, Ref } from "react";
 
 export async function registerAction({ request }) {
   const formData = await request.formData();
@@ -19,6 +19,13 @@ export async function registerAction({ request }) {
 export default function Register() {
 
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%~]).{8,24}$/;
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const emailRef = useRef<HTMLInputElement>();
+
+  const [ email, setEmail ] = useState('');
+  const [ emailValid, setEmailValid ] = useState(true);
+  const [ emailFocused, setEmailFocused ] = useState(false);
 
   const [ password, setPassword ] = useState('');
   const [ validPassword, setValidPassword ] = useState(true);
@@ -27,6 +34,14 @@ export default function Register() {
   const [ confirmPassword, setConfirmPassword ] = useState('');
 
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
+
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    setEmailValid(EMAIL_REGEX.test(email));
+  }, [ email ]);
 
   useEffect(() => {
     setValidPassword(PASSWORD_REGEX.test(password));
@@ -48,16 +63,25 @@ export default function Register() {
         <div className="flex flex-col gap-6">
 
           <div className="flex flex-col gap-2">
-            <Typography variant="h6" color="blue-gray">
+            <Typography variant="h6" color={!emailFocused && email !== '' && !emailValid ? "red" : "blue-gray"}>
               Your Email
             </Typography>
             <Input
               name="email"
+              type="email"
               size="lg"
               label="Email Address"
+              ref={emailRef as Ref<HTMLInputElement>}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setEmailFocused(true)}
+              onBlur={() => setEmailFocused(false)}
+              value={email}
+              aria-invalid={email != '' && emailValid ? "false" : "true"}
+              error={!emailFocused && email !== '' && !emailValid}
             />
             <Typography
               variant="small"
+              color={!emailFocused && email !== '' && !emailValid ? "red" : "gray"}
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
@@ -68,7 +92,8 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Typography variant="h6" color={!passwordFocused && password !== '' && !validPassword ? "red" : "blue-gray"}>
+            <Typography variant="h6"
+                        color={!passwordFocused && password !== '' && !validPassword ? "red" : "blue-gray"}>
               Password
             </Typography>
             <Input
@@ -90,7 +115,8 @@ export default function Register() {
             >
               <ExclamationCircleIcon className="w-1/12"/>
               <div className="w-11/12">
-                Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special character
+                Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special
+                character
               </div>
             </Typography>
           </div>
@@ -142,7 +168,8 @@ export default function Register() {
           />
 
           <div>
-            <Button className="block rounded capitalize" type="submit" disabled={!validPassword || !passwordsMatches}>
+            <Button className="block rounded capitalize" type="submit"
+                    disabled={!emailValid || !validPassword || !passwordsMatches}>
               Register
             </Button>
 
