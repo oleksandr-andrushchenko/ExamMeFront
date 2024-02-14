@@ -56,6 +56,15 @@ export default function Register() {
               size="lg"
               label="Email Address"
             />
+            <Typography
+              variant="small"
+              className="flex items-center gap-1 font-normal"
+            >
+              <ExclamationCircleIcon className="w-1/12"/>
+              <div className="w-11/12">
+                Should be valid email address
+              </div>
+            </Typography>
           </div>
 
           <div className="flex flex-col gap-2">
