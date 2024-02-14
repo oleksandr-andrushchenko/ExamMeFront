@@ -26,30 +26,16 @@ export default function Register() {
   const [ email, setEmail ] = useState('');
   const [ emailValid, setEmailValid ] = useState(true);
   const [ emailFocused, setEmailFocused ] = useState(false);
-
   const [ password, setPassword ] = useState('');
   const [ validPassword, setValidPassword ] = useState(true);
   const [ passwordFocused, setPasswordFocused ] = useState(false);
-
   const [ confirmPassword, setConfirmPassword ] = useState('');
-
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
 
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
-
-  useEffect(() => {
-    setEmailValid(EMAIL_REGEX.test(email));
-  }, [ email ]);
-
-  useEffect(() => {
-    setValidPassword(PASSWORD_REGEX.test(password));
-  }, [ password ]);
-
-  useEffect(() => {
-    setPasswordsMatches(password === confirmPassword);
-  }, [ password, confirmPassword ]);
+  useEffect(() => emailRef.current.focus(), []);
+  useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
+  useEffect(() => setValidPassword(PASSWORD_REGEX.test(password)), [ password ]);
+  useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
 
   return (
     <Card color="transparent" shadow={false}>
