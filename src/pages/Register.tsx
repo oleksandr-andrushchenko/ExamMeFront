@@ -65,6 +65,15 @@ export default function Register() {
               onBlur={() => setPasswordFocused(false)}
               value={password}
             />
+            <Typography
+              variant="small"
+              className="flex items-center gap-1 font-normal"
+            >
+              <ExclamationCircleIcon className="w-1/12"/>
+              <div className="w-11/12">
+                8 to 24 characters, uppercase and lowercase letters, a number and a special character
+              </div>
+            </Typography>
           </div>
 
           <div className="flex flex-col gap-2">
