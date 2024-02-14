@@ -85,9 +85,9 @@ export default function Register() {
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
-              <div className="w-11/12">
+              <span className="w-11/12">
                 Should be valid email address
-              </div>
+              </span>
             </Typography>
           </div>
 
@@ -114,10 +114,10 @@ export default function Register() {
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
-              <div className="w-11/12">
+              <span className="w-11/12">
                 Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special
                 character
-              </div>
+              </span>
             </Typography>
           </div>
 
@@ -142,9 +142,9 @@ export default function Register() {
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
-              <div className="w-11/12">
+              <span className="w-11/12">
                 Should match the password
-              </div>
+              </span>
             </Typography>
           </div>
 
