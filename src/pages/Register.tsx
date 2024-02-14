@@ -87,8 +87,10 @@ export default function Register() {
               color={!passwordFocused && !passwordsMatches ? "red" : "gray"}
               className="flex items-center gap-1 font-normal"
             >
-              <ExclamationCircleIcon className="inline-block h-6 w-6"/>
-              Must match the first password input field
+              <ExclamationCircleIcon className="w-1/12"/>
+              <div className="w-11/12">
+                Must match the first password input field
+              </div>
             </Typography>
           </div>
 
