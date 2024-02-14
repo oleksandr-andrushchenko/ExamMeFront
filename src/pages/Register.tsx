@@ -2,7 +2,7 @@ import { Form, Link } from 'react-router-dom';
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
 import { PlusIcon, ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState, useRef, Ref } from "react";
+import { useEffect, useState } from "react";
 
 export async function registerAction({ request }) {
   const formData = await request.formData();
@@ -21,8 +21,6 @@ export default function Register() {
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()]).{8,24}$/;
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const emailRef = useRef<HTMLInputElement>();
-
   const [ email, setEmail ] = useState('');
   const [ emailValid, setEmailValid ] = useState(true);
   const [ emailFocused, setEmailFocused ] = useState(false);
@@ -32,7 +30,6 @@ export default function Register() {
   const [ confirmPassword, setConfirmPassword ] = useState('');
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
 
-  useEffect(() => emailRef.current.focus(), []);
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
   useEffect(() => setPasswordValid(PASSWORD_REGEX.test(password)), [ password ]);
   useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
@@ -57,7 +54,6 @@ export default function Register() {
               type="email"
               size="lg"
               label="Email Address"
-              ref={emailRef as Ref<HTMLInputElement>}
               onChange={(e) => setEmail(e.target.value)}
               onFocus={() => setEmailFocused(true)}
               onBlur={() => setEmailFocused(false)}
