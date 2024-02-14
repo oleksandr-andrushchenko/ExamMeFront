@@ -27,14 +27,14 @@ export default function Register() {
   const [ emailValid, setEmailValid ] = useState(true);
   const [ emailFocused, setEmailFocused ] = useState(false);
   const [ password, setPassword ] = useState('');
-  const [ validPassword, setValidPassword ] = useState(true);
+  const [ passwordValid, setPasswordValid ] = useState(true);
   const [ passwordFocused, setPasswordFocused ] = useState(false);
   const [ confirmPassword, setConfirmPassword ] = useState('');
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
 
   useEffect(() => emailRef.current.focus(), []);
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
-  useEffect(() => setValidPassword(PASSWORD_REGEX.test(password)), [ password ]);
+  useEffect(() => setPasswordValid(PASSWORD_REGEX.test(password)), [ password ]);
   useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
 
   return (
@@ -80,7 +80,7 @@ export default function Register() {
 
           <div className="flex flex-col gap-2">
             <Typography variant="h6"
-                        color={!passwordFocused && password !== '' && !validPassword ? "red" : "blue-gray"}>
+                        color={!passwordFocused && password !== '' && !passwordValid ? "red" : "blue-gray"}>
               Password
             </Typography>
             <Input
@@ -92,13 +92,13 @@ export default function Register() {
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
               value={password}
-              aria-invalid={password != '' && validPassword ? "false" : "true"}
-              error={!passwordFocused && password !== '' && !validPassword}
+              aria-invalid={password != '' && passwordValid ? "false" : "true"}
+              error={!passwordFocused && password !== '' && !passwordValid}
               required
             />
             <Typography
               variant="small"
-              color={!passwordFocused && password !== '' && !validPassword ? "red" : "gray"}
+              color={!passwordFocused && password !== '' && !passwordValid ? "red" : "gray"}
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
@@ -158,7 +158,7 @@ export default function Register() {
 
           <div>
             <Button className="block rounded capitalize" type="submit"
-                    disabled={!emailValid || !validPassword || !passwordsMatches}>
+                    disabled={!emailValid || !passwordValid || !passwordsMatches}>
               Register
             </Button>
 
