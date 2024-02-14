@@ -23,7 +23,7 @@ export default function Register() {
 
   const [ confirmPassword, setConfirmPassword ] = useState('');
 
-  const [ passwordsMatches, setPasswordsMatches ] = useState(false);
+  const [ passwordsMatches, setPasswordsMatches ] = useState(true);
 
   useEffect(() => {
     setPasswordsMatches(password === confirmPassword);
