@@ -78,6 +78,7 @@ export default function Register() {
               value={email}
               aria-invalid={email != '' && emailValid ? "false" : "true"}
               error={!emailFocused && email !== '' && !emailValid}
+              required
             />
             <Typography
               variant="small"
@@ -107,6 +108,7 @@ export default function Register() {
               value={password}
               aria-invalid={password != '' && validPassword ? "false" : "true"}
               error={!passwordFocused && password !== '' && !validPassword}
+              required
             />
             <Typography
               variant="small"
@@ -135,6 +137,7 @@ export default function Register() {
               aria-invalid={passwordsMatches ? "false" : "true"}
               aria-describedby="confirmnote"
               error={!passwordFocused && !passwordsMatches}
+              required
             />
             <Typography
               variant="small"
