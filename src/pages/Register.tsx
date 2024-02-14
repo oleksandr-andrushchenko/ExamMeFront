@@ -29,6 +29,7 @@ export default function Register() {
   const [ passwordFocused, setPasswordFocused ] = useState(false);
   const [ confirmPassword, setConfirmPassword ] = useState('');
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
+  const [ terms, setTerms ] = useState(false);
 
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
   useEffect(() => setPasswordValid(PASSWORD_REGEX.test(password)), [ password ]);
@@ -144,12 +145,13 @@ export default function Register() {
                 <Link to="/terms-and-conditions">Terms and Conditions</Link>
               </Typography>
             }
+            onChange={(e) => setTerms(e.target.checked)}
             required
           />
 
           <div>
             <Button className="block rounded capitalize" type="submit"
-                    disabled={!emailValid || !passwordValid || !passwordsMatches}>
+                    disabled={!emailValid || !passwordValid || !passwordsMatches || !terms}>
               Register
             </Button>
 
