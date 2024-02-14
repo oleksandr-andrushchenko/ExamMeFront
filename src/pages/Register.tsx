@@ -18,12 +18,19 @@ export async function registerAction({ request }) {
 
 export default function Register() {
 
+  const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%~]).{8,24}$/;
+
   const [ password, setPassword ] = useState('');
+  const [ validPassword, setValidPassword ] = useState(true);
   const [ passwordFocused, setPasswordFocused ] = useState(false);
 
   const [ confirmPassword, setConfirmPassword ] = useState('');
 
   const [ passwordsMatches, setPasswordsMatches ] = useState(true);
+
+  useEffect(() => {
+    setValidPassword(PASSWORD_REGEX.test(password));
+  }, [ password ]);
 
   useEffect(() => {
     setPasswordsMatches(password === confirmPassword);
@@ -52,7 +59,7 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Typography variant="h6" color="blue-gray">
+            <Typography variant="h6" color={!passwordFocused && password !== '' && !validPassword ? "red" : "blue-gray"}>
               Password
             </Typography>
             <Input
@@ -64,9 +71,12 @@ export default function Register() {
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
               value={password}
+              aria-invalid={password != '' && validPassword ? "false" : "true"}
+              error={!passwordFocused && password !== '' && !validPassword}
             />
             <Typography
               variant="small"
+              color={!passwordFocused && password !== '' && !validPassword ? "red" : "gray"}
               className="flex items-center gap-1 font-normal"
             >
               <ExclamationCircleIcon className="w-1/12"/>
@@ -123,7 +133,7 @@ export default function Register() {
           />
 
           <div>
-            <Button className="block rounded capitalize" type="submit" disabled={!passwordsMatches}>
+            <Button className="block rounded capitalize" type="submit" disabled={!validPassword || !passwordsMatches}>
               Register
             </Button>
 
