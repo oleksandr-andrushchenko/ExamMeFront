@@ -24,17 +24,23 @@ export default function Login() {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to login
       </Typography>
-      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" method="post">
-        <div className="mb-1 flex flex-col gap-6">
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
+      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" method="post">
+
+        <div className="flex flex-col gap-2">
+          <Typography variant="h6" color="blue-gray">
             Your Email
           </Typography>
           <Input
             name="email"
+            type="email"
             size="lg"
             label="Email Address"
+            required
           />
-          <Typography variant="h6" color="blue-gray" className="-mb-3">
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Typography variant="h6" color="blue-gray">
             Password
           </Typography>
           <Input
@@ -42,17 +48,21 @@ export default function Login() {
             type="password"
             size="lg"
             label="Password"
+            required
           />
         </div>
-        <Button className="block rounded capitalize mt-4" type="submit">
-          Login
-        </Button>
-        <Typography variant="small" color="gray" className="mt-4 font-normal">
-          Don't have an account?{" "}
-          <Link to="/register" className="font-medium text-gray-900">
-            Register
-          </Link>
-        </Typography>
+
+        <div>
+          <Button className="block rounded capitalize" type="submit">
+            Login
+          </Button>
+          <Typography variant="small" color="gray" className="mt-4 font-normal">
+            Don't have an account?{" "}
+            <Link to="/register" className="font-medium text-gray-900">
+              Register
+            </Link>
+          </Typography>
+        </div>
       </Form>
     </Card>
   );
