@@ -3,11 +3,11 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 export type PasswordSectionProps = {
-  setReadyState: (ready: boolean) => void,
+  setValue: (password?: string) => void,
   confirm?: boolean,
 }
 
-export default function PasswordSection({ setReadyState, confirm = false }: PasswordSectionProps) {
+export default function PasswordSection({ setValue, confirm = false }: PasswordSectionProps) {
 
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()]).{8,24}$/;
 
@@ -19,7 +19,7 @@ export default function PasswordSection({ setReadyState, confirm = false }: Pass
 
   useEffect(() => setPasswordValid(PASSWORD_REGEX.test(password)), [ password ]);
   useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
-  useEffect(() => setReadyState(password !== '' && passwordValid && (!confirm || passwordsMatches)), [ password, passwordValid, passwordsMatches ]);
+  useEffect(() => setValue(password !== '' && passwordValid && (!confirm || passwordsMatches) ? password : undefined), [ password, passwordValid, passwordsMatches ]);
 
   return (
     <>

@@ -3,10 +3,10 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 export type EmailSectionProps = {
-  setReadyState: (ready: boolean) => void,
+  setValue: (email?: string) => void,
 }
 
-export default function EmailSection({ setReadyState }: EmailSectionProps) {
+export default function EmailSection({ setValue }: EmailSectionProps) {
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,7 +15,7 @@ export default function EmailSection({ setReadyState }: EmailSectionProps) {
   const [ emailFocused, setEmailFocused ] = useState(false);
 
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
-  useEffect(() => setReadyState(email !== '' && emailValid), [ email, emailValid ]);
+  useEffect(() => setValue(email !== '' && emailValid ? email : undefined), [ email, emailValid ]);
 
   return (
     <div className="flex flex-col gap-2">

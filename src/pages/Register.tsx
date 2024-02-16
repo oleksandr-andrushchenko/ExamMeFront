@@ -1,5 +1,5 @@
 import { Form, Link } from 'react-router-dom';
-import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
+import { Card, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
@@ -20,8 +20,8 @@ export async function registerAction({ request }) {
 
 export default function Register() {
 
-  const [ emailReady, setEmailReady ] = useState(true);
-  const [ passwordReady, setPasswordReady ] = useState(true);
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
   const [ terms, setTerms ] = useState(false);
 
   return (
@@ -34,8 +34,8 @@ export default function Register() {
       </Typography>
       <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" method="post">
 
-        <EmailSection setReadyState={setEmailReady}/>
-        <PasswordSection setReadyState={setPasswordReady} confirm/>
+        <EmailSection setValue={setEmail}/>
+        <PasswordSection setValue={setPassword} confirm/>
 
         <Checkbox
           label={
@@ -53,7 +53,7 @@ export default function Register() {
         />
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!emailReady || !passwordReady || !terms}>
+          <Button className="block rounded capitalize" type="submit" disabled={!email || !password || !terms}>
             Register
           </Button>
 

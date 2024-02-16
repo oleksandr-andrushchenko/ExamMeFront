@@ -20,8 +20,8 @@ export async function loginAction({ request }) {
 
 export default function Login() {
 
-  const [ emailReady, setEmailReady ] = useState(true);
-  const [ passwordReady, setPasswordReady ] = useState(true);
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
 
   return (
     <Card color="transparent" shadow={false}>
@@ -33,11 +33,11 @@ export default function Login() {
       </Typography>
       <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" method="post">
 
-        <EmailSection setReadyState={setEmailReady}/>
-        <PasswordSection setReadyState={setPasswordReady}/>
+        <EmailSection setValue={setEmail}/>
+        <PasswordSection setValue={setPassword}/>
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!emailReady || !passwordReady}>
+          <Button className="block rounded capitalize" type="submit" disabled={!email || !password}>
             Login
           </Button>
           <Typography variant="small" color="gray" className="mt-4 font-normal">
