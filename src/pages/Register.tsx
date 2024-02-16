@@ -43,125 +43,123 @@ export default function Register() {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to register
       </Typography>
-      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" method="post">
-        <div className="flex flex-col gap-6">
+      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" method="post">
 
-          <div className="flex flex-col gap-2">
-            <Typography variant="h6" color={!emailFocused && email !== '' && !emailValid ? "red" : "blue-gray"}>
-              Your Email
-            </Typography>
-            <Input
-              name="email"
-              type="email"
-              size="lg"
-              label="Email Address"
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={() => setEmailFocused(true)}
-              onBlur={() => setEmailFocused(false)}
-              value={email}
-              aria-invalid={email != '' && emailValid ? "false" : "true"}
-              error={!emailFocused && email !== '' && !emailValid}
-              required
-            />
-            <Typography
-              variant="small"
-              color={!emailFocused && email !== '' && !emailValid ? "red" : "gray"}
-              className="flex items-center gap-1 font-normal"
-            >
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">
+        <div className="flex flex-col gap-2">
+          <Typography variant="h6" color={!emailFocused && email !== '' && !emailValid ? "red" : "blue-gray"}>
+            Your Email
+          </Typography>
+          <Input
+            name="email"
+            type="email"
+            size="lg"
+            label="Email Address"
+            onChange={(e) => setEmail(e.target.value)}
+            onFocus={() => setEmailFocused(true)}
+            onBlur={() => setEmailFocused(false)}
+            value={email}
+            aria-invalid={email != '' && emailValid ? "false" : "true"}
+            error={!emailFocused && email !== '' && !emailValid}
+            required
+          />
+          <Typography
+            variant="small"
+            color={!emailFocused && email !== '' && !emailValid ? "red" : "gray"}
+            className="flex items-center gap-1 font-normal"
+          >
+            <ExclamationCircleIcon className="w-1/12"/>
+            <span className="w-11/12">
                 Should be valid email address
               </span>
-            </Typography>
-          </div>
+          </Typography>
+        </div>
 
-          <div className="flex flex-col gap-2">
-            <Typography variant="h6"
-                        color={!passwordFocused && password !== '' && !passwordValid ? "red" : "blue-gray"}>
-              Password
-            </Typography>
-            <Input
-              name="password"
-              type="password"
-              size="lg"
-              label="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              onFocus={() => setPasswordFocused(true)}
-              onBlur={() => setPasswordFocused(false)}
-              value={password}
-              aria-invalid={password != '' && passwordValid ? "false" : "true"}
-              error={!passwordFocused && password !== '' && !passwordValid}
-              required
-            />
-            <Typography
-              variant="small"
-              color={!passwordFocused && password !== '' && !passwordValid ? "red" : "gray"}
-              className="flex items-center gap-1 font-normal"
-            >
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">
+        <div className="flex flex-col gap-2">
+          <Typography variant="h6"
+                      color={!passwordFocused && password !== '' && !passwordValid ? "red" : "blue-gray"}>
+            Password
+          </Typography>
+          <Input
+            name="password"
+            type="password"
+            size="lg"
+            label="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setPasswordFocused(true)}
+            onBlur={() => setPasswordFocused(false)}
+            value={password}
+            aria-invalid={password != '' && passwordValid ? "false" : "true"}
+            error={!passwordFocused && password !== '' && !passwordValid}
+            required
+          />
+          <Typography
+            variant="small"
+            color={!passwordFocused && password !== '' && !passwordValid ? "red" : "gray"}
+            className="flex items-center gap-1 font-normal"
+          >
+            <ExclamationCircleIcon className="w-1/12"/>
+            <span className="w-11/12">
                 Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special
                 character
               </span>
-            </Typography>
-          </div>
+          </Typography>
+        </div>
 
-          <div className="flex flex-col gap-2">
-            <Typography variant="h6" color={!passwordFocused && !passwordsMatches ? "red" : "blue-gray"}>
-              Confirm Password
-            </Typography>
-            <Input
-              name="confirm-password"
-              type="password"
-              size="lg"
-              label="Confirm Password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
-              aria-invalid={passwordsMatches ? "false" : "true"}
-              aria-describedby="confirmnote"
-              error={!passwordFocused && !passwordsMatches}
-              required
-            />
-            <Typography
-              variant="small"
-              color={!passwordFocused && !passwordsMatches ? "red" : "gray"}
-              className="flex items-center gap-1 font-normal"
-            >
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">
-                Should match the password
-              </span>
-            </Typography>
-          </div>
-
-          <Checkbox
-            label={
-              <Typography
-                variant="small"
-                color="gray"
-                className="flex items-center font-normal"
-              >
-                I agree the
-                <Link to="/terms-and-conditions">Terms and Conditions</Link>
-              </Typography>
-            }
-            onChange={(e) => setTerms(e.target.checked)}
+        <div className="flex flex-col gap-2">
+          <Typography variant="h6" color={!passwordFocused && !passwordsMatches ? "red" : "blue-gray"}>
+            Confirm Password
+          </Typography>
+          <Input
+            name="confirm-password"
+            type="password"
+            size="lg"
+            label="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            aria-invalid={passwordsMatches ? "false" : "true"}
+            aria-describedby="confirmnote"
+            error={!passwordFocused && !passwordsMatches}
             required
           />
+          <Typography
+            variant="small"
+            color={!passwordFocused && !passwordsMatches ? "red" : "gray"}
+            className="flex items-center gap-1 font-normal"
+          >
+            <ExclamationCircleIcon className="w-1/12"/>
+            <span className="w-11/12">
+                Should match the password
+              </span>
+          </Typography>
+        </div>
 
-          <div>
-            <Button className="block rounded capitalize" type="submit"
-                    disabled={!emailValid || !passwordValid || !passwordsMatches || !terms}>
-              Register
-            </Button>
-
-            <Typography variant="small" color="gray" className="mt-4 font-normal">
-              Already have an account?{" "}
-              <Link to="/login" className="font-medium text-gray-900">
-                Login
-              </Link>
+        <Checkbox
+          label={
+            <Typography
+              variant="small"
+              color="gray"
+              className="flex items-center font-normal"
+            >
+              I agree the
+              <Link to="/terms-and-conditions">Terms and Conditions</Link>
             </Typography>
-          </div>
+          }
+          onChange={(e) => setTerms(e.target.checked)}
+          required
+        />
+
+        <div>
+          <Button className="block rounded capitalize" type="submit"
+                  disabled={!emailValid || !passwordValid || !passwordsMatches || !terms}>
+            Register
+          </Button>
+
+          <Typography variant="small" color="gray" className="mt-4 font-normal">
+            Already have an account?{" "}
+            <Link to="/login" className="font-medium text-gray-900">
+              Login
+            </Link>
+          </Typography>
         </div>
       </Form>
     </Card>
