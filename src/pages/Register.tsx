@@ -150,7 +150,7 @@ export default function Register() {
 
         <div>
           <Button className="block rounded capitalize" type="submit"
-                  disabled={!emailValid || !passwordValid || !passwordsMatches || !terms}>
+                  disabled={email === '' || !emailValid || password === '' || !passwordValid || !passwordsMatches || !terms}>
             Register
           </Button>
 
