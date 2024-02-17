@@ -12,14 +12,14 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
   const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()]).{8,24}$/;
 
   const [ password, setPassword ] = useState('');
-  const [ passwordValid, setPasswordValid ] = useState(true);
-  const [ passwordFocused, setPasswordFocused ] = useState(false);
+  const [ valid, setValid ] = useState(true);
+  const [ focused, setFocused ] = useState(false);
   const [ confirmPassword, setConfirmPassword ] = useState('');
-  const [ passwordsMatches, setPasswordsMatches ] = useState(true);
+  const [ matches, setMatches ] = useState(true);
 
-  useEffect(() => setPasswordValid(PASSWORD_REGEX.test(password)), [ password ]);
-  useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
-  useEffect(() => setValue(password !== '' && passwordValid && (!confirm || passwordsMatches) ? password : undefined), [ password, passwordValid, passwordsMatches ]);
+  useEffect(() => setValid(PASSWORD_REGEX.test(password)), [ password ]);
+  useEffect(() => setMatches(password === confirmPassword), [ password, confirmPassword ]);
+  useEffect(() => setValue(password !== '' && valid && (!confirm || matches) ? password : undefined), [ password, valid, matches ]);
 
   const ref = useRef();
   const confirmRef = useRef();
@@ -40,7 +40,7 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
     <>
       <div className="flex flex-col gap-2">
         <Typography variant="h6"
-                    color={!passwordFocused && password !== '' && !passwordValid ? "red" : "blue-gray"}>
+                    color={!focused && password !== '' && !valid ? "red" : "blue-gray"}>
           Password
         </Typography>
         <Input
@@ -51,16 +51,16 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
           size="lg"
           label="Password"
           onChange={(e) => setPassword(e.target.value)}
-          onFocus={() => setPasswordFocused(true)}
-          onBlur={() => setPasswordFocused(false)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           value={password}
-          aria-invalid={password != '' && passwordValid ? "false" : "true"}
-          error={!passwordFocused && password !== '' && !passwordValid}
+          aria-invalid={password != '' && valid ? "false" : "true"}
+          error={!focused && password !== '' && !valid}
           required
         />
         <Typography
           variant="small"
-          color={!passwordFocused && password !== '' && !passwordValid ? "red" : "gray"}
+          color={!focused && password !== '' && !valid ? "red" : "gray"}
           className="flex items-center gap-1 font-normal"
         >
           <ExclamationCircleIcon className="w-1/12"/>
@@ -73,7 +73,7 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
       {
         confirm &&
         <div className="flex flex-col gap-2">
-          <Typography variant="h6" color={!passwordFocused && !passwordsMatches ? "red" : "blue-gray"}>
+          <Typography variant="h6" color={!focused && !matches ? "red" : "blue-gray"}>
             Confirm Password
           </Typography>
           <Input
@@ -85,14 +85,14 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
             label="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
             value={confirmPassword}
-            aria-invalid={passwordsMatches ? "false" : "true"}
+            aria-invalid={matches ? "false" : "true"}
             aria-describedby="confirmnote"
-            error={!passwordFocused && !passwordsMatches}
+            error={!focused && !matches}
             required
           />
           <Typography
             variant="small"
-            color={!passwordFocused && !passwordsMatches ? "red" : "gray"}
+            color={!focused && !matches ? "red" : "gray"}
             className="flex items-center gap-1 font-normal"
           >
             <ExclamationCircleIcon className="w-1/12"/>
