@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, redirect } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
@@ -12,7 +12,7 @@ import categoryLoader from "./loaders/categoryLoader";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import TermsAndConditions from "./pages/TermsAndConditions.tsx";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import AuthProvider from "./context/AuthProvider";
 
 const router = createBrowserRouter(

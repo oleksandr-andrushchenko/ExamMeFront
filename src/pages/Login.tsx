@@ -3,8 +3,8 @@ import { Button, Card, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import apiClient from "../api/apiClient";
 import { useState } from "react";
-import EmailSection from "../components/forms/EmailSection.tsx";
-import PasswordSection from "../components/forms/PasswordSection.tsx";
+import EmailSection from "../components/forms/EmailSection";
+import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 
 export default function Login() {
