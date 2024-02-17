@@ -7,12 +7,12 @@ interface getCategoryAndQuestionsParams {
   params: { categoryId: string }
 }
 
-interface getCategoryAndQuestionsResult {
+export interface CategoryAndQuestions {
   category: Category,
   questions: Question[],
 }
 
-const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestionsParams): Promise<getCategoryAndQuestionsResult> => {
+const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestionsParams): Promise<CategoryAndQuestions> => {
   const response: AxiosResponse[] = await Promise.all([
     apiClient.get(`/categories/${params.categoryId}`),
     apiClient.get(`/categories/${params.categoryId}/questions`),
