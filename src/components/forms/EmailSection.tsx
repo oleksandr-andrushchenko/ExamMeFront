@@ -1,6 +1,6 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 export type EmailSectionProps = {
   setValue: (email?: string) => void,
@@ -17,14 +17,27 @@ export default function EmailSection({ setValue }: EmailSectionProps) {
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
   useEffect(() => setValue(email !== '' && emailValid ? email : undefined), [ email, emailValid ]);
 
+  const ref = useRef();
+  useEffect(() => {
+    setTimeout(() => {
+      ref.current.name = 'email';
+      ref.current.type = 'email';
+      ref.current.value = '';
+      ref.current.disabled = false;
+      ref.current.focus();
+    }, 300);
+  }, []);
+
   return (
     <div className="flex flex-col gap-2">
       <Typography variant="h6" color={!emailFocused && email !== '' && !emailValid ? "red" : "blue-gray"}>
         Your Email
       </Typography>
       <Input
-        name="email"
-        type="email"
+        inputRef={ref as MutableRefObject<any>}
+        name={`temp${Date.now()}`}
+        type="number"
+        disabled={true}
         size="lg"
         label="Email Address"
         onChange={(e) => setEmail(e.target.value)}
