@@ -1,10 +1,13 @@
 import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PlusIcon, ArrowRightEndOnRectangleIcon } from "@heroicons/react/16/solid";
+import {
+  PlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
+} from "@heroicons/react/16/solid";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
 import React from "react";
 import { Navbar, Collapse, Typography, Button, IconButton } from "@material-tailwind/react";
+import useAuth from "../hooks/useAuth";
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -13,6 +16,7 @@ const navigation = [
 
 export default function NavBar() {
   const [ openNav, setOpenNav ] = React.useState(false);
+  const { auth, setAuth } = useAuth();
 
   React.useEffect(() => {
     window.addEventListener(
@@ -47,39 +51,57 @@ export default function NavBar() {
           </Link>
         </Typography>
       })}
-      <Typography
-        as="li"
-        variant="small"
-        className="p-1 font-normal"
-      >
-        <Link
-          to="/login"
-        >
-          <Button
-            size="md"
-            className="rounded capitalize"
-          >
+      {
+        auth
+          ? <>
+            <span className="inline-flex items-center">
+              <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
+              {auth.email}
+            </span>
+            <Button
+              size="sm"
+              className="rounded capitalize"
+              onClick={() => setAuth(undefined)}
+            >
+              <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
+            </Button>
+          </>
+          : <>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal"
+            >
+              <Link
+                to="/login"
+              >
+                <Button
+                  size="md"
+                  className="rounded capitalize"
+                >
 
-            <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-          </Button>
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        className="p-1 font-normal"
-      >
-        <Link
-          to="/register"
-        >
-          <Button
-            size="sm"
-            className="rounded capitalize"
-          >
-            <PlusIcon className="inline-block h-4 w-4"/> Register
-          </Button>
-        </Link>
-      </Typography>
+                  <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
+                </Button>
+              </Link>
+            </Typography>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal"
+            >
+              <Link
+                to="/register"
+              >
+                <Button
+                  size="sm"
+                  className="rounded capitalize"
+                >
+                  <PlusIcon className="inline-block h-4 w-4"/> Register
+                </Button>
+              </Link>
+            </Typography>
+          </>
+      }
     </ul>
   );
 
