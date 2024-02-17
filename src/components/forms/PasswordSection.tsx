@@ -1,6 +1,6 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 export type PasswordSectionProps = {
   setValue: (password?: string) => void,
@@ -21,6 +21,21 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
   useEffect(() => setPasswordsMatches(password === confirmPassword), [ password, confirmPassword ]);
   useEffect(() => setValue(password !== '' && passwordValid && (!confirm || passwordsMatches) ? password : undefined), [ password, passwordValid, passwordsMatches ]);
 
+  const ref = useRef();
+  const confirmRef = useRef();
+  useEffect(() => {
+    setTimeout(() => {
+      ref.current.name = 'password';
+      ref.current.type = 'password';
+      ref.current.disabled = false;
+      ref.current.value = '';
+      confirmRef.current.name = 'confirm-password';
+      confirmRef.current.type = 'password';
+      confirmRef.current.value = '';
+      confirmRef.current.disabled = false;
+    }, 300);
+  }, []);
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -29,8 +44,10 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
           Password
         </Typography>
         <Input
-          name="password"
-          type="password"
+          inputRef={ref as MutableRefObject<any>}
+          name={`temp${Date.now()}`}
+          type="number"
+          disabled={true}
           size="lg"
           label="Password"
           onChange={(e) => setPassword(e.target.value)}
@@ -60,8 +77,10 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
             Confirm Password
           </Typography>
           <Input
-            name="confirm-password"
-            type="password"
+            inputRef={confirmRef as MutableRefObject<any>}
+            name={`temp${Date.now()}`}
+            type="number"
+            disabled={true}
             size="lg"
             label="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
