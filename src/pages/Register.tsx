@@ -54,7 +54,7 @@ export default function Register() {
       <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
             method="post">
 
-        <EmailSection setValue={setEmail}/>
+        <EmailSection setValue={setEmail} focus/>
         <PasswordSection setValue={setPassword} confirm/>
 
         <Checkbox
