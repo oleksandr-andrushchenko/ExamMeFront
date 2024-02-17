@@ -1,7 +1,7 @@
 import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Card, Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
@@ -45,8 +45,8 @@ export default function Register() {
 
   return (
     <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray">
-        <PlusIcon className="inline-block h-6 w-6"/> Register
+      <Typography variant="h4" color="blue-gray" className="flex items-center">
+        <UserPlusIcon className="inline-block h-6 w-6 mr-1"/> Register
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to register
