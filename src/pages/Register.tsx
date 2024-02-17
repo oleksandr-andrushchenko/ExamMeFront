@@ -7,18 +7,6 @@ import EmailSection from "../components/forms/EmailSection.tsx";
 import PasswordSection from "../components/forms/PasswordSection.tsx";
 import useAuth from "../hooks/useAuth";
 
-export async function registerAction({ request }) {
-  const formData = await request.formData();
-  const response = await apiClient.post('/me', {
-    email: formData.get('email'),
-    password: formData.get('password'),
-  });
-
-  console.log(response.data);
-
-  return response.data;
-}
-
 export default function Register() {
 
   const [ email, setEmail ] = useState('');
