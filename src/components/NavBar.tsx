@@ -1,4 +1,4 @@
-import { LightBulbIcon } from "@heroicons/react/24/solid";
+import { AcademicCapIcon } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   PlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
@@ -112,7 +112,7 @@ export default function NavBar() {
           to="/"
           className="mr-4 cursor-pointer py-1.5 text-xs"
         >
-          <LightBulbIcon alt="ExamMe"/> Exam Me
+          <AcademicCapIcon alt="ExamMe"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
