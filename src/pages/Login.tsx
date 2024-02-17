@@ -23,6 +23,7 @@ export default function Login() {
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
+  const [ submitting, setSubmitting ] = useState(false);
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     try {
       const loginRes = await apiClient.post('/auth', { email, password });
@@ -53,6 +55,8 @@ export default function Login() {
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -71,8 +75,8 @@ export default function Login() {
         <PasswordSection setValue={setPassword}/>
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!email || !password}>
-            Login
+          <Button className="block rounded capitalize" type="submit" disabled={!email || !password || submitting}>
+            {submitting ? 'Logging in...' : 'Login'}
           </Button>
           <Typography variant="small" color="gray" className="mt-4 font-normal">
             Don't have an account?{" "}
