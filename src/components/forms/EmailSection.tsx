@@ -4,9 +4,10 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 export type EmailSectionProps = {
   setValue: (email?: string) => void,
+  focus?: boolean,
 }
 
-export default function EmailSection({ setValue }: EmailSectionProps) {
+export default function EmailSection({ setValue, focus = false }: EmailSectionProps) {
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -24,7 +25,7 @@ export default function EmailSection({ setValue }: EmailSectionProps) {
       ref.current.type = 'email';
       ref.current.value = '';
       ref.current.disabled = false;
-      ref.current.focus();
+      focus && ref.current.focus();
     }, 300);
   }, []);
 
