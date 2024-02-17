@@ -2,7 +2,7 @@ import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-export type PasswordSectionProps = {
+interface PasswordSectionProps {
   setValue: (password?: string) => void,
   confirm?: boolean,
 }
