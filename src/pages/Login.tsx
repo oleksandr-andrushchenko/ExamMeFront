@@ -50,8 +50,8 @@ export default function Login() {
 
   return (
     <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray">
-        <ArrowRightEndOnRectangleIcon className="inline-block h-6 w-6"/> Login
+      <Typography variant="h4" color="blue-gray" className="flex items-center">
+        <ArrowRightEndOnRectangleIcon className="inline-block h-6 w-6 mr-1"/> Login
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to login
