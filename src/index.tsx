@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, LoaderFunction, Route, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
@@ -14,16 +14,24 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import AuthProvider from "./context/AuthProvider";
+import Unauthorized from "./pages/Unauthorized";
+import AddCategory from "./pages/AddCategory";
+import RequireAuth from "./components/RequireAuth";
+import Permission from "./schema/Permission";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
       <Route path="/" element={<Home/>}/>
       <Route path="/categories" element={<Categories/>} loader={getCategories}/>
-      <Route path="/categories/:categoryId" element={<Category/>} loader={getCategoryAndQuestions}/>
+      <Route path="/categories/:categoryId" element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
+      <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
+        <Route path="/categories/add" element={<AddCategory/>}/>
+      </Route>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
       <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
+      <Route path="unauthorized" element={<Unauthorized/>}/>
       <Route path="*" element={<NotFound/>}/>
     </Route>
   )
