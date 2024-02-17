@@ -12,7 +12,7 @@ interface getCategoryAndQuestionsResult {
   questions: Question[],
 }
 
-export const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestionsParams): Promise<getCategoryAndQuestionsResult> => {
+const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestionsParams): Promise<getCategoryAndQuestionsResult> => {
   const response: AxiosResponse[] = await Promise.all([
     apiClient.get(`/categories/${params.categoryId}`),
     apiClient.get(`/categories/${params.categoryId}/questions`),
@@ -23,3 +23,5 @@ export const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestion
     questions: response[1].data,
   };
 };
+
+export default getCategoryAndQuestions;
