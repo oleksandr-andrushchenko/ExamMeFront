@@ -1,6 +1,7 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import classNames from "../../utils/classNames";
 
 interface EmailSectionProps {
   setValue: (email?: string) => void,
@@ -14,9 +15,19 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
   const [ email, setEmail ] = useState('');
   const [ emailValid, setEmailValid ] = useState(true);
   const [ emailFocused, setEmailFocused ] = useState(false);
+  const [ displayError, setDisplayError ] = useState(false);
+  const [ error, setError ] = useState(false);
 
   useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
-  useEffect(() => setValue(email !== '' && emailValid ? email : undefined), [ email, emailValid ]);
+  useEffect(() => {
+    setValue(email !== '' && emailValid ? email : undefined);
+    setError(email !== '' && !emailValid);
+  }, [ email, emailValid ]);``
+  useEffect(() => {
+    if (error && !emailFocused) {
+      setDisplayError(true);
+    }
+  }, [ emailFocused ]);
 
   const ref = useRef();
   useEffect(() => {
@@ -31,7 +42,9 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
 
   return (
     <div className="flex flex-col gap-2">
-      <Typography variant="h6" color={!emailFocused && email !== '' && !emailValid ? "red" : "blue-gray"}>
+      <Typography
+        variant="h6"
+        color={error && displayError ? "red" : "blue-gray"}>
         Your Email
       </Typography>
       <Input
@@ -46,14 +59,16 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
         onBlur={() => setEmailFocused(false)}
         value={email}
         aria-invalid={email != '' && emailValid ? "false" : "true"}
-        error={!emailFocused && email !== '' && !emailValid}
+        error={error && displayError}
         required
       />
       <Typography
         variant="small"
-        color={!emailFocused && email !== '' && !emailValid ? "red" : "gray"}
-        className="flex items-center gap-1 font-normal"
-      >
+        color="red"
+        className={classNames(
+          'flex items-center gap-1 font-normal',
+          error && displayError ? '' : 'hidden'
+        )}>
         <ExclamationCircleIcon className="w-1/12"/>
         <span className="w-11/12">
           Should be valid email address
