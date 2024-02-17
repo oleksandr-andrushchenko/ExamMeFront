@@ -18,20 +18,21 @@ import Unauthorized from "./pages/Unauthorized";
 import AddCategory from "./pages/AddCategory";
 import RequireAuth from "./components/RequireAuth";
 import Permission from "./schema/Permission";
+import RoutePath from "./schema/RoutePath";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/categories" element={<Categories/>} loader={getCategories}/>
-      <Route path="/categories/:categoryId" element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
+      <Route path={RoutePath.HOME} element={<Home/>}/>
+      <Route path={RoutePath.CATEGORIES} element={<Categories/>} loader={getCategories}/>
+      <Route path={RoutePath.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
-        <Route path="/categories/add" element={<AddCategory/>}/>
+        <Route path={RoutePath.ADD_CATEGORY} element={<AddCategory/>}/>
       </Route>
-      <Route path="/login" element={<Login/>}/>
-      <Route path="/register" element={<Register/>}/>
-      <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
-      <Route path="unauthorized" element={<Unauthorized/>}/>
+      <Route path={RoutePath.LOGIN} element={<Login/>}/>
+      <Route path={RoutePath.REGISTER} element={<Register/>}/>
+      <Route path={RoutePath.TERMS_AND_CONDITIONS} element={<TermsAndConditions/>}/>
+      <Route path={RoutePath.UNAUTHORIZED} element={<Unauthorized/>}/>
       <Route path="*" element={<NotFound/>}/>
     </Route>
   )

@@ -6,6 +6,7 @@ import { useState } from "react";
 import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
+import RoutePath from "../schema/RoutePath";
 
 export default function Login() {
 
@@ -68,7 +69,7 @@ export default function Login() {
           </Button>
           <Typography variant="small" color="gray" className="mt-4 font-normal">
             Don't have an account?{" "}
-            <Link to="/register" className="font-medium text-gray-900">
+            <Link to={RoutePath.REGISTER} className="font-medium text-gray-900">
               Register
             </Link>
           </Typography>

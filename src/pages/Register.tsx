@@ -6,6 +6,7 @@ import { useState } from "react";
 import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
+import RoutePath from "../schema/RoutePath";
 
 export default function Register() {
 
@@ -65,7 +66,7 @@ export default function Register() {
               className="flex items-center font-normal"
             >
               I agree the
-              <Link to="/terms-and-conditions">Terms and Conditions</Link>
+              <Link to={RoutePath.TERMS_AND_CONDITIONS}>Terms and Conditions</Link>
             </Typography>
           }
           onChange={(e) => setTerms(e.target.checked)}
@@ -80,7 +81,7 @@ export default function Register() {
 
           <Typography variant="small" color="gray" className="mt-4 font-normal">
             Already have an account?{" "}
-            <Link to="/login" className="font-medium text-gray-900">
+            <Link to={RoutePath.LOGIN} className="font-medium text-gray-900">
               Login
             </Link>
           </Typography>
