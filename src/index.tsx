@@ -9,7 +9,7 @@ import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
 import categoriesLoader from "./loaders/categoriesLoader";
 import categoryLoader from "./loaders/categoryLoader";
-import Login, { loginAction } from "./pages/Login";
+import Login from "./pages/Login";
 import Register, { registerAction } from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
@@ -21,19 +21,13 @@ const register = async (request) => {
   return redirect('/login');
 };
 
-const login = async (request) => {
-  await loginAction(request);
-
-  return redirect('/categories');
-};
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
       <Route path="/" element={<Home/>}/>
       <Route path="/categories" element={<Categories/>} loader={categoriesLoader}/>
       <Route path="/categories/:categoryId" element={<Category/>} loader={categoryLoader}/>
-      <Route path="/login" element={<Login/>} action={login}/>
+      <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>} action={register}/>
       <Route path="/terms-and-conditions" element={<TermsAndConditions/>}/>
       <Route path="*" element={<NotFound/>}/>
