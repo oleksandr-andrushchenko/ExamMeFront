@@ -24,6 +24,7 @@ export default function Register() {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ terms, setTerms ] = useState(false);
+  const [ submitting, setSubmitting ] = useState(false);
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     try {
       const registerRes = await apiClient.post('/me', { email, password });
@@ -48,6 +50,8 @@ export default function Register() {
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -81,8 +85,9 @@ export default function Register() {
         />
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!email || !password || !terms}>
-            Register
+          <Button className="block rounded capitalize" type="submit"
+                  disabled={!email || !password || !terms || submitting}>
+            {submitting ? 'Registering in...' : 'Register'}
           </Button>
 
           <Typography variant="small" color="gray" className="mt-4 font-normal">
