@@ -13,6 +13,7 @@ import Login, { loginAction } from "./pages/Login";
 import Register, { registerAction } from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
+import AuthProvider from "./context/AuthProvider";
 
 const register = async (request) => {
   await registerAction(request);
@@ -42,8 +43,10 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router}/>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <RouterProvider router={router}/>
+      </ThemeProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )
