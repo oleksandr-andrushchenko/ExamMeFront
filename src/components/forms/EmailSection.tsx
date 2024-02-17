@@ -13,21 +13,21 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [ email, setEmail ] = useState('');
-  const [ emailValid, setEmailValid ] = useState(true);
-  const [ emailFocused, setEmailFocused ] = useState(false);
+  const [ valid, setValid ] = useState(true);
+  const [ focused, setFocused ] = useState(false);
   const [ displayError, setDisplayError ] = useState(false);
   const [ error, setError ] = useState(false);
 
-  useEffect(() => setEmailValid(EMAIL_REGEX.test(email)), [ email ]);
+  useEffect(() => setValid(EMAIL_REGEX.test(email)), [ email ]);
   useEffect(() => {
-    setValue(email !== '' && emailValid ? email : undefined);
-    setError(email !== '' && !emailValid);
-  }, [ email, emailValid ]);``
+    setValue(email !== '' && valid ? email : undefined);
+    setError(email !== '' && !valid);
+  }, [ email, valid ]);``
   useEffect(() => {
-    if (error && !emailFocused) {
+    if (error && !focused) {
       setDisplayError(true);
     }
-  }, [ emailFocused ]);
+  }, [ focused ]);
 
   const ref = useRef();
   useEffect(() => {
@@ -55,10 +55,10 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
         size="lg"
         label="Email Address"
         onChange={(e) => setEmail(e.target.value)}
-        onFocus={() => setEmailFocused(true)}
-        onBlur={() => setEmailFocused(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         value={email}
-        aria-invalid={email != '' && emailValid ? "false" : "true"}
+        aria-invalid={email != '' && valid ? "false" : "true"}
         error={error && displayError}
         required
       />
