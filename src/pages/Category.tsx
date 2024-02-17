@@ -1,8 +1,10 @@
 import { Link, useLoaderData } from "react-router-dom";
 import { List, ListItem } from "@material-tailwind/react";
+import { CategoryAndQuestions } from "../api/getCategoryAndQuestions";
+import RoutePath from "../schema/RoutePath";
 
 export default function Category() {
-  const { category, questions } = useLoaderData();
+  const { category, questions }: CategoryAndQuestions = useLoaderData();
 
   return (
     <>
@@ -11,7 +13,9 @@ export default function Category() {
       <List>
         {questions.map(question => {
           return <ListItem key={question.id}>
-            <Link key={question.id} to={`/questions/${question.id}`}>
+            <Link
+              key={question.id}
+              to={RoutePath.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id)}>
               {question.title}
             </Link>
           </ListItem>;
