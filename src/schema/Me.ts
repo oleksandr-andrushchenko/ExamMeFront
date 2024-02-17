@@ -3,5 +3,5 @@ export default interface Me {
   email: string,
   permissions: string[],
   created: number,
-  updated: number,
+  updated?: number,
 }
