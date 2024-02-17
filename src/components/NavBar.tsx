@@ -1,7 +1,7 @@
 import { AcademicCapIcon } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
-  PlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
+  UserPlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/16/solid";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
@@ -96,7 +96,7 @@ export default function NavBar() {
                   size="sm"
                   className="rounded capitalize"
                 >
-                  <PlusIcon className="inline-block h-4 w-4"/> Register
+                  <UserPlusIcon className="inline-block h-4 w-4"/> Register
                 </Button>
               </Link>
             </Typography>
