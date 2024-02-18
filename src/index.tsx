@@ -19,6 +19,7 @@ import AddCategory from "./pages/AddCategory";
 import RequireAuth from "./components/RequireAuth";
 import Permission from "./enum/Permission";
 import { default as Path } from "./enum/Route";
+import AddQuestion from "./pages/AddQuestion";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,9 @@ const router = createBrowserRouter(
       <Route path={Path.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
         <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
+      </Route>
+      <Route element={<RequireAuth permission={Permission.CREATE_QUESTION}/>}>
+        <Route path={Path.ADD_QUESTION} element={<AddQuestion/>}/>
       </Route>
       <Route path={Path.LOGIN} element={<Login/>}/>
       <Route path={Path.REGISTER} element={<Register/>}/>
