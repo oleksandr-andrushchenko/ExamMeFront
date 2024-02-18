@@ -7,6 +7,7 @@ import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import RoutePath from "../schema/RoutePath";
+import classNames from "../utils/classNames.ts";
 
 export default function Register() {
 
@@ -52,28 +53,29 @@ export default function Register() {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to register
       </Typography>
-      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
+      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
             method="post">
 
         <EmailSection setValue={setEmail} focus/>
         <PasswordSection setValue={setPassword} confirm/>
 
-        <Checkbox
-          label={
-            <Typography
-              variant="small"
-              color="gray"
-              className="flex items-center font-normal"
-            >
-              I agree the
-              <Link to={RoutePath.TERMS_AND_CONDITIONS}>Terms and Conditions</Link>
-            </Typography>
-          }
-          onChange={(e) => setTerms(e.target.checked)}
-          required
-        />
+        <div className="-mt-4">
+          <Checkbox
+            label={
+              <Typography
+                variant="small"
+                color="gray"
+                className="flex items-center font-normal">
+                I agree the
+                <Link to={RoutePath.TERMS_AND_CONDITIONS}>Terms and Conditions</Link>
+              </Typography>
+            }
+            onChange={(e) => setTerms(e.target.checked)}
+            required
+          />
+        </div>
 
-        <div>
+        <div className="-mt-4">
           <Button className="block rounded capitalize" type="submit"
                   disabled={!email || !password || !terms || submitting}>
             {submitting ? 'Registering in...' : 'Register'}

@@ -57,7 +57,7 @@ export default function Login() {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to login
       </Typography>
-      <Form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
+      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
             method="post">
 
         <EmailSection setValue={setEmail} focus/>
