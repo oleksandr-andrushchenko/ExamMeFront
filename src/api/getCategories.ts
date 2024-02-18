@@ -1,4 +1,4 @@
-import apiClient from "./apiClient";
+import client from "./client";
 import Category from "../schema/Category";
 
-export default async (): Promise<Category[]> => (await apiClient.get('/categories')).data;
+export default async (): Promise<Category[]> => (await client.get('/categories')).data;
