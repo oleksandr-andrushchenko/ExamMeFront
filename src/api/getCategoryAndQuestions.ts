@@ -1,7 +1,7 @@
-import apiClient from "../api/apiClient";
-import { AxiosResponse } from "axios";
 import Question from "../schema/Question";
 import Category from "../schema/Category";
+import getCategory from "./getCategory";
+import getCategoryQuestions from "./getCategoryQuestions";
 
 interface getCategoryAndQuestionsParams {
   params: { categoryId: string }
@@ -12,16 +12,7 @@ export interface CategoryAndQuestions {
   questions: Question[],
 }
 
-const getCategoryAndQuestions = async ({ params }: getCategoryAndQuestionsParams): Promise<CategoryAndQuestions> => {
-  const response: AxiosResponse[] = await Promise.all([
-    apiClient.get(`/categories/${params.categoryId}`),
-    apiClient.get(`/categories/${params.categoryId}/questions`),
-  ]);
-
-  return {
-    category: response[0].data,
-    questions: response[1].data,
-  };
-};
-
-export default getCategoryAndQuestions;
+export default async ({ params }: getCategoryAndQuestionsParams) => await Promise.all<Category | Question[]>([
+  getCategory(params.categoryId),
+  getCategoryQuestions(params.categoryId),
+])

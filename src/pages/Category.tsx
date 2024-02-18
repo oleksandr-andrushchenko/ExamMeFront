@@ -4,7 +4,7 @@ import { CategoryAndQuestions } from "../api/getCategoryAndQuestions";
 import RoutePath from "../schema/RoutePath";
 
 export default function Category() {
-  const { category, questions }: CategoryAndQuestions = useLoaderData();
+  const [ category, questions ]: CategoryAndQuestions = useLoaderData();
 
   return (
     <>
