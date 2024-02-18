@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "react-router-dom";
 import { List, ListItem } from "@material-tailwind/react";
-import { CategoryAndQuestions } from "../api/getCategoryAndQuestions";
+import { CategoryAndQuestions } from "../loaders/getCategoryAndQuestions";
 import RoutePath from "../schema/RoutePath";
 
 export default function Category() {

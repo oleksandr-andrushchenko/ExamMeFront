@@ -1,7 +1,7 @@
 import Question from "../schema/Question";
 import Category from "../schema/Category";
-import getCategory from "./getCategory";
-import getCategoryQuestions from "./getCategoryQuestions";
+import getCategory from "../api/getCategory";
+import getCategoryQuestions from "../api/getCategoryQuestions";
 
 interface getCategoryAndQuestionsParams {
   params: { categoryId: string }

@@ -8,7 +8,7 @@ import Categories from "./pages/Categories";
 import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
 import getCategories from "./api/getCategories";
-import getCategoryAndQuestions from "./api/getCategoryAndQuestions";
+import getCategoryAndQuestions from "./loaders/getCategoryAndQuestions";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
