@@ -1,5 +1,5 @@
 import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Button, Card, Typography } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
 import apiClient from "../api/apiClient";
 import { useState } from "react";
@@ -8,8 +8,7 @@ import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
 
-export default function Login() {
-
+export default () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ submitting, setSubmitting ] = useState(false);
@@ -50,9 +49,9 @@ export default function Login() {
   };
 
   return (
-    <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray" className="flex items-center">
-        <ArrowRightEndOnRectangleIcon className="inline-block h-6 w-6 mr-1"/> Login
+    <>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+        <ArrowRightEndOnRectangleIcon className="inline-block h-8 w-8 mr-1"/> Login
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to login
@@ -75,6 +74,6 @@ export default function Login() {
           </Typography>
         </div>
       </Form>
-    </Card>
+    </>
   );
 }
