@@ -9,14 +9,14 @@ interface RequireAuthParams {
 }
 
 export default function RequireAuth({ permission }: RequireAuthParams) {
-  const { meLoading, me } = useAuth();
+  const { meLoading, me, checkAuth } = useAuth();
   const location = useLocation();
 
   return (
     meLoading
       ? <Spinner/>
       : (
-        me?.permissions?.find(_permission => _permission === permission)
+        checkAuth(permission)
           ? <Outlet/>
           : me
             ? <Navigate to={Route.UNAUTHORIZED} state={{ from: location }} replace/>

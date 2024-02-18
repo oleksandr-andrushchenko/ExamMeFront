@@ -1,15 +1,16 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Button, List, ListItem, Typography } from '@material-tailwind/react';
-import { Link } from "react-router-dom";
 import Category from "../schema/Category";
 import Route from "../enum/Route";
 import useAuth from "../hooks/useAuth";
 import { Squares2X2Icon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import React from "react";
+import Permission from "../enum/Permission";
+import Spinner from "../components/Spinner.tsx";
 
 export default () => {
   const categories = useLoaderData() as Category[];
-  const { auth } = useAuth();
+  const { meLoading, checkAuth } = useAuth();
 
   return (
     <>
@@ -32,7 +33,9 @@ export default () => {
         })}
       </List>
 
-      {auth && <Link
+      {meLoading
+        ? <Spinner/>
+        : checkAuth(Permission.CREATE_CATEGORY) && <Link
         to={Route.ADD_CATEGORY}>
         <Button
           size="sm"

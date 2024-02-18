@@ -5,10 +5,12 @@ import Route from "../enum/Route";
 import { CubeIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import React from "react";
 import useAuth from "../hooks/useAuth";
+import Permission from "../enum/Permission";
+import Spinner from "../components/Spinner";
 
 export default () => {
   const [ category, questions ]: CategoryAndQuestions = useLoaderData();
-  const { auth } = useAuth();
+  const { meLoading, checkAuth } = useAuth();
 
   return (
     <>
@@ -31,7 +33,9 @@ export default () => {
         })}
       </List>
 
-      {auth && <Link
+      {meLoading
+        ? <Spinner/>
+        : checkAuth(Permission.CREATE_QUESTION) && <Link
         to={Route.ADD_QUESTION.replace(':categoryId', category.id)}>
         <Button
           size="sm"
