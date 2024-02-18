@@ -8,7 +8,7 @@ import React from "react";
 import { Navbar, Collapse, Typography, Button, IconButton } from "@material-tailwind/react";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
-import Spinner from "./Spinner.tsx";
+import Spinner from "./Spinner";
 
 const navigation = [
   { name: 'Home', href: '/' },
