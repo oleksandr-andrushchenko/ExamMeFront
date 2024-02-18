@@ -58,7 +58,7 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         value={email}
-        aria-invalid={email != '' && valid ? "false" : "true"}
+        aria-invalid={error ? "true" : "false"}
         error={error && displayError}
         required
       />

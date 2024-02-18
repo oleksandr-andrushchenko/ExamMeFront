@@ -76,7 +76,7 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           value={password}
-          aria-invalid={password != '' && valid ? "false" : "true"}
+          aria-invalid={error ? "true" : "false"}
           error={error && displayError}
           required
         />
@@ -113,7 +113,7 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
             onFocus={() => setConfirmFocused(true)}
             onBlur={() => setConfirmFocused(false)}
             value={confirmPassword}
-            aria-invalid={matches ? "false" : "true"}
+            aria-invalid={confirmError ? "true" : "false"}
             aria-describedby="confirmnote"
             error={confirmError && displayConfirmError}
             required
