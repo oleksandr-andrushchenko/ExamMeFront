@@ -1,11 +1,4 @@
-import apiClient from "../api/apiClient";
+import apiClient from "./apiClient";
 import Me from "../schema/Me";
-import { AxiosResponse } from "axios";
 
-const getMe = async (): Promise<Me> => {
-  const response: AxiosResponse = await apiClient.get('/me');
-
-  return response.data;
-};
-
-export default getMe;
+export default async (): Promise<Me> => (await apiClient.get('/me')).data;
