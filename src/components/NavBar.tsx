@@ -37,8 +37,7 @@ export default function NavBar() {
           key={item.href}
           variant="small"
           color="blue-gray"
-          className="p-1 font-normal"
-        >
+          className="p-1 font-normal">
           <Link
             key={item.name}
             to={item.href}
@@ -46,8 +45,7 @@ export default function NavBar() {
               current ? 'underline' : '',
               'flex items-center'
             )}
-            aria-current={current ? 'page' : undefined}
-          >
+            aria-current={current ? 'page' : undefined}>
             {item.name}
           </Link>
         </Typography>
@@ -62,8 +60,7 @@ export default function NavBar() {
             <Button
               size="sm"
               className="rounded capitalize"
-              onClick={() => setAuth(undefined)}
-            >
+              onClick={() => setAuth(undefined)}>
               <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
             </Button>
           </>
@@ -71,16 +68,12 @@ export default function NavBar() {
             <Typography
               as="li"
               variant="small"
-              className="p-1 font-normal"
-            >
+              className="p-1 font-normal">
               <Link
-                to={RoutePath.LOGIN}
-              >
+                to={RoutePath.LOGIN}>
                 <Button
                   size="md"
-                  className="rounded capitalize"
-                >
-
+                  className="rounded capitalize">
                   <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
                 </Button>
               </Link>
@@ -88,15 +81,12 @@ export default function NavBar() {
             <Typography
               as="li"
               variant="small"
-              className="p-1 font-normal"
-            >
+              className="p-1 font-normal">
               <Link
-                to={RoutePath.REGISTER}
-              >
+                to={RoutePath.REGISTER}>
                 <Button
                   size="sm"
-                  className="rounded capitalize"
-                >
+                  className="rounded capitalize">
                   <UserPlusIcon className="inline-block h-4 w-4"/> Register
                 </Button>
               </Link>
@@ -111,8 +101,7 @@ export default function NavBar() {
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link
           to={RoutePath.HOME}
-          className="mr-4 cursor-pointer py-1.5 text-xs"
-        >
+          className="mr-4 cursor-pointer py-1.5 text-xs">
           <AcademicCapIcon alt="ExamMe"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
@@ -121,8 +110,7 @@ export default function NavBar() {
             variant="text"
             className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
             ripple={false}
-            onClick={() => setOpenNav(!openNav)}
-          >
+            onClick={() => setOpenNav(!openNav)}>
             {openNav
               ? <XMarkIcon className="block h-6 w-6" aria-hidden="true"/>
               : <Bars3Icon className="block h-6 w-6" aria-hidden="true"/>}
