@@ -7,7 +7,6 @@ import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import RoutePath from "../schema/RoutePath";
-import classNames from "../utils/classNames.ts";
 
 export default function Register() {
 
