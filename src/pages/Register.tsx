@@ -1,5 +1,5 @@
 import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Card, Checkbox, Button, Typography } from "@material-tailwind/react";
+import { Checkbox, Button, Typography } from "@material-tailwind/react";
 import apiClient from "../api/apiClient";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
@@ -8,8 +8,7 @@ import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
 
-export default function Register() {
-
+export default () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ terms, setTerms ] = useState(false);
@@ -45,9 +44,9 @@ export default function Register() {
   };
 
   return (
-    <Card color="transparent" shadow={false}>
-      <Typography variant="h4" color="blue-gray" className="flex items-center">
-        <UserPlusIcon className="inline-block h-6 w-6 mr-1"/> Register
+    <>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+        <UserPlusIcon className="inline-block h-8 w-8 mr-1"/> Register
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to register
@@ -88,6 +87,6 @@ export default function Register() {
           </Typography>
         </div>
       </Form>
-    </Card>
+    </>
   );
 }
