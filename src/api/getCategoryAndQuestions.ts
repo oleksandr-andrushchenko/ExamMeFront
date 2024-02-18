@@ -7,10 +7,7 @@ interface getCategoryAndQuestionsParams {
   params: { categoryId: string }
 }
 
-export interface CategoryAndQuestions {
-  category: Category,
-  questions: Question[],
-}
+export type CategoryAndQuestions = [ Category, Question[] ];
 
 export default async ({ params }: getCategoryAndQuestionsParams) => await Promise.all<Category | Question[]>([
   getCategory(params.categoryId),
