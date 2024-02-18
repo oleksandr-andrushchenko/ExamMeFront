@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { Button, List, ListItem } from '@material-tailwind/react';
 import { Link } from "react-router-dom";
 import Category from "../schema/Category";
-import RoutePath from "../schema/RoutePath";
+import Route from "../enum/Route";
 import useAuth from "../hooks/useAuth";
 import { SquaresPlusIcon } from "@heroicons/react/16/solid";
 import React from "react";
@@ -16,7 +16,7 @@ export default function Categories() {
       <h1>Categories</h1>
 
       {auth && <Link
-        to={RoutePath.ADD_CATEGORY}>
+        to={Route.ADD_CATEGORY}>
         <Button
           size="sm"
           className="rounded capitalize">
@@ -29,7 +29,7 @@ export default function Categories() {
           return <ListItem key={category.id}>
             <Link
               key={category.id}
-              to={RoutePath.CATEGORY.replace(':categoryId', category.id)}>
+              to={Route.CATEGORY.replace(':categoryId', category.id)}>
               {category.name}
             </Link>
           </ListItem>;

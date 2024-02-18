@@ -8,7 +8,7 @@ import classNames from "../utils/classNames";
 import React from "react";
 import { Navbar, Collapse, Typography, Button, IconButton } from "@material-tailwind/react";
 import useAuth from "../hooks/useAuth";
-import RoutePath from "../schema/RoutePath";
+import Route from "../enum/Route";
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -70,7 +70,7 @@ export default function NavBar() {
               variant="small"
               className="p-1 font-normal">
               <Link
-                to={RoutePath.LOGIN}>
+                to={Route.LOGIN}>
                 <Button
                   size="md"
                   className="rounded capitalize">
@@ -83,7 +83,7 @@ export default function NavBar() {
               variant="small"
               className="p-1 font-normal">
               <Link
-                to={RoutePath.REGISTER}>
+                to={Route.REGISTER}>
                 <Button
                   size="sm"
                   className="rounded capitalize">
@@ -100,7 +100,7 @@ export default function NavBar() {
     <Navbar className="h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4" fullWidth={true}>
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link
-          to={RoutePath.HOME}
+          to={Route.HOME}
           className="mr-4 cursor-pointer py-1.5 text-xs">
           <AcademicCapIcon alt="ExamMe"/> Exam Me
         </Link>

@@ -17,22 +17,22 @@ import AuthProvider from "./context/AuthProvider";
 import Unauthorized from "./pages/Unauthorized";
 import AddCategory from "./pages/AddCategory";
 import RequireAuth from "./components/RequireAuth";
-import Permission from "./schema/Permission";
-import RoutePath from "./schema/RoutePath";
+import Permission from "./enum/Permission";
+import { default as Path } from "./enum/Route";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
-      <Route path={RoutePath.HOME} element={<Home/>}/>
-      <Route path={RoutePath.CATEGORIES} element={<Categories/>} loader={getCategories}/>
-      <Route path={RoutePath.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
+      <Route path={Path.HOME} element={<Home/>}/>
+      <Route path={Path.CATEGORIES} element={<Categories/>} loader={getCategories}/>
+      <Route path={Path.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
-        <Route path={RoutePath.ADD_CATEGORY} element={<AddCategory/>}/>
+        <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
       </Route>
-      <Route path={RoutePath.LOGIN} element={<Login/>}/>
-      <Route path={RoutePath.REGISTER} element={<Register/>}/>
-      <Route path={RoutePath.TERMS_AND_CONDITIONS} element={<TermsAndConditions/>}/>
-      <Route path={RoutePath.UNAUTHORIZED} element={<Unauthorized/>}/>
+      <Route path={Path.LOGIN} element={<Login/>}/>
+      <Route path={Path.REGISTER} element={<Register/>}/>
+      <Route path={Path.TERMS_AND_CONDITIONS} element={<TermsAndConditions/>}/>
+      <Route path={Path.UNAUTHORIZED} element={<Unauthorized/>}/>
       <Route path="*" element={<NotFound/>}/>
     </Route>
   )

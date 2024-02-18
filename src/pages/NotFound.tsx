@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import RoutePath from "../schema/RoutePath";
+import Route from "../enum/Route";
 
 const NotFound = () => {
   return (
@@ -7,7 +7,7 @@ const NotFound = () => {
       <h1>Oops!</h1>
       <p>Page Not Found</p>
       <div className="flexGrow">
-        <Link to={RoutePath.HOME}>Visit Our Homepage</Link>
+        <Link to={Route.HOME}>Visit Our Homepage</Link>
       </div>
     </>
   )

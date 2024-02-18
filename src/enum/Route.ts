@@ -1,4 +1,4 @@
-enum RoutePath {
+enum Route {
   HOME = '/',
   CATEGORIES = '/categories',
   CATEGORY = '/categories/:categoryId',
@@ -10,4 +10,4 @@ enum RoutePath {
   UNAUTHORIZED = '/unauthorized',
 }
 
-export default RoutePath;
+export default Route;
