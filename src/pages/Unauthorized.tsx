@@ -3,7 +3,7 @@ import { Button, Typography } from "@material-tailwind/react";
 import React from "react";
 import { ArrowUturnLeftIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 
-export default function Unauthorized() {
+export default () => {
   const navigate = useNavigate();
 
   const goBack = () => navigate(-1);
