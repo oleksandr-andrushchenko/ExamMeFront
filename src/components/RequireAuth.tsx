@@ -9,11 +9,11 @@ interface RequireAuthParams {
 }
 
 export default function RequireAuth({ permission }: RequireAuthParams) {
-  const { meLoading, me, checkAuth } = useAuth();
+  const { authLoading, me, checkAuth } = useAuth();
   const location = useLocation();
 
   return (
-    meLoading
+    authLoading
       ? <Spinner/>
       : (
         checkAuth(permission)

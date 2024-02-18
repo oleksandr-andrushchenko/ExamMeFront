@@ -10,7 +10,7 @@ import Spinner from "../components/Spinner";
 
 export default () => {
   const [ category, questions ]: CategoryAndQuestions = useLoaderData();
-  const { meLoading, checkAuth } = useAuth();
+  const { authLoading, checkAuth } = useAuth();
 
   return (
     <>
@@ -33,7 +33,7 @@ export default () => {
         })}
       </List>
 
-      {meLoading
+      {authLoading
         ? <Spinner/>
         : checkAuth(Permission.CREATE_QUESTION) && <Link
         to={Route.ADD_QUESTION.replace(':categoryId', category.id)}>

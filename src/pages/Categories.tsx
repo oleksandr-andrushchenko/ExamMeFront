@@ -10,7 +10,7 @@ import Spinner from "../components/Spinner.tsx";
 
 export default () => {
   const categories = useLoaderData() as Category[];
-  const { meLoading, checkAuth } = useAuth();
+  const { authLoading, checkAuth } = useAuth();
 
   return (
     <>
@@ -33,7 +33,7 @@ export default () => {
         })}
       </List>
 
-      {meLoading
+      {authLoading
         ? <Spinner/>
         : checkAuth(Permission.CREATE_CATEGORY) && <Link
         to={Route.ADD_CATEGORY}>
