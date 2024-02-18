@@ -1,8 +1,7 @@
-import { AcademicCapIcon } from "@heroicons/react/24/solid";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
-  UserPlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
+  ArrowRightStartOnRectangleIcon, Bars3Icon, XMarkIcon, UserPlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon,
 } from "@heroicons/react/24/solid";
+import { CheckCircleIcon} from "@heroicons/react/24/outline";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
 import React from "react";
@@ -101,8 +100,8 @@ export default function NavBar() {
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link
           to={Route.HOME}
-          className="mr-4 cursor-pointer py-1.5 text-xs">
-          <AcademicCapIcon alt="ExamMe"/> Exam Me
+          className="inline-flex items-center w-3/12">
+          <CheckCircleIcon className="h-12 w-12" alt="ExamMe"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
