@@ -26,10 +26,10 @@ const router = createBrowserRouter(
     <Route element={<Layout/>}>
       <Route path={Path.HOME} element={<Home/>}/>
       <Route path={Path.CATEGORIES} element={<Categories/>} loader={getCategories}/>
-      <Route path={Path.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
         <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
       </Route>
+      <Route path={Path.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
       <Route element={<RequireAuth permission={Permission.CREATE_QUESTION}/>}>
         <Route path={Path.ADD_QUESTION} element={<AddQuestion/>}/>
       </Route>
