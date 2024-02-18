@@ -2,7 +2,7 @@ import { AcademicCapIcon } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   UserPlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon,
-} from "@heroicons/react/16/solid";
+} from "@heroicons/react/24/solid";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
 import React from "react";
