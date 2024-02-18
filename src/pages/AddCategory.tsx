@@ -1,7 +1,15 @@
-export default function AddCategory() {
+import { Typography } from "@material-tailwind/react";
+import { SquaresPlusIcon } from "@heroicons/react/24/solid";
+
+export default () => {
   return (
     <>
-      <h1>Add Category</h1>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+        <SquaresPlusIcon className="inline-block h-8 w-8 mr-1"/> Add Category
+      </Typography>
+      <Typography variant="small" color="gray" className="mt-1 font-normal">
+        Create new category
+      </Typography>
     </>
   );
 }
