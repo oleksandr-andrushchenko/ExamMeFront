@@ -1,6 +1,7 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import classNames from "../../utils/classNames.ts";
 
 interface PasswordSectionProps {
   setValue: (password?: string) => void,
@@ -13,13 +14,33 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
 
   const [ password, setPassword ] = useState('');
   const [ valid, setValid ] = useState(true);
+  const [ error, setError ] = useState(false);
   const [ focused, setFocused ] = useState(false);
+  const [ displayError, setDisplayError ] = useState(false);
+
   const [ confirmPassword, setConfirmPassword ] = useState('');
   const [ matches, setMatches ] = useState(true);
+  const [ confirmError, setConfirmError ] = useState(false);
+  const [ confirmFocused, setConfirmFocused ] = useState(false);
+  const [ displayConfirmError, setDisplayConfirmError ] = useState(false);
 
   useEffect(() => setValid(PASSWORD_REGEX.test(password)), [ password ]);
   useEffect(() => setMatches(password === confirmPassword), [ password, confirmPassword ]);
-  useEffect(() => setValue(password !== '' && valid && (!confirm || matches) ? password : undefined), [ password, valid, matches ]);
+  useEffect(() => {
+    setValue(password !== '' && valid && (!confirm || matches) ? password : undefined);
+    setError(password !== '' && !valid);
+    setConfirmError(confirmPassword !== '' && !matches);
+  }, [ password, valid, confirmPassword, matches ]);
+  useEffect(() => {
+    if (error && !focused) {
+      setDisplayError(true);
+    }
+  }, [ focused ]);
+  useEffect(() => {
+    if (confirmError && !confirmFocused) {
+      setDisplayConfirmError(true);
+    }
+  }, [ confirmFocused ]);
 
   const ref = useRef();
   const confirmRef = useRef();
@@ -39,8 +60,9 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
   return (
     <>
       <div className="flex flex-col gap-2">
-        <Typography variant="h6"
-                    color={!focused && password !== '' && !valid ? "red" : "blue-gray"}>
+        <Typography
+          variant="h6"
+          color={error && displayError ? "red" : "blue-gray"}>
           Password
         </Typography>
         <Input
@@ -55,14 +77,16 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
           onBlur={() => setFocused(false)}
           value={password}
           aria-invalid={password != '' && valid ? "false" : "true"}
-          error={!focused && password !== '' && !valid}
+          error={error && displayError}
           required
         />
         <Typography
           variant="small"
-          color={!focused && password !== '' && !valid ? "red" : "gray"}
-          className="flex items-center gap-1 font-normal"
-        >
+          color="red"
+          className={classNames(
+            'flex items-center gap-1 font-normal',
+            error && displayError ? '' : 'hidden'
+          )}>
           <ExclamationCircleIcon className="w-1/12"/>
           <span className="w-11/12">
           Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special character
@@ -73,7 +97,9 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
       {
         confirm &&
         <div className="flex flex-col gap-2">
-          <Typography variant="h6" color={!focused && !matches ? "red" : "blue-gray"}>
+          <Typography
+            variant="h6"
+            color={confirmError && displayConfirmError ? "red" : "blue-gray"}>
             Confirm Password
           </Typography>
           <Input
@@ -84,17 +110,21 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
             size="lg"
             label="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onFocus={() => setConfirmFocused(true)}
+            onBlur={() => setConfirmFocused(false)}
             value={confirmPassword}
             aria-invalid={matches ? "false" : "true"}
             aria-describedby="confirmnote"
-            error={!focused && !matches}
+            error={confirmError && displayConfirmError}
             required
           />
           <Typography
             variant="small"
-            color={!focused && !matches ? "red" : "gray"}
-            className="flex items-center gap-1 font-normal"
-          >
+            color="red"
+            className={classNames(
+              'flex items-center gap-1 font-normal',
+              confirmError && displayConfirmError ? '' : 'hidden'
+            )}>
             <ExclamationCircleIcon className="w-1/12"/>
             <span className="w-11/12">
                 Should match the password
