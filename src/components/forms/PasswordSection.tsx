@@ -50,10 +50,12 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
       ref.current.type = 'password';
       ref.current.disabled = false;
       ref.current.value = '';
-      confirmRef.current.name = 'confirm-password';
-      confirmRef.current.type = 'password';
-      confirmRef.current.value = '';
-      confirmRef.current.disabled = false;
+      if (confirm) {
+        confirmRef.current.name = 'confirm-password';
+        confirmRef.current.type = 'password';
+        confirmRef.current.value = '';
+        confirmRef.current.disabled = false;
+      }
     }, 300);
   }, []);
 
