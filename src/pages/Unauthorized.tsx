@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 import React from "react";
-import { ArrowUturnLeftIcon } from "@heroicons/react/16/solid";
+import { ArrowUturnLeftIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 
 export default function Unauthorized() {
   const navigate = useNavigate();
@@ -10,12 +10,15 @@ export default function Unauthorized() {
 
   return (
     <>
-      <h1>Unauthorized</h1>
-      <br/>
-      <p>You do not have access to the requested page.</p>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+        <LockClosedIcon className="inline-block h-8 w-8 mr-1"/> Unauthorized
+      </Typography>
+      <Typography variant="small" color="gray" className="mt-1 font-normal">
+        You do not have access to the requested page
+      </Typography>
       <Button
         size="sm"
-        className="rounded capitalize"
+        className="rounded capitalize font-normal mt-3"
         onClick={goBack}>
         <ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back
       </Button>
