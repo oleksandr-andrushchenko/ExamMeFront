@@ -1,28 +1,24 @@
 import { useLoaderData } from "react-router-dom";
-import { Button, List, ListItem } from '@material-tailwind/react';
+import { Button, List, ListItem, Typography } from '@material-tailwind/react';
 import { Link } from "react-router-dom";
 import Category from "../schema/Category";
 import Route from "../enum/Route";
 import useAuth from "../hooks/useAuth";
-import { SquaresPlusIcon } from "@heroicons/react/16/solid";
+import { Squares2X2Icon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-export default function Categories() {
+export default () => {
   const categories = useLoaderData() as Category[];
   const { auth } = useAuth();
 
   return (
     <>
-      <h1>Categories</h1>
-
-      {auth && <Link
-        to={Route.ADD_CATEGORY}>
-        <Button
-          size="sm"
-          className="rounded capitalize">
-          <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Category
-        </Button>
-      </Link>}
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+        <Squares2X2Icon className="inline-block h-8 w-8 mr-1"/> Categories
+      </Typography>
+      <Typography variant="small" color="gray" className="mt-1 font-normal">
+        Available categories
+      </Typography>
 
       <List>
         {categories.map(category => {
@@ -35,6 +31,15 @@ export default function Categories() {
           </ListItem>;
         })}
       </List>
+
+      {auth && <Link
+        to={Route.ADD_CATEGORY}>
+        <Button
+          size="sm"
+          className="rounded capitalize font-normal mt-3">
+          <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Category
+        </Button>
+      </Link>}
     </>
   );
 }
