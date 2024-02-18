@@ -1,12 +1,12 @@
 import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/solid";
-import apiClient from "../api/apiClient";
 import { useState } from "react";
 import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
+import postAuth from "../api/postAuth";
 
 export default () => {
   const [ email, setEmail ] = useState('');
@@ -23,21 +23,7 @@ export default () => {
     setSubmitting(true);
 
     try {
-      const loginRes = await apiClient.post('/auth', { email, password });
-      const token = loginRes?.data?.token;
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      };
-      const meRes = await apiClient.get('/me', config);
-
-      setAuth({
-        email,
-        permissions: meRes?.data?.permissions,
-        token,
-        expires: loginRes?.data?.expires,
-      });
+      setAuth(await postAuth({ email, password }));
       setEmail('');
       setPassword('');
       navigate(from, { replace: true });

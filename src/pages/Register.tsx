@@ -1,12 +1,13 @@
 import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Checkbox, Button, Typography } from "@material-tailwind/react";
-import apiClient from "../api/apiClient";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import EmailSection from "../components/forms/EmailSection";
 import PasswordSection from "../components/forms/PasswordSection";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
+import postMe from "../api/postMe";
+import postAuth from "../api/postAuth";
 
 export default () => {
   const [ email, setEmail ] = useState('');
@@ -24,15 +25,8 @@ export default () => {
     setSubmitting(true);
 
     try {
-      const registerRes = await apiClient.post('/me', { email, password });
-      const loginRes = await apiClient.post('/auth', { email, password });
-
-      setAuth({
-        email,
-        permissions: registerRes?.data?.permissions,
-        token: loginRes?.data?.token,
-        expires: loginRes?.data?.expires,
-      });
+      await postMe({ email, password });
+      setAuth(await postAuth({ email, password }));
       setEmail('');
       setPassword('');
       navigate(from, { replace: true });

@@ -1,13 +1,14 @@
 import {
   ArrowRightStartOnRectangleIcon, Bars3Icon, XMarkIcon, UserPlusIcon, ArrowRightEndOnRectangleIcon, UserCircleIcon,
 } from "@heroicons/react/24/solid";
-import { CheckCircleIcon} from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import classNames from "../utils/classNames";
 import React from "react";
 import { Navbar, Collapse, Typography, Button, IconButton } from "@material-tailwind/react";
 import useAuth from "../hooks/useAuth";
 import Route from "../enum/Route";
+import Spinner from "./Spinner.tsx";
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -16,7 +17,7 @@ const navigation = [
 
 export default function NavBar() {
   const [ openNav, setOpenNav ] = React.useState(false);
-  const { auth, setAuth } = useAuth();
+  const { meLoading, me, setAuth } = useAuth();
 
   React.useEffect(() => {
     window.addEventListener(
@@ -50,47 +51,64 @@ export default function NavBar() {
         </Typography>
       })}
       {
-        auth
-          ? <>
-            <span className="inline-flex items-center">
-              <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
-              {auth.email}
-            </span>
-            <Button
-              size="sm"
-              className="rounded capitalize"
-              onClick={() => setAuth(undefined)}>
-              <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
-            </Button>
-          </>
-          : <>
-            <Typography
-              as="li"
-              variant="small"
-              className="p-1 font-normal">
-              <Link
-                to={Route.LOGIN}>
-                <Button
-                  size="md"
-                  className="rounded capitalize">
-                  <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-                </Button>
-              </Link>
-            </Typography>
-            <Typography
-              as="li"
-              variant="small"
-              className="p-1 font-normal">
-              <Link
-                to={Route.REGISTER}>
-                <Button
-                  size="sm"
-                  className="rounded capitalize">
-                  <UserPlusIcon className="inline-block h-4 w-4"/> Register
-                </Button>
-              </Link>
-            </Typography>
-          </>
+        meLoading
+          ? <Typography
+            as="li"
+            variant="small"
+            className="p-1 font-normal">
+            <Spinner/>
+          </Typography>
+          : (
+            me
+              ? <>
+                <Typography
+                  as="li"
+                  variant="small"
+                  className="p-1 font-normal truncate">
+                  <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
+                  {me.email}
+                </Typography>
+                <Typography
+                  as="li"
+                  variant="small"
+                  className="p-1 font-normal">
+                  <Button
+                    size="sm"
+                    className="rounded capitalize font-normal"
+                    onClick={() => setAuth(undefined)}>
+                    <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
+                  </Button>
+                </Typography>
+              </>
+              : <>
+                <Typography
+                  as="li"
+                  variant="small"
+                  className="p-1 font-normal">
+                  <Link
+                    to={Route.LOGIN}>
+                    <Button
+                      size="md"
+                      className="rounded capitalize font-normal">
+                      <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
+                    </Button>
+                  </Link>
+                </Typography>
+                <Typography
+                  as="li"
+                  variant="small"
+                  className="p-1 font-normal">
+                  <Link
+                    to={Route.REGISTER}>
+                    <Button
+                      size="sm"
+                      className="rounded capitalize font-normal">
+                      <UserPlusIcon className="inline-block h-4 w-4"/> Register
+                    </Button>
+                  </Link>
+                </Typography>
+              </>
+          )
       }
     </ul>
   );
@@ -100,11 +118,11 @@ export default function NavBar() {
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link
           to={Route.HOME}
-          className="inline-flex items-center w-3/12">
+          className="inline-flex items-center w-2/12">
           <CheckCircleIcon className="h-12 w-12" alt="ExamMe"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
-          <div className="mr-4 hidden lg:block">{navList}</div>
+          <div className="hidden lg:block">{navList}</div>
           <IconButton
             variant="text"
             className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
