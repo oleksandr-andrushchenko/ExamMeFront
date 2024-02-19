@@ -1,7 +1,7 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import classNames from "../../utils/classNames";
+import classNames from "../utils/classNames";
 
 interface EmailSectionProps {
   setValue: (email?: string) => void,
@@ -22,7 +22,8 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
   useEffect(() => {
     setValue(email !== '' && valid ? email : undefined);
     setError(email !== '' && !valid);
-  }, [ email, valid ]);``
+  }, [ email, valid ]);
+  ``
   useEffect(() => {
     if (error && !focused) {
       setDisplayError(true);
