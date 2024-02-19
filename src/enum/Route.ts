@@ -8,7 +8,6 @@ enum Route {
   LOGIN = '/login',
   REGISTER = '/register',
   TERMS_AND_CONDITIONS = '/terms-and-conditions',
-  UNAUTHORIZED = '/unauthorized',
 }
 
 export default Route;

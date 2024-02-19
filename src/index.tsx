@@ -12,7 +12,6 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import AuthProvider from "./context/AuthProvider";
-import Unauthorized from "./pages/Unauthorized";
 import AddCategory from "./pages/AddCategory";
 import RequireAuth from "./components/RequireAuth";
 import Permission from "./enum/Permission";
@@ -34,7 +33,6 @@ const router = createBrowserRouter(
       <Route path={Path.LOGIN} element={<Login/>}/>
       <Route path={Path.REGISTER} element={<Register/>}/>
       <Route path={Path.TERMS_AND_CONDITIONS} element={<TermsAndConditions/>}/>
-      <Route path={Path.UNAUTHORIZED} element={<Unauthorized/>}/>
       <Route path="*" element={<NotFound/>}/>
     </Route>
   )

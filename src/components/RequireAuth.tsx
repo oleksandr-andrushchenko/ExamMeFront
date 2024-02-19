@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import Permission from "../enum/Permission";
 import Route from "../enum/Route";
 import Spinner from "./Spinner";
+import Unauthorized from "../pages/Unauthorized";
 
 interface RequireAuthParams {
   permission: Permission,
@@ -19,7 +20,7 @@ export default function RequireAuth({ permission }: RequireAuthParams) {
         checkAuth(permission)
           ? <Outlet/>
           : me
-            ? <Navigate to={Route.UNAUTHORIZED} state={{ from: location }} replace/>
+            ? <Unauthorized/>
             : <Navigate to={Route.LOGIN} state={{ from: location }} replace/>
       )
   );
