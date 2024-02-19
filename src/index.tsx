@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
-import getCategories from "./api/getCategories";
 import getCategoryAndQuestions from "./loaders/getCategoryAndQuestions";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -25,7 +24,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Layout/>}>
       <Route path={Path.HOME} element={<Home/>}/>
-      <Route path={Path.CATEGORIES} element={<Categories/>} loader={getCategories}/>
+      <Route path={Path.CATEGORIES} element={<Categories/>}/>
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
         <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
       </Route>

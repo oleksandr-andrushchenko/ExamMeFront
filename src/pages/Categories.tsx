@@ -1,16 +1,21 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, List, ListItem, Typography } from '@material-tailwind/react';
 import Category from "../schema/Category";
 import Route from "../enum/Route";
 import useAuth from "../hooks/useAuth";
 import { Squares2X2Icon, SquaresPlusIcon } from "@heroicons/react/24/solid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Permission from "../enum/Permission";
-import Spinner from "../components/Spinner.tsx";
+import Spinner from "../components/Spinner";
+import getCategories from "../api/getCategories";
 
 export default () => {
-  const categories = useLoaderData() as Category[];
+  const [ categories, setCategories ] = useState<Category[] | undefined>(undefined);
   const { authLoading, checkAuth } = useAuth();
+
+  useEffect(() => {
+    getCategories().then((categories) => setCategories(categories))
+  }, [])
 
   return (
     <>
@@ -21,7 +26,7 @@ export default () => {
         Available categories
       </Typography>
 
-      <List>
+      {categories === undefined ? <Spinner/> : <List>
         {categories.map(category => {
           return <ListItem key={category.id}>
             <Link
@@ -31,11 +36,9 @@ export default () => {
             </Link>
           </ListItem>;
         })}
-      </List>
+      </List>}
 
-      {authLoading
-        ? <Spinner/>
-        : checkAuth(Permission.CREATE_CATEGORY) && <Link
+      {authLoading ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
         to={Route.ADD_CATEGORY}>
         <Button
           size="sm"
