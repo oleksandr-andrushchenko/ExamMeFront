@@ -21,7 +21,7 @@ export default function AuthProvider({ children }) {
       return false;
     }
 
-    userPermissions = userPermissions ? userPermissions : me?.permissions;
+    userPermissions = userPermissions ? userPermissions : me.permissions;
 
     if (userPermissions.indexOf(Permission.ALL) !== -1) {
       return true;
@@ -46,10 +46,10 @@ export default function AuthProvider({ children }) {
     if (auth) {
       client.defaults.headers['Authorization'] = `Bearer ${auth.token}`;
       localStorage.setItem('auth', JSON.stringify(auth));
-      Promise.all<Me | PermissionHierarchy>([ getMe(), getPermissionHierarchy() ])
+      Promise.all<any>([ getMe(), getPermissionHierarchy() ])
         .then(([ me, permissionHierarchy ]) => {
-          setMe(me as Me);
-          setPermissionHierarchy(permissionHierarchy as PermissionHierarchy);
+          setMe(me);
+          setPermissionHierarchy(permissionHierarchy);
         })
         .catch(() => setAuth(undefined))
       ;
