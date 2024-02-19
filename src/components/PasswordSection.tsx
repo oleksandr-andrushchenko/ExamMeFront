@@ -91,8 +91,8 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
           )}>
           <ExclamationCircleIcon className="w-1/12"/>
           <span className="w-11/12">
-          Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special character
-        </span>
+            Should be from 8 to 24 characters long, uppercase and lowercase letters, a number and a special character
+          </span>
         </Typography>
       </div>
 
@@ -129,8 +129,8 @@ export default function PasswordSection({ setValue, confirm = false }: PasswordS
             )}>
             <ExclamationCircleIcon className="w-1/12"/>
             <span className="w-11/12">
-                Should match the password
-              </span>
+              Should match the password
+            </span>
           </Typography>
         </div>
       }
