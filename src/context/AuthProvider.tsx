@@ -10,11 +10,16 @@ import { AuthHook } from "../hooks/useAuth";
 
 export const AuthContext = createContext({});
 
+interface Data {
+  me: Me | undefined,
+  permissionHierarchy: PermissionHierarchy | undefined,
+}
+
 export default function AuthProvider({ children }) {
   const cacheAuth = localStorage.getItem('auth');
   const [ auth, setAuth ] = useState<Auth | undefined>(cacheAuth ? JSON.parse(cacheAuth) : undefined);
-  const [ me, setMe ] = useState<Me | undefined>();
-  const [ permissionHierarchy, setPermissionHierarchy ] = useState<PermissionHierarchy | undefined>();
+  const defaultData = { me: undefined, permissionHierarchy: undefined };
+  const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData);
 
   const checkAuth = function (permission: Permission, userPermissions: Permission[] = undefined): boolean {
     if (!auth || !me || !permissionHierarchy) {
@@ -47,16 +52,13 @@ export default function AuthProvider({ children }) {
       client.defaults.headers['Authorization'] = `Bearer ${auth.token}`;
       localStorage.setItem('auth', JSON.stringify(auth));
       Promise.all<any>([ getMe(), getPermissionHierarchy() ])
-        .then(([ me, permissionHierarchy ]) => {
-          setMe(me);
-          setPermissionHierarchy(permissionHierarchy);
-        })
+        .then(([ me, permissionHierarchy ]) => setData({ me, permissionHierarchy }))
         .catch(() => setAuth(undefined))
       ;
     } else {
       delete client.defaults.headers['Authorization'];
       localStorage.removeItem('auth');
-      setMe(undefined);
+      setData(defaultData);
     }
   }, [ auth ]);
 
