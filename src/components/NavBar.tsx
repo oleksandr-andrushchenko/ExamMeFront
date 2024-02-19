@@ -17,7 +17,7 @@ const navigation = [
 
 export default function NavBar() {
   const [ openNav, setOpenNav ] = React.useState(false);
-  const { authLoading, me, setAuth } = useAuth();
+  const { auth, me, setAuth } = useAuth();
 
   React.useEffect(() => {
     window.addEventListener(
@@ -51,7 +51,7 @@ export default function NavBar() {
         </Typography>
       })}
       {
-        authLoading
+        auth && me === undefined
           ? <Typography
             as="li"
             variant="small"

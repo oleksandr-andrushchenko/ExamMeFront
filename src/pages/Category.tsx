@@ -23,7 +23,7 @@ interface Data {
 export default () => {
   const { categoryId }: Params = useParams<Params>();
   const [ { category, questions }, setData ] = useState<Data>({ category: undefined, questions: undefined });
-  const { authLoading, checkAuth } = useAuth();
+  const { auth, me, checkAuth } = useAuth();
 
   useEffect(() => {
     Promise.all<any>([ getCategory(categoryId), getCategoryQuestions(categoryId) ])
@@ -54,9 +54,7 @@ export default () => {
         })}
       </List>}
 
-      {authLoading
-        ? <Spinner/>
-        : checkAuth(Permission.CREATE_QUESTION) && <Link
+      {auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <Link
         to={Route.ADD_QUESTION.replace(':categoryId', categoryId)}>
         <Button
           size="sm"

@@ -11,7 +11,7 @@ import getCategories from "../api/getCategories";
 
 export default () => {
   const [ categories, setCategories ] = useState<Category[] | undefined>(undefined);
-  const { authLoading, checkAuth } = useAuth();
+  const { auth, me, checkAuth } = useAuth();
 
   useEffect(() => {
     getCategories().then((categories) => setCategories(categories))
@@ -38,7 +38,7 @@ export default () => {
         })}
       </List>}
 
-      {authLoading ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
+      {auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
         to={Route.ADD_CATEGORY}>
         <Button
           size="sm"

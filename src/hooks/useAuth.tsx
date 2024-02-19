@@ -7,7 +7,6 @@ import Permission from "../enum/Permission";
 export interface AuthHook {
   auth: Auth | undefined,
   setAuth: (auth: Auth | undefined) => void,
-  authLoading: boolean,
   me: Me | undefined,
   checkAuth: (permission: Permission) => boolean,
 }
