@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, createRoutesFromElements, LoaderFunction, Route, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Categories from "./pages/Categories";
 import ThemeProvider from "./components/ThemeProvider";
 import Category from "./pages/Category";
-import getCategoryAndQuestions from "./loaders/getCategoryAndQuestions";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
@@ -28,7 +27,7 @@ const router = createBrowserRouter(
       <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
         <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
       </Route>
-      <Route path={Path.CATEGORY} element={<Category/>} loader={getCategoryAndQuestions as LoaderFunction}/>
+      <Route path={Path.CATEGORY} element={<Category/>}/>
       <Route element={<RequireAuth permission={Permission.CREATE_QUESTION}/>}>
         <Route path={Path.ADD_QUESTION} element={<AddQuestion/>}/>
       </Route>
