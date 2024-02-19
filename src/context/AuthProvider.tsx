@@ -6,9 +6,15 @@ import getMe from "../api/getMe";
 import Permission from "../enum/Permission";
 import getPermissionHierarchy from "../api/getPermissionHierarchy";
 import PermissionHierarchy from "../types/PermissionHierarchy";
-import { AuthHook } from "../hooks/useAuth";
 
 export const AuthContext = createContext({});
+
+export interface AuthProviderContextValue {
+  auth: Auth | undefined,
+  setAuth: (auth: Auth | undefined) => void,
+  me: Me | undefined,
+  checkAuth: (permission: Permission) => boolean,
+}
 
 interface Data {
   me: Me | undefined,
@@ -62,7 +68,7 @@ export default function AuthProvider({ children }) {
     }
   }, [ auth ]);
 
-  const value: AuthHook = { auth, setAuth, me, checkAuth };
+  const value: AuthProviderContextValue = { auth, setAuth, me, checkAuth };
 
   return (
     <AuthContext.Provider value={value}>
