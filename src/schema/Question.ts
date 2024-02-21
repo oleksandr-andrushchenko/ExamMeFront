@@ -1,18 +1,7 @@
-interface QuestionChoice {
-  title: string,
-  correct: boolean,
-  explanation?: string,
-}
+import QuestionTransfer from "./QuestionTransfer";
 
-export default interface Question {
+export default interface Question extends QuestionTransfer {
   id: string,
-  category: string,
-  type: 'type' | 'choice',
-  difficulty: 'easy' | 'moderate' | 'difficult' | 'expert',
-  title: 'string',
-  choices?: QuestionChoice[],
-  answers?: string[],
-  explanation?: string,
   created: number,
   updated?: number,
 }
