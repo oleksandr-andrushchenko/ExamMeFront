@@ -1,6 +1,7 @@
-export default interface Category {
+import CategoryTransfer from "./CategoryTransfer";
+
+export default interface Category extends CategoryTransfer {
   id: string,
-  name: string,
   created: number,
   updated?: number,
 }
