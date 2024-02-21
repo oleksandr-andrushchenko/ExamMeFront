@@ -16,7 +16,6 @@ export default () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || Route.HOME;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,9 +23,7 @@ export default () => {
 
     try {
       setAuth(await postAuth({ email, password }));
-      setEmail('');
-      setPassword('');
-      navigate(from, { replace: true });
+      navigate((location.pathname === Route.LOGIN ? -1 : 0) as any, { replace: true });
     } catch (err) {
       console.log(err);
     } finally {
