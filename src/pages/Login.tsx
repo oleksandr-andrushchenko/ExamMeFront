@@ -34,7 +34,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.LOGIN }>Login</Link>
       </Breadcrumbs>
       <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
@@ -43,19 +44,19 @@ export default () => {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to login
       </Typography>
-      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
+      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
             method="post">
 
-        <EmailSection setValue={setEmail} focus/>
-        <PasswordSection setValue={setPassword}/>
+        <EmailSection setValue={ setEmail } focus/>
+        <PasswordSection setValue={ setPassword }/>
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!email || !password || submitting}>
-            {submitting ? 'Logging in...' : 'Login'}
+          <Button className="block rounded capitalize" type="submit" disabled={ !email || !password || submitting }>
+            { submitting ? 'Logging in...' : 'Login' }
           </Button>
           <Typography variant="small" color="gray" className="mt-4 font-normal">
-            Don't have an account?{" "}
-            <Link to={Route.REGISTER} className="font-medium text-gray-900">
+            Don't have an account?{ " " }
+            <Link to={ Route.REGISTER } className="font-medium text-gray-900">
               Register
             </Link>
           </Typography>

@@ -398,7 +398,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.CATEGORIES }>Categories</Link>
         { category === undefined ? <Spinner/> : <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }
                                                       className="capitalize">{ category.name }</Link> }

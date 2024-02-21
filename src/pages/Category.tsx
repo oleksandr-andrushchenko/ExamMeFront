@@ -33,7 +33,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.CATEGORIES }>Categories</Link>
         { category === undefined ? <Spinner/> : <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }
                                                       className="capitalize">{ category.name }</Link> }
@@ -41,33 +42,33 @@ export default () => {
       <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <CubeIcon className="inline-block h-8 w-8 mr-1"/>
         <span className="capitalize">
-          {category === undefined ? <Spinner/> : category.name}
+          { category === undefined ? <Spinner/> : category.name }
         </span>
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Available questions
       </Typography>
 
-      {questions === undefined ? <Spinner/> : <List>
-        {questions.map(question => {
-          return <ListItem key={question.id}>
+      { questions === undefined ? <Spinner/> : <List>
+        { questions.map(question => {
+          return <ListItem key={ question.id }>
             <Link
-              key={question.id}
-              to={Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id)}>
-              {question.title}
+              key={ question.id }
+              to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+              { question.title }
             </Link>
           </ListItem>;
-        })}
-      </List>}
+        }) }
+      </List> }
 
-      {auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <Link
-        to={Route.ADD_QUESTION.replace(':categoryId', categoryId)}>
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <Link
+        to={ Route.ADD_QUESTION.replace(':categoryId', categoryId) }>
         <Button
           size="sm"
           className="rounded capitalize font-normal mt-3">
           <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Question
         </Button>
-      </Link>}
+      </Link> }
     </>
   );
 }

@@ -8,7 +8,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
       </Breadcrumbs>
       <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <HomeIcon className="inline-block h-8 w-8 mr-1"/> Home

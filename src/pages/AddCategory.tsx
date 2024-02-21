@@ -43,7 +43,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.CATEGORIES }>Categories</Link>
         <Link to={ Route.ADD_CATEGORY }>Add Category</Link>
       </Breadcrumbs>
@@ -53,13 +54,13 @@ export default () => {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Create new category
       </Typography>
-      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
+      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
             method="post">
 
         <div className="flex flex-col gap-2">
           <Typography
             variant="h6"
-            color={nameError && displayNameError ? "red" : "blue-gray"}>
+            color={ nameError && displayNameError ? "red" : "blue-gray" }>
             Name
           </Typography>
           <Input
@@ -67,21 +68,21 @@ export default () => {
             type="text"
             size="lg"
             label="Name"
-            onChange={(e) => setName(e.target.value)}
-            onFocus={() => setNameFocused(true)}
-            onBlur={() => setNameFocused(false)}
-            value={name}
-            aria-invalid={nameError ? "true" : "false"}
-            error={nameError && displayNameError}
+            onChange={ (e) => setName(e.target.value) }
+            onFocus={ () => setNameFocused(true) }
+            onBlur={ () => setNameFocused(false) }
+            value={ name }
+            aria-invalid={ nameError ? "true" : "false" }
+            error={ nameError && displayNameError }
             required
           />
           <Typography
             variant="small"
             color="red"
-            className={classNames(
+            className={ classNames(
               'flex items-center gap-1 font-normal',
               nameError && displayNameError ? '' : 'hidden'
-            )}>
+            ) }>
             <ExclamationCircleIcon className="w-1/12"/>
             <span className="w-11/12">
               Should be from 2 to 24 characters long, lowercase and digits allowed
@@ -90,8 +91,8 @@ export default () => {
         </div>
 
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={!name || nameError || submitting}>
-            {submitting ? 'Adding...' : 'Add'}
+          <Button className="block rounded capitalize" type="submit" disabled={ !name || nameError || submitting }>
+            { submitting ? 'Adding...' : 'Add' }
           </Button>
         </div>
       </Form>

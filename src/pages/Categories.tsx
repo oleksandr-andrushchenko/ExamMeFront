@@ -20,7 +20,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.CATEGORIES }>Categories</Link>
       </Breadcrumbs>
       <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
@@ -30,26 +31,26 @@ export default () => {
         Available categories
       </Typography>
 
-      {categories === undefined ? <Spinner/> : <List>
-        {categories.map(category => {
-          return <ListItem key={category.id}>
+      { categories === undefined ? <Spinner/> : <List>
+        { categories.map(category => {
+          return <ListItem key={ category.id }>
             <Link
-              key={category.id}
-              to={Route.CATEGORY.replace(':categoryId', category.id)}>
-              {category.name}
+              key={ category.id }
+              to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+              { category.name }
             </Link>
           </ListItem>;
-        })}
-      </List>}
+        }) }
+      </List> }
 
-      {auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
-        to={Route.ADD_CATEGORY}>
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
+        to={ Route.ADD_CATEGORY }>
         <Button
           size="sm"
           className="rounded capitalize font-normal mt-3">
           <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Category
         </Button>
-      </Link>}
+      </Link> }
     </>
   );
 }

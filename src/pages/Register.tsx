@@ -36,7 +36,8 @@ export default () => {
   return (
     <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon
+          className="inline-block w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.REGISTER }>Register</Link>
       </Breadcrumbs>
       <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
@@ -45,11 +46,11 @@ export default () => {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Enter your details to register
       </Typography>
-      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={handleSubmit}
+      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
             method="post">
 
-        <EmailSection setValue={setEmail} focus/>
-        <PasswordSection setValue={setPassword} confirm/>
+        <EmailSection setValue={ setEmail } focus/>
+        <PasswordSection setValue={ setPassword } confirm/>
 
         <div className="-mt-4">
           <Checkbox
@@ -59,23 +60,23 @@ export default () => {
                 color="gray"
                 className="flex items-center font-normal">
                 I agree the
-                <Link to={Route.TERMS_AND_CONDITIONS}>Terms and Conditions</Link>
+                <Link to={ Route.TERMS_AND_CONDITIONS }>Terms and Conditions</Link>
               </Typography>
             }
-            onChange={(e) => setTerms(e.target.checked)}
+            onChange={ (e) => setTerms(e.target.checked) }
             required
           />
         </div>
 
         <div className="-mt-4">
           <Button className="block rounded capitalize" type="submit"
-                  disabled={!email || !password || !terms || submitting}>
-            {submitting ? 'Registering in...' : 'Register'}
+                  disabled={ !email || !password || !terms || submitting }>
+            { submitting ? 'Registering in...' : 'Register' }
           </Button>
 
           <Typography variant="small" color="gray" className="mt-4 font-normal">
-            Already have an account?{" "}
-            <Link to={Route.LOGIN} className="font-medium text-gray-900">
+            Already have an account?{ " " }
+            <Link to={ Route.LOGIN } className="font-medium text-gray-900">
               Login
             </Link>
           </Typography>
