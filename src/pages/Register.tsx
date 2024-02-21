@@ -1,4 +1,4 @@
-import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Form, Link, useNavigate } from 'react-router-dom';
 import { Checkbox, Button, Typography } from "@material-tailwind/react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
@@ -17,8 +17,6 @@ export default () => {
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +25,7 @@ export default () => {
     try {
       await postMe({ email, password });
       setAuth(await postAuth({ email, password }));
-      setEmail('');
-      setPassword('');
-      navigate(from, { replace: true });
+      navigate(Route.HOME, { replace: true });
     } catch (err) {
       console.log(err);
     } finally {
