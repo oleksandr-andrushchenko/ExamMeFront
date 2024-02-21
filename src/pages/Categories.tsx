@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { Button, List, ListItem, Typography } from '@material-tailwind/react';
+import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailwind/react';
 import Category from "../schema/Category";
 import Route from "../enum/Route";
 import useAuth from "../hooks/useAuth";
-import { Squares2X2Icon, SquaresPlusIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, Squares2X2Icon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import Permission from "../enum/Permission";
 import Spinner from "../components/Spinner";
@@ -19,7 +19,11 @@ export default () => {
 
   return (
     <>
-      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+      <Breadcrumbs>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.CATEGORIES }>Categories</Link>
+      </Breadcrumbs>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <Squares2X2Icon className="inline-block h-8 w-8 mr-1"/> Categories
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">

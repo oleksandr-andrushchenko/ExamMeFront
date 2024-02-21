@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
-import { Button, List, ListItem, Typography } from "@material-tailwind/react";
+import { Breadcrumbs, Button, List, ListItem, Typography } from "@material-tailwind/react";
 import Route from "../enum/Route";
-import { CubeIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
+import { CubeIcon, HomeIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import Permission from "../enum/Permission";
@@ -32,7 +32,13 @@ export default () => {
 
   return (
     <>
-      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+      <Breadcrumbs>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.CATEGORIES }>Categories</Link>
+        { category === undefined ? <Spinner/> : <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }
+                                                      className="capitalize">{ category.name }</Link> }
+      </Breadcrumbs>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <CubeIcon className="inline-block h-8 w-8 mr-1"/>
         <span className="capitalize">
           {category === undefined ? <Spinner/> : category.name}

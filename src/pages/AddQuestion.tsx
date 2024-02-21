@@ -1,8 +1,8 @@
-import { Button, Checkbox, Input, Option, Select, Typography } from "@material-tailwind/react";
+import { Breadcrumbs, Button, Checkbox, Input, Option, Select, Typography } from "@material-tailwind/react";
 import {
-  ExclamationCircleIcon, PlusCircleIcon, SquaresPlusIcon, XMarkIcon,
+  ExclamationCircleIcon, HomeIcon, PlusCircleIcon, SquaresPlusIcon, XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { Form, useNavigate, useParams } from "react-router-dom";
+import { Form, Link, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Route from "../enum/Route";
 import postQuestion from "../api/postQuestion";
@@ -14,6 +14,9 @@ import QuestionTransfer, {
 } from "../schema/QuestionTransfer";
 import InputState, { defaultInputState } from "../types/InputState";
 import normalizeApiErrors from "../utils/normalizeApiErrors";
+import Category from "../schema/Category";
+import getCategory from "../api/getCategory";
+import Spinner from "../components/Spinner";
 
 interface Params {
   categoryId?: string | undefined,
@@ -29,6 +32,7 @@ type ChoiceInputState = {
 
 export default () => {
   const { categoryId }: Params = useParams<Params>();
+  const [ category, setCategory ] = useState<Category>();
   const navigate = useNavigate();
 
   const [ title, setTitle ] = useState<InputState>({ ...defaultInputState });
@@ -386,11 +390,21 @@ export default () => {
     }
   }
 
+  useEffect(() => {
+    getCategory(categoryId as string).then((category) => setCategory(category))
+  }, [])
   useEffect(() => setDisabled(isDisabled()), [ title, type, choices, answers, difficulty ])
 
   return (
     <>
-      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+      <Breadcrumbs>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.CATEGORIES }>Categories</Link>
+        { category === undefined ? <Spinner/> : <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }
+                                                      className="capitalize">{ category.name }</Link> }
+        <Link to={ Route.ADD_QUESTION.replace(':categoryId', categoryId as string) }>Add Question</Link>
+      </Breadcrumbs>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <SquaresPlusIcon className="inline-block h-8 w-8 mr-1"/> Add Question
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">

@@ -1,8 +1,8 @@
-import { Button, Input, Typography } from "@material-tailwind/react";
-import { ExclamationCircleIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
-import { Form, useNavigate } from "react-router-dom";
+import { Breadcrumbs, Button, Input, Typography } from "@material-tailwind/react";
+import { ExclamationCircleIcon, HomeIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
+import { Form, Link, useNavigate } from "react-router-dom";
 import Route from "../enum/Route";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "../utils/classNames";
 import postCategory from "../api/postCategory";
 
@@ -42,7 +42,12 @@ export default () => {
 
   return (
     <>
-      <Typography variant="h1" color="blue-gray" className="flex items-baseline">
+      <Breadcrumbs>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="inline-block w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.CATEGORIES }>Categories</Link>
+        <Link to={ Route.ADD_CATEGORY }>Add Category</Link>
+      </Breadcrumbs>
+      <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
         <SquaresPlusIcon className="inline-block h-8 w-8 mr-1"/> Add Category
       </Typography>
       <Typography variant="small" color="gray" className="mt-1 font-normal">
