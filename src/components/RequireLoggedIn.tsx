@@ -13,6 +13,6 @@ export default ({ permission }: RequireAuthParams) => {
   const { auth, me, checkAuth } = useAuth();
 
   return (
-    auth && me === undefined ? <Spinner/> : (checkAuth(permission) ? <Outlet/> : (me ? <Unauthorized/> : <Login/>))
+    auth && me === undefined ? <Spinner/> : (checkAuth(permission) ? <Outlet/> : (me ? <Unauthorized/> : <Login refresh/>))
   );
 }
