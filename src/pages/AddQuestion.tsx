@@ -59,7 +59,7 @@ export default () => {
     setTitle({ ...title, ...{ focused, error, displayError } });
   }
   const setTitleError = (error: string) => {
-    const displayError = true;
+    const displayError = !!error;
     setTitle({ ...title, ...{ error, displayError } });
   }
 
@@ -83,7 +83,7 @@ export default () => {
     setType({ ...type, ...{ focused, error, displayError } });
   }
   const setTypeError = (error: string) => {
-    const displayError = true;
+    const displayError = !!error;
     setType({ ...type, ...{ error, displayError } });
   }
 
@@ -259,7 +259,7 @@ export default () => {
     setDifficulty({ ...difficulty, ...{ focused, error, displayError } });
   }
   const setDifficultyError = (error: string) => {
-    const displayError = true;
+    const displayError = !!error;
     setDifficulty({ ...difficulty, ...{ error, displayError } });
   }
 
