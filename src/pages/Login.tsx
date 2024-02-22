@@ -9,7 +9,6 @@ import Route from "../enum/Route";
 import postAuth from "../api/postAuth";
 import normalizeApiErrors from "../utils/normalizeApiErrors";
 
-// todo: pass redirect path as param
 export default () => {
   const [ email, setEmail ] = useState('');
   const [ emailError, setEmailError ] = useState('');
@@ -27,7 +26,7 @@ export default () => {
     setSubmitting(true);
 
     try {
-      setAuth(await postAuth({ email:email, password }));
+      setAuth(await postAuth({ email, password }));
       navigate((location.pathname === Route.LOGIN ? -1 : 0) as any, { replace: true });
     } catch (err) {
       const errors = normalizeApiErrors(err);
