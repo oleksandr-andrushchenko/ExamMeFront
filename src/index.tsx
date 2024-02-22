@@ -20,20 +20,20 @@ import AddQuestion from "./pages/AddQuestion";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<Layout/>}>
-      <Route path={Path.HOME} element={<Home/>}/>
-      <Route path={Path.CATEGORIES} element={<Categories/>}/>
-      <Route element={<RequireAuth permission={Permission.CREATE_CATEGORY}/>}>
-        <Route path={Path.ADD_CATEGORY} element={<AddCategory/>}/>
+    <Route element={ <Layout/> }>
+      <Route path={ Path.HOME } element={ <Home/> }/>
+      <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
+      <Route element={ <RequireAuth permission={ Permission.CREATE_CATEGORY }/> }>
+        <Route path={ Path.ADD_CATEGORY } element={ <AddCategory/> }/>
       </Route>
-      <Route path={Path.CATEGORY} element={<Category/>}/>
-      <Route element={<RequireAuth permission={Permission.CREATE_QUESTION}/>}>
-        <Route path={Path.ADD_QUESTION} element={<AddQuestion/>}/>
+      <Route path={ Path.CATEGORY } element={ <Category/> }/>
+      <Route element={ <RequireAuth permission={ Permission.CREATE_QUESTION }/> }>
+        <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
       </Route>
-      <Route path={Path.LOGIN} element={<Login/>}/>
-      <Route path={Path.REGISTER} element={<Register/>}/>
-      <Route path={Path.TERMS_AND_CONDITIONS} element={<TermsAndConditions/>}/>
-      <Route path="*" element={<NotFound/>}/>
+      <Route path={ Path.LOGIN } element={ <Login/> }/>
+      <Route path={ Path.REGISTER } element={ <Register/> }/>
+      <Route path={ Path.TERMS_AND_CONDITIONS } element={ <TermsAndConditions/> }/>
+      <Route path="*" element={ <NotFound/> }/>
     </Route>
   )
 );
@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
       <ThemeProvider>
-        <RouterProvider router={router}/>
+        <RouterProvider router={ router }/>
       </ThemeProvider>
     </AuthProvider>
   </React.StrictMode>,
