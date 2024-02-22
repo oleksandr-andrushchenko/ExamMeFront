@@ -17,6 +17,7 @@ import RequireLoggedIn from "./components/RequireLoggedIn";
 import Permission from "./enum/Permission";
 import { default as Path } from "./enum/Route";
 import AddQuestion from "./pages/AddQuestion";
+import RequireLoggedOut from "./components/RequireLoggedOut";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,8 +31,12 @@ const router = createBrowserRouter(
       <Route element={ <RequireLoggedIn permission={ Permission.CREATE_QUESTION }/> }>
         <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
       </Route>
-      <Route path={ Path.LOGIN } element={ <Login/> }/>
-      <Route path={ Path.REGISTER } element={ <Register/> }/>
+      <Route element={ <RequireLoggedOut/> }>
+        <Route path={ Path.LOGIN } element={ <Login/> }/>
+      </Route>
+      <Route element={ <RequireLoggedOut/> }>
+        <Route path={ Path.REGISTER } element={ <Register/> }/>
+      </Route>
       <Route path={ Path.TERMS_AND_CONDITIONS } element={ <TermsAndConditions/> }/>
       <Route path="*" element={ <NotFound/> }/>
     </Route>
