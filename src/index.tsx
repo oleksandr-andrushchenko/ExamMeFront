@@ -13,7 +13,7 @@ import NotFound from "./pages/NotFound";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import AuthProvider from "./context/AuthProvider";
 import AddCategory from "./pages/AddCategory";
-import RequireAuth from "./components/RequireAuth";
+import RequireLoggedIn from "./components/RequireLoggedIn";
 import Permission from "./enum/Permission";
 import { default as Path } from "./enum/Route";
 import AddQuestion from "./pages/AddQuestion";
@@ -23,11 +23,11 @@ const router = createBrowserRouter(
     <Route element={ <Layout/> }>
       <Route path={ Path.HOME } element={ <Home/> }/>
       <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
-      <Route element={ <RequireAuth permission={ Permission.CREATE_CATEGORY }/> }>
+      <Route element={ <RequireLoggedIn permission={ Permission.CREATE_CATEGORY }/> }>
         <Route path={ Path.ADD_CATEGORY } element={ <AddCategory/> }/>
       </Route>
       <Route path={ Path.CATEGORY } element={ <Category/> }/>
-      <Route element={ <RequireAuth permission={ Permission.CREATE_QUESTION }/> }>
+      <Route element={ <RequireLoggedIn permission={ Permission.CREATE_QUESTION }/> }>
         <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
       </Route>
       <Route path={ Path.LOGIN } element={ <Login/> }/>
