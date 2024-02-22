@@ -24,5 +24,5 @@ export default (err): object => {
     }
   }
 
-  return { unknown: data.name };
+  return { unknown: data?.message ?? data.name };
 }
