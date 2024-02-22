@@ -2,39 +2,57 @@ import { Breadcrumbs, Button, Input, Typography } from "@material-tailwind/react
 import { ExclamationCircleIcon, HomeIcon, SquaresPlusIcon } from "@heroicons/react/24/solid";
 import { Form, Link, useNavigate } from "react-router-dom";
 import Route from "../enum/Route";
-import React, { useEffect, useState } from "react";
-import classNames from "../utils/classNames";
+import React, { useState } from "react";
 import postCategory from "../api/postCategory";
+import InputState, { defaultInputState } from "../types/InputState";
+import normalizeApiErrors from "../utils/normalizeApiErrors";
 
 export default () => {
   const navigate = useNavigate();
 
-  const NAME_REGEX = /^[a-zA-Z0-9 ]{2,24}$/;
+  const [ name, setName ] = useState<InputState>({ ...defaultInputState });
+  const getNameError = (value: string | undefined = undefined) => {
+    value = value === undefined ? name.value : value;
 
-  const [ name, setName ] = useState('');
-  const [ nameValid, setNameValid ] = useState(true);
-  const [ nameFocused, setNameFocused ] = useState(false);
-  const [ nameError, setNameError ] = useState(false);
-  const [ displayNameError, setDisplayNameError ] = useState(false);
-  const [ submitting, setSubmitting ] = useState(false);
-
-  useEffect(() => setNameValid(NAME_REGEX.test(name)), [ name ])
-  useEffect(() => setNameError(name !== '' && !nameValid), [ name, nameValid ])
-  useEffect(() => {
-    if (nameError && !nameFocused) {
-      setDisplayNameError(true);
+    if (!value) {
+      return 'Should not be empty';
     }
-  }, [ nameFocused ])
+
+    if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
+      return 'Should be from 2 to 24 characters long, lowercase and digits allowed';
+    }
+
+    return '';
+  }
+  const setNameValue = (value: string) => {
+    const error = getNameError(value);
+    setName({ ...name, ...{ value, error } });
+  }
+  const setNameFocused = (focused: boolean) => {
+    const error = focused ? name.error : getNameError();
+    const displayError = error && !focused ? true : name.displayError;
+    setName({ ...name, ...{ focused, error, displayError } });
+  }
+  const setNameError = (error: string) => {
+    const displayError = !!error;
+    setName({ ...name, ...{ error, displayError } });
+  }
+
+  const [ submitting, setSubmitting ] = useState(false);
+  const [ error, setError ] = useState<string>('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
-      const category = await postCategory({ name });
+      const category = await postCategory({ name: name.value });
       navigate(Route.CATEGORY.replace(':categoryId', category.id));
     } catch (err) {
-      console.log(err);
+      const errors = normalizeApiErrors(err);
+      console.log(errors);
+      setNameError(errors?.title);
+      setError(errors?.unknown);
     } finally {
       setSubmitting(false);
     }
@@ -60,7 +78,7 @@ export default () => {
         <div className="flex flex-col gap-2">
           <Typography
             variant="h6"
-            color={ nameError && displayNameError ? "red" : "blue-gray" }>
+            color={ name.error && name.displayError ? "red" : "blue-gray" }>
             Name
           </Typography>
           <Input
@@ -68,30 +86,34 @@ export default () => {
             type="text"
             size="lg"
             label="Name"
-            onChange={ (e) => setName(e.target.value) }
+            onChange={ (e) => setNameValue(e.target.value) }
             onFocus={ () => setNameFocused(true) }
             onBlur={ () => setNameFocused(false) }
-            value={ name }
-            aria-invalid={ nameError ? "true" : "false" }
-            error={ nameError && displayNameError }
+            value={ name.value }
+            aria-invalid={ name.error ? "true" : "false" }
+            error={ !!name.error && name.displayError }
             required
           />
-          <Typography
+          { name.error && name.displayError && <Typography
             variant="small"
             color="red"
-            className={ classNames(
-              'flex items-center gap-1 font-normal',
-              nameError && displayNameError ? '' : 'hidden'
-            ) }>
+            className="flex items-center gap-1 font-normal">
             <ExclamationCircleIcon className="w-1/12"/>
-            <span className="w-11/12">
-              Should be from 2 to 24 characters long, lowercase and digits allowed
-            </span>
-          </Typography>
+            <span className="w-11/12">{ name.error }</span>
+          </Typography> }
         </div>
 
+        { error && <Typography
+          variant="small"
+          color="red"
+          className="flex items-center gap-1 font-normal">
+          <ExclamationCircleIcon className="w-1/12"/>
+          <span className="w-11/12">{ error }</span>
+        </Typography> }
+
         <div>
-          <Button className="block rounded capitalize" type="submit" disabled={ !name || nameError || submitting }>
+          <Button className="block rounded capitalize" type="submit"
+                  disabled={ !name.value || !!name.error || submitting }>
             { submitting ? 'Adding...' : 'Add' }
           </Button>
         </div>
