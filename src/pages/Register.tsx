@@ -10,7 +10,6 @@ import postMe from "../api/postMe";
 import postAuth from "../api/postAuth";
 import normalizeApiErrors from "../utils/normalizeApiErrors";
 
-// todo: pass redirect path as param
 export default () => {
   const [ email, setEmail ] = useState('');
   const [ emailError, setEmailError ] = useState('');
