@@ -1,34 +1,46 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import classNames from "../utils/classNames";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import InputState, { defaultInputState } from "../types/InputState";
 
 interface EmailSectionProps {
   setValue: (email?: string) => void,
+  error: string,
   focus?: boolean,
 }
 
-export default function EmailSection({ setValue, focus = false }: EmailSectionProps) {
+export default function EmailSection({ setValue, error, focus = false }: EmailSectionProps) {
 
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [ email, setEmail ] = useState<InputState>({ ...defaultInputState });
+  const getEmailError = (value: string | undefined = undefined) => {
+    value = value === undefined ? email.value : value;
 
-  const [ email, setEmail ] = useState('');
-  const [ valid, setValid ] = useState(true);
-  const [ focused, setFocused ] = useState(false);
-  const [ displayError, setDisplayError ] = useState(false);
-  const [ error, setError ] = useState(false);
-
-  useEffect(() => setValid(EMAIL_REGEX.test(email)), [ email ]);
-  useEffect(() => {
-    setValue(email !== '' && valid ? email : undefined);
-    setError(email !== '' && !valid);
-  }, [ email, valid ]);
-  ``
-  useEffect(() => {
-    if (error && !focused) {
-      setDisplayError(true);
+    if (!value) {
+      return 'Should not be empty';
     }
-  }, [ focused ]);
+
+    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return 'Should be valid email address';
+    }
+
+    return '';
+  }
+  const setEmailValue = (value: string) => {
+    const error = getEmailError(value);
+    setValue(error ? undefined : value);
+    setEmail({ ...email, ...{ value, error } });
+  }
+  const setEmailFocused = (focused: boolean) => {
+    const error = focused ? email.error : getEmailError();
+    const displayError = error && !focused ? true : email.displayError;
+    setEmail({ ...email, ...{ focused, error, displayError } });
+  }
+  const setEmailError = (error: string) => {
+    const displayError = !!error;
+    setEmail({ ...email, ...{ error, displayError } });
+  }
+
+  useEffect(() => setEmailError(error), [ error ])
 
   const ref = useRef();
   useEffect(() => {
@@ -45,36 +57,31 @@ export default function EmailSection({ setValue, focus = false }: EmailSectionPr
     <div className="flex flex-col gap-2">
       <Typography
         variant="h6"
-        color={error && displayError ? "red" : "blue-gray"}>
+        color={ email.error && email.displayError ? "red" : "blue-gray" }>
         Your Email
       </Typography>
       <Input
-        inputRef={ref as MutableRefObject<any>}
-        name={`temp${Date.now()}`}
+        inputRef={ ref as MutableRefObject<any> }
+        name={ `temp${ Date.now() }` }
         type="number"
-        disabled={true}
+        disabled={ true }
         size="lg"
         label="Email Address"
-        onChange={(e) => setEmail(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        value={email}
-        aria-invalid={error ? "true" : "false"}
-        error={error && displayError}
+        onChange={ (e) => setEmailValue(e.target.value) }
+        onFocus={ () => setEmailFocused(true) }
+        onBlur={ () => setEmailFocused(false) }
+        value={ email.value }
+        aria-invalid={ email.error ? "true" : "false" }
+        error={ !!email.error && email.displayError }
         required
       />
-      <Typography
+      { email.error && email.displayError && <Typography
         variant="small"
         color="red"
-        className={classNames(
-          'flex items-center gap-1 font-normal',
-          error && displayError ? '' : 'hidden'
-        )}>
+        className="flex items-center gap-1 font-normal">
         <ExclamationCircleIcon className="w-1/12"/>
-        <span className="w-11/12">
-          Should be valid email address
-        </span>
-      </Typography>
+        <span className="w-11/12">{ email.error }</span>
+      </Typography> }
     </div>
   );
 }
