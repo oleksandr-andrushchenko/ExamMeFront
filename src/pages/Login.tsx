@@ -1,4 +1,4 @@
-import { Form, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Form, Link, useNavigate } from 'react-router-dom';
 import { Breadcrumbs, Button, Typography } from "@material-tailwind/react";
 import { ArrowRightEndOnRectangleIcon, ExclamationCircleIcon, HomeIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
@@ -9,7 +9,11 @@ import Route from "../enum/Route";
 import postAuth from "../api/postAuth";
 import normalizeApiErrors from "../utils/normalizeApiErrors";
 
-export default () => {
+interface Params {
+  refresh?: boolean,
+}
+
+export default ({ refresh }: Params) => {
   const [ email, setEmail ] = useState('');
   const [ emailError, setEmailError ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -19,7 +23,6 @@ export default () => {
   const { setAuth } = useAuth();
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +30,7 @@ export default () => {
 
     try {
       setAuth(await postAuth({ email, password }));
-      navigate((location.pathname === Route.LOGIN ? -1 : 0) as any, { replace: true });
+      refresh ? navigate(0) : navigate(Route.HOME, { replace: true });
     } catch (err) {
       const errors = normalizeApiErrors(err);
       console.log(errors);
