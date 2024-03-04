@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import Auth from "../schema/Auth";
 import client from "../api/client";
 import Me from "../schema/Me";
@@ -21,13 +21,13 @@ interface Data {
   permissionHierarchy: PermissionHierarchy | undefined,
 }
 
-export default function AuthProvider({ children }) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const cacheAuth = localStorage.getItem('auth');
   const [ auth, setAuth ] = useState<Auth | undefined>(cacheAuth ? JSON.parse(cacheAuth) : undefined);
   const defaultData = { me: undefined, permissionHierarchy: undefined };
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData);
 
-  const checkAuth = function (permission: Permission, userPermissions: Permission[] = undefined): boolean {
+  const checkAuth = function (permission: Permission, userPermissions: Permission[] | undefined = undefined): boolean {
     if (!auth || !me || !permissionHierarchy) {
       return false;
     }
@@ -55,7 +55,7 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     if (auth) {
-      client.defaults.headers['Authorization'] = `Bearer ${auth.token}`;
+      client.defaults.headers['Authorization'] = `Bearer ${ auth.token }`;
       localStorage.setItem('auth', JSON.stringify(auth));
       Promise.all<any>([ getMe(), getPermissionHierarchy() ])
         .then(([ me, permissionHierarchy ]) => setData({ me, permissionHierarchy }))
@@ -71,8 +71,8 @@ export default function AuthProvider({ children }) {
   const value: AuthProviderContextValue = { auth, setAuth, me, checkAuth };
 
   return (
-    <AuthContext.Provider value={value}>
-      {children}
+    <AuthContext.Provider value={ value }>
+      { children }
     </AuthContext.Provider>
   )
 }
