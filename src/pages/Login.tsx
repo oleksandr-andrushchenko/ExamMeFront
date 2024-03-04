@@ -24,7 +24,7 @@ export default ({ refresh }: Params) => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
 
@@ -34,9 +34,9 @@ export default ({ refresh }: Params) => {
     } catch (err) {
       const errors = normalizeApiErrors(err);
       console.log(errors);
-      setEmailError(errors?.email);
-      setPasswordError(errors?.password);
-      setError(errors?.unknown);
+      setEmailError(errors?.email || '');
+      setPasswordError(errors?.password || '');
+      setError(errors?.unknown || '');
     } finally {
       setSubmitting(false);
     }
