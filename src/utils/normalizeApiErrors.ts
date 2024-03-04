@@ -1,4 +1,4 @@
-export default (err): object => {
+export default (err): { [key: string]: string } => {
   const data = err.response.data;
   console.log(data);
 
