@@ -73,6 +73,7 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
         value={ email.value }
         aria-invalid={ email.error ? "true" : "false" }
         error={ !!email.error && email.displayError }
+        placeholder="Email Address"
         required
       />
       { email.error && email.displayError && <Typography
