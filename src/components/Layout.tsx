@@ -1,6 +1,6 @@
-import NavBar from './NavBar';
-import { Outlet } from 'react-router-dom';
-import { ReactNode } from 'react';
+import NavBar from './NavBar'
+import { Outlet } from 'react-router-dom'
+import { ReactNode } from 'react'
 
 export default (): ReactNode => <div className="min-h-full">
   <NavBar/>

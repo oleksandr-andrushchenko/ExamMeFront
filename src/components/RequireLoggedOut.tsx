@@ -1,14 +1,15 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import Route from "../enum/Route";
+import { Outlet, useNavigate } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
+import Route from '../enum/Route'
+import { ReactNode } from 'react'
 
-export default () => {
-  const { auth } = useAuth();
-  const navigate = useNavigate();
+export default (): ReactNode => {
+  const { auth } = useAuth()
+  const navigate = useNavigate()
 
   if (auth) {
-    navigate(Route.HOME);
+    navigate(Route.HOME)
   }
 
-  return <Outlet/>;
+  return <Outlet/>
 }

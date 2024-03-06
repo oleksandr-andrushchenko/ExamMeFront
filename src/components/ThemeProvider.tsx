@@ -1,12 +1,8 @@
-import { ThemeProvider as TailwindThemeProvider } from "@material-tailwind/react";
-import React from "react";
+import { ThemeProvider as TailwindThemeProvider } from '@material-tailwind/react'
+import { ReactNode } from 'react'
 
-const theme = {};
+const theme = {}
 
-export default function ThemeProvider({ children }) {
-  return (
-    <TailwindThemeProvider value={theme}>
-      {children}
-    </TailwindThemeProvider>
-  );
-}
+export default ({ children }): ReactNode => <TailwindThemeProvider value={ theme }>
+  { children }
+</TailwindThemeProvider>

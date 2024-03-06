@@ -15,6 +15,7 @@ import Permission from '../enum/Permission'
 import { default as Path } from '../enum/Route'
 import AddQuestion from '../pages/AddQuestion'
 import RequireLoggedOut from './RequireLoggedOut'
+import { ReactNode } from 'react'
 
 const routes = <Routes>
   <Route element={ <Layout/> }>
@@ -38,7 +39,7 @@ const routes = <Routes>
   </Route>
 </Routes>
 
-export default () => <AuthProvider>
+export default (): ReactNode => <AuthProvider>
   <ThemeProvider>
     <BrowserRouter>
       { routes }

@@ -1,8 +1,8 @@
-import { Input, Typography } from "@material-tailwind/react";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react";
-import InputState, { defaultInputState } from "../types/InputState";
-import testsRunning from '../utils/testsRunning';
+import { Input, Typography } from '@material-tailwind/react'
+import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
+import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
+import InputState, { defaultInputState } from '../types/InputState'
+import testsRunning from '../utils/testsRunning'
 
 interface EmailSectionProps {
   setValue: (email?: string) => void,
@@ -12,39 +12,39 @@ interface EmailSectionProps {
 
 export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNode => {
 
-  const [ email, setEmail ] = useState<InputState>({ ...defaultInputState });
-  const getEmailError = (value: string | undefined = undefined) => {
-    value = value === undefined ? email.value : value;
+  const [ email, setEmail ] = useState<InputState>({ ...defaultInputState })
+  const getEmailError = (value: string | undefined = undefined): string => {
+    value = value === undefined ? email.value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
     if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      return 'Should be valid email address';
+      return 'Should be valid email address'
     }
 
-    return '';
+    return ''
   }
-  const setEmailValue = (value: string) => {
-    const error = getEmailError(value);
-    setValue(error ? undefined : value);
-    setEmail({ ...email, ...{ value, error } });
+  const setEmailValue = (value: string): void => {
+    const error = getEmailError(value)
+    setValue(error ? undefined : value)
+    setEmail({ ...email, ...{ value, error } })
   }
-  const setEmailFocused = (focused: boolean) => {
-    const error = focused ? email.error : getEmailError();
-    const displayError = error && !focused ? true : email.displayError;
-    setEmail({ ...email, ...{ focused, error, displayError } });
+  const setEmailFocused = (focused: boolean): void => {
+    const error = focused ? email.error : getEmailError()
+    const displayError = error && !focused ? true : email.displayError
+    setEmail({ ...email, ...{ focused, error, displayError } })
   }
-  const setEmailError = (error: string) => {
-    const displayError = !!error;
-    setEmail({ ...email, ...{ error, displayError } });
+  const setEmailError = (error: string): void => {
+    const displayError = !!error
+    setEmail({ ...email, ...{ error, displayError } })
   }
 
-  useEffect(() => setEmailError(error), [ error ])
+  useEffect((): void => setEmailError(error), [ error ])
 
-  const ref = useRef<HTMLInputElement>();
-  useEffect(() => {
+  const ref = useRef<HTMLInputElement>()
+  useEffect((): void => {
     const restore = (): void => {
       ref.current.name = 'email'
       ref.current.type = 'email'
@@ -52,8 +52,8 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
       ref.current.disabled = false
       focus && ref.current.focus()
     }
-    testsRunning() ? restore() : setTimeout(() => restore, 300)
-  }, []);
+    testsRunning() ? restore() : setTimeout(restore, 300)
+  }, [])
 
   return (
     <div className="flex flex-col gap-2">
@@ -69,9 +69,9 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
         disabled={ true }
         size="lg"
         label="Email Address"
-        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setEmailValue(e.target.value) }
-        onFocus={ () => setEmailFocused(true) }
-        onBlur={ () => setEmailFocused(false) }
+        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setEmailValue(e.target.value) }
+        onFocus={ (): void => setEmailFocused(true) }
+        onBlur={ (): void => setEmailFocused(false) }
         value={ email.value }
         aria-invalid={ email.error ? "true" : "false" }
         error={ !!email.error && email.displayError }
@@ -86,5 +86,5 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
         <span className="w-11/12">{ email.error }</span>
       </Typography> }
     </div>
-  );
+  )
 }
