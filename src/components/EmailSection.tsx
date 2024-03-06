@@ -1,6 +1,6 @@
 import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react";
 import InputState, { defaultInputState } from "../types/InputState";
 
 interface EmailSectionProps {
@@ -9,7 +9,7 @@ interface EmailSectionProps {
   focus?: boolean,
 }
 
-export default function EmailSection({ setValue, error, focus = false }: EmailSectionProps) {
+export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNode => {
 
   const [ email, setEmail ] = useState<InputState>({ ...defaultInputState });
   const getEmailError = (value: string | undefined = undefined) => {
@@ -42,7 +42,7 @@ export default function EmailSection({ setValue, error, focus = false }: EmailSe
 
   useEffect(() => setEmailError(error), [ error ])
 
-  const ref = useRef();
+  const ref = useRef<HTMLInputElement>();
   useEffect(() => {
     setTimeout(() => {
       ref.current.name = 'email';
@@ -67,7 +67,7 @@ export default function EmailSection({ setValue, error, focus = false }: EmailSe
         disabled={ true }
         size="lg"
         label="Email Address"
-        onChange={ (e) => setEmailValue(e.target.value) }
+        onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setEmailValue(e.target.value) }
         onFocus={ () => setEmailFocused(true) }
         onBlur={ () => setEmailFocused(false) }
         value={ email.value }
