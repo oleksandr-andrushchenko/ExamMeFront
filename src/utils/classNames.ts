@@ -1,3 +1,1 @@
-export default (...classes) => {
-  return classes.filter(Boolean).join(' ');
-}
+export default (...classes): string => classes.filter(Boolean).join(' ')
