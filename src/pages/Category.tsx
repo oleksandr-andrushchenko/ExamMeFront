@@ -17,7 +17,7 @@ interface Data {
 }
 
 export default (): ReactNode => {
-  const { categoryId }: Params = useParams<Params>()
+  const { categoryId } = useParams<Params>() as { categoryId: string }
   const [ { category, questions }, setData ] = useState<Data>({ category: undefined, questions: undefined })
   const { auth, me, checkAuth } = useAuth()
 

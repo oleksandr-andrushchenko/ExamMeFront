@@ -57,8 +57,8 @@ export default ({ refresh }: Params): ReactNode => {
     <form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
           method="post">
 
-      <EmailSection setValue={ setEmail } error={ emailError } focus/>
-      <PasswordSection setValue={ setPassword } error={ passwordError }/>
+      <EmailSection setValue={ setEmail as any } error={ emailError } focus/>
+      <PasswordSection setValue={ setPassword as any } error={ passwordError }/>
 
       { error && <Typography
         variant="small"

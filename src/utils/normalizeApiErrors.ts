@@ -1,4 +1,4 @@
-export default (err): { [key: string]: string } => {
+export default (err: any): { [key: string]: string } => {
   const data = err.response.data
   console.log(data)
 
@@ -11,10 +11,10 @@ export default (err): { [key: string]: string } => {
     if (data.message.startsWith(staticValidationPart)) {
       const validationErrors = JSON.parse(data.message.substring(staticValidationPart.length))
 
-      // Validation error [{\"value\":\"qwe\",\"property\":\"title\",\"children\":[],\"constraints\":{\"isLength\":\"title must be longer than or equal to 50 characters\"}}]
       const errors = {}
 
       for (const validationError of validationErrors) {
+        // @ts-ignore
         errors[validationError['property']] = Object.values(validationError['constraints'])
           .map((error) => Array.isArray(error) ? (error[0].toUpperCase() + error.slice(1)) : undefined)
           .filter((error) => error !== undefined)

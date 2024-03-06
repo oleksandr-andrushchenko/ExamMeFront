@@ -33,9 +33,9 @@ export default (): ReactNode => {
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
-      setEmailError(errors?.email)
-      setPasswordError(errors?.password)
-      setError(errors?.unknown)
+      setEmailError(errors?.email || '')
+      setPasswordError(errors?.password || '')
+      setError(errors?.unknown || '')
     } finally {
       setSubmitting(false)
     }
@@ -56,8 +56,8 @@ export default (): ReactNode => {
     <form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
           method="post">
 
-      <EmailSection setValue={ setEmail } error={ emailError } focus/>
-      <PasswordSection setValue={ setPassword } error={ passwordError } confirm/>
+      <EmailSection setValue={ setEmail as any } error={ emailError } focus/>
+      <PasswordSection setValue={ setPassword as any } error={ passwordError } confirm/>
 
       <div className="-mt-4">
         <Checkbox

@@ -88,8 +88,9 @@ export default (): ReactNode => {
   } as AnswerInputState
   const [ answers, setAnswers ] = useState<AnswerInputState[]>([ { ...defaultAnswerInputState } ])
   const [ answersError, setAnswersError ] = useState<string>('')
-  const setAnswer = (index: number, prop: string, key: string, value: any) => {
+  const setAnswer = (index: number, prop: string, key: string, value: any): void => {
     const tmp = answers.slice()
+    // @ts-ignore
     tmp[index][prop][key] = value
     setAnswers(tmp)
   }
@@ -166,6 +167,7 @@ export default (): ReactNode => {
   const [ choicesError, setChoicesError ] = useState<string>('')
   const setChoice = (index: number, prop: string, key: string, value: any): void => {
     const tmp = choices.slice()
+    // @ts-ignore
     tmp[index][prop][key] = value
     setChoices(tmp)
   }
@@ -273,9 +275,8 @@ export default (): ReactNode => {
         if (!answer.variants.value || answer.variants.error) {
           return true
         }
-        if (answer.explanation?.value && answer.explanation?.error) {
-          return true
-        }
+
+        return !!(answer.explanation?.value && answer.explanation?.error)
       })
 
       if (invalidAnswers.length > 0) {
@@ -288,9 +289,8 @@ export default (): ReactNode => {
         if (!choice.title.value || choice.title.error) {
           return true
         }
-        if (choice.explanation?.value && choice.explanation?.error) {
-          return true
-        }
+
+        return !!(choice.explanation?.value && choice.explanation?.error)
       })
 
       if (invalidChoices.length > 0) {
@@ -341,7 +341,7 @@ export default (): ReactNode => {
       if (type.value === QuestionType.TYPE) {
         transfer.answers = answers.map((answer: AnswerInputState): QuestionAnswer => {
           const answerTransfer: QuestionAnswer = {
-            variants: answer.variants.value.split(',').map((variant) => variant.trim()),
+            variants: answer.variants.value.split(',').map((variant: string): string => variant.trim()),
             correct: answer.correct.value,
           }
 
@@ -373,12 +373,12 @@ export default (): ReactNode => {
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
-      setTitleError(errors?.title)
-      setTypeError(errors?.type)
-      setAnswersError(errors?.answers)
-      setChoicesError(errors?.choices)
-      setDifficultyError(errors?.difficulty)
-      setError(errors?.unknown)
+      setTitleError(errors?.title || '')
+      setTypeError(errors?.type || '')
+      setAnswersError(errors?.answers || '')
+      setChoicesError(errors?.choices || '')
+      setDifficultyError(errors?.difficulty || '')
+      setError(errors?.unknown || '')
     } finally {
       setSubmitting(false)
     }

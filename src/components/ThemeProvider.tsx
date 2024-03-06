@@ -3,6 +3,6 @@ import { ReactNode } from 'react'
 
 const theme = {}
 
-export default ({ children }): ReactNode => <TailwindThemeProvider value={ theme }>
+export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
   { children }
 </TailwindThemeProvider>

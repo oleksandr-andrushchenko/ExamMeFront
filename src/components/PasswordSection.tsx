@@ -67,15 +67,15 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
   const confirmRef = useRef<HTMLInputElement>()
   useEffect((): void => {
     const restore = (): void => {
-      ref.current.name = 'password'
-      ref.current.type = 'password'
-      ref.current.disabled = false
-      ref.current.value = ''
+      ref.current!.name = 'password'
+      ref.current!.type = 'password'
+      ref.current!.disabled = false
+      ref.current!.value = ''
       if (confirm) {
-        confirmRef.current.name = 'confirm-password'
-        confirmRef.current.type = 'password'
-        confirmRef.current.value = ''
-        confirmRef.current.disabled = false
+        confirmRef.current!.name = 'confirm-password'
+        confirmRef.current!.type = 'password'
+        confirmRef.current!.value = ''
+        confirmRef.current!.disabled = false
       }
     }
     testsRunning() ? restore() : setTimeout(restore, 300)

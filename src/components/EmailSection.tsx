@@ -46,11 +46,11 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
   const ref = useRef<HTMLInputElement>()
   useEffect((): void => {
     const restore = (): void => {
-      ref.current.name = 'email'
-      ref.current.type = 'email'
-      ref.current.value = ''
-      ref.current.disabled = false
-      focus && ref.current.focus()
+      ref.current!.name = 'email'
+      ref.current!.type = 'email'
+      ref.current!.value = ''
+      ref.current!.disabled = false
+      focus && ref.current!.focus()
     }
     testsRunning() ? restore() : setTimeout(restore, 300)
   }, [])

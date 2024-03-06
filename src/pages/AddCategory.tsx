@@ -51,8 +51,8 @@ export default (): ReactNode => {
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
-      setNameError(errors?.title)
-      setError(errors?.unknown)
+      setNameError(errors?.title || '')
+      setError(errors?.unknown || '')
     } finally {
       setSubmitting(false)
     }
