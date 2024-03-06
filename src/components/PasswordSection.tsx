@@ -1,6 +1,6 @@
-import { Input, ThemeProvider, Typography } from "@material-tailwind/react";
+import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react";
 import InputState, { defaultInputState } from "../types/InputState";
 
 interface PasswordSectionProps {
@@ -9,7 +9,7 @@ interface PasswordSectionProps {
   confirm?: boolean,
 }
 
-export default function PasswordSection({ setValue, error, confirm = false }: PasswordSectionProps) {
+export default ({ setValue, error, confirm = false }: PasswordSectionProps): ReactNode => {
 
   const [ password, setPassword ] = useState<InputState>({ ...defaultInputState });
   const getPasswordError = (value: string | undefined = undefined) => {
@@ -62,8 +62,8 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pa
   useEffect(() => setPasswordError(error), [ error ])
   useEffect(() => setConfirmPasswordValue(confirmPassword.value), [ password ])
 
-  const ref = useRef();
-  const confirmRef = useRef();
+  const ref = useRef<HTMLInputElement>();
+  const confirmRef = useRef<HTMLInputElement>();
   useEffect(() => {
     setTimeout(() => {
       ref.current.name = 'password';
@@ -94,7 +94,7 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pa
           disabled={ true }
           size="lg"
           label="Password"
-          onChange={ (e) => setPasswordValue(e.target.value) }
+          onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setPasswordValue(e.target.value) }
           onFocus={ () => setPasswordFocused(true) }
           onBlur={ () => setPasswordFocused(false) }
           value={ password.value }
@@ -126,7 +126,7 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pa
             disabled={ true }
             size="lg"
             label="Confirm Password"
-            onChange={ (e) => setConfirmPasswordValue(e.target.value) }
+            onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setConfirmPasswordValue(e.target.value) }
             onFocus={ () => setConfirmPasswordFocused(true) }
             onBlur={ () => setConfirmPasswordFocused(false) }
             value={ confirmPassword.value }
