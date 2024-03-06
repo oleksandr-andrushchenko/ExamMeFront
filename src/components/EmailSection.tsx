@@ -2,6 +2,7 @@ import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react";
 import InputState, { defaultInputState } from "../types/InputState";
+import testsRunning from '../utils/testsRunning';
 
 interface EmailSectionProps {
   setValue: (email?: string) => void,
@@ -44,13 +45,14 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
 
   const ref = useRef<HTMLInputElement>();
   useEffect(() => {
-    setTimeout(() => {
-      ref.current.name = 'email';
-      ref.current.type = 'email';
-      ref.current.value = '';
-      ref.current.disabled = false;
-      focus && ref.current.focus();
-    }, 300);
+    const restore = (): void => {
+      ref.current.name = 'email'
+      ref.current.type = 'email'
+      ref.current.value = ''
+      ref.current.disabled = false
+      focus && ref.current.focus()
+    }
+    testsRunning() ? restore() : setTimeout(() => restore, 300)
   }, []);
 
   return (
