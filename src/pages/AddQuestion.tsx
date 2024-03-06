@@ -1,361 +1,355 @@
-import { Breadcrumbs, Button, Checkbox, Input, Option, Select, Typography } from "@material-tailwind/react";
-import {
-  ExclamationCircleIcon, HomeIcon, PlusCircleIcon, SquaresPlusIcon, XMarkIcon,
-} from "@heroicons/react/24/solid";
-import { Form, Link, useNavigate, useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import Route from "../enum/Route";
-import postQuestion from "../api/postQuestion";
+import { Breadcrumbs, Button, Checkbox, Input, Option, Select, Typography } from '@material-tailwind/react'
+import { ExclamationCircleIcon, HomeIcon, PlusCircleIcon, SquaresPlusIcon, XMarkIcon, } from '@heroicons/react/24/solid'
+import { Link, Params, useNavigate, useParams } from 'react-router-dom'
+import React, { ReactNode, useEffect, useState } from 'react'
+import Route from '../enum/Route'
+import postQuestion from '../api/postQuestion'
 import QuestionTransfer, {
   QuestionAnswer,
   QuestionChoice,
   QuestionDifficulty,
   QuestionType
-} from "../schema/QuestionTransfer";
-import InputState, { defaultInputState } from "../types/InputState";
-import normalizeApiErrors from "../utils/normalizeApiErrors";
-import Category from "../schema/Category";
-import getCategory from "../api/getCategory";
-import Spinner from "../components/Spinner";
-
-interface Params {
-  categoryId?: string | undefined,
-}
+} from '../schema/QuestionTransfer'
+import InputState, { defaultInputState } from '../types/InputState'
+import normalizeApiErrors from '../utils/normalizeApiErrors'
+import Category from '../schema/Category'
+import getCategory from '../api/getCategory'
+import Spinner from '../components/Spinner'
 
 type AnswerInputState = {
-  [key in keyof QuestionAnswer]: InputState;
+  [key in keyof QuestionAnswer]: InputState
 }
 
 type ChoiceInputState = {
-  [key in keyof QuestionChoice]: InputState;
+  [key in keyof QuestionChoice]: InputState
 }
 
-export default () => {
-  const { categoryId }: Params = useParams<Params>();
-  const [ category, setCategory ] = useState<Category>();
-  const navigate = useNavigate();
+export default (): ReactNode => {
+  const { categoryId }: Params = useParams<Params>()
+  const [ category, setCategory ] = useState<Category>()
+  const navigate = useNavigate()
 
-  const [ title, setTitle ] = useState<InputState>({ ...defaultInputState });
-  const getTitleError = (value: string | undefined = undefined) => {
-    value = value === undefined ? title.value : value;
+  const [ title, setTitle ] = useState<InputState>({ ...defaultInputState })
+  const getTitleError = (value: string | undefined = undefined): string => {
+    value = value === undefined ? title.value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
     if (value && !/^[a-zA-Z0-9-() ]{2,}$/.test(value)) {
-      return 'Should be from 2 to 1024 characters long, lowercase and digits allowed';
+      return 'Should be from 2 to 1024 characters long, lowercase and digits allowed'
     }
 
-    return '';
+    return ''
   }
-  const setTitleValue = (value: string) => {
-    const error = getTitleError(value);
-    setTitle({ ...title, ...{ value, error } });
+  const setTitleValue = (value: string): void => {
+    const error = getTitleError(value)
+    setTitle({ ...title, ...{ value, error } })
   }
-  const setTitleFocused = (focused: boolean) => {
-    const error = focused ? title.error : getTitleError();
-    const displayError = error && !focused ? true : title.displayError;
-    setTitle({ ...title, ...{ focused, error, displayError } });
+  const setTitleFocused = (focused: boolean): void => {
+    const error = focused ? title.error : getTitleError()
+    const displayError = error && !focused ? true : title.displayError
+    setTitle({ ...title, ...{ focused, error, displayError } })
   }
-  const setTitleError = (error: string) => {
-    const displayError = !!error;
-    setTitle({ ...title, ...{ error, displayError } });
+  const setTitleError = (error: string): void => {
+    const displayError = !!error
+    setTitle({ ...title, ...{ error, displayError } })
   }
 
-  const [ type, setType ] = useState<InputState>({ ...defaultInputState });
-  const getTypeError = (value: string | undefined = undefined) => {
-    value = value === undefined ? type.value : value;
+  const [ type, setType ] = useState<InputState>({ ...defaultInputState })
+  const getTypeError = (value: string | undefined = undefined): string => {
+    value = value === undefined ? type.value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
-    return '';
+    return ''
   }
-  const setTypeValue = (value: string) => {
-    const error = getTypeError(value);
-    setType({ ...type, ...{ value, error } });
+  const setTypeValue = (value: string): void => {
+    const error = getTypeError(value)
+    setType({ ...type, ...{ value, error } })
   }
-  const setTypeFocused = (focused: boolean) => {
-    const error = focused ? type.error : getTypeError();
-    const displayError = error && !focused ? true : type.displayError;
-    setType({ ...type, ...{ focused, error, displayError } });
+  const setTypeFocused = (focused: boolean): void => {
+    const error = focused ? type.error : getTypeError()
+    const displayError = error && !focused ? true : type.displayError
+    setType({ ...type, ...{ focused, error, displayError } })
   }
-  const setTypeError = (error: string) => {
-    const displayError = !!error;
-    setType({ ...type, ...{ error, displayError } });
+  const setTypeError = (error: string): void => {
+    const displayError = !!error
+    setType({ ...type, ...{ error, displayError } })
   }
 
   const defaultAnswerInputState = {
     variants: { ...defaultInputState },
     correct: { value: false },
     explanation: { ...defaultInputState }
-  } as AnswerInputState;
-  const [ answers, setAnswers ] = useState<AnswerInputState[]>([ { ...defaultAnswerInputState } ]);
-  const [ answersError, setAnswersError ] = useState<string>('');
+  } as AnswerInputState
+  const [ answers, setAnswers ] = useState<AnswerInputState[]>([ { ...defaultAnswerInputState } ])
+  const [ answersError, setAnswersError ] = useState<string>('')
   const setAnswer = (index: number, prop: string, key: string, value: any) => {
-    const tmp = answers.slice();
-    tmp[index][prop][key] = value;
-    setAnswers(tmp);
+    const tmp = answers.slice()
+    tmp[index][prop][key] = value
+    setAnswers(tmp)
   }
-  const getAnswerVariantsError = (index: number, value: string | undefined = undefined) => {
-    value = value === undefined ? answers[index]['variants'].value : value;
+  const getAnswerVariantsError = (index: number, value: string | undefined = undefined): string => {
+    value = value === undefined ? answers[index]['variants'].value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
     if (value && !/^[a-zA-Z0-9 ,]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed';
+      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
     }
 
-    return '';
+    return ''
   }
-  const setAnswerVariantsValue = (index: number, value: string) => {
-    const tmp = answers.slice();
-    const old: InputState = tmp[index]['variants'];
-    const error = getAnswerVariantsError(index, value);
-    tmp[index]['variants'] = { ...old, ...{ value, error } };
-    setAnswers(tmp);
+  const setAnswerVariantsValue = (index: number, value: string): void => {
+    const tmp = answers.slice()
+    const old: InputState = tmp[index]['variants']
+    const error = getAnswerVariantsError(index, value)
+    tmp[index]['variants'] = { ...old, ...{ value, error } }
+    setAnswers(tmp)
   }
-  const setAnswerVariantsFocused = (index: number, focused: boolean) => {
-    const tmp = answers.slice();
-    const old: InputState = tmp[index]['variants'];
-    const error = focused ? old.error : getAnswerVariantsError(index);
-    const displayError = error && !focused ? true : old.displayError;
-    tmp[index]['variants'] = { ...old, ...{ focused, error, displayError } };
-    setAnswers(tmp);
+  const setAnswerVariantsFocused = (index: number, focused: boolean): void => {
+    const tmp = answers.slice()
+    const old: InputState = tmp[index]['variants']
+    const error = focused ? old.error : getAnswerVariantsError(index)
+    const displayError = error && !focused ? true : old.displayError
+    tmp[index]['variants'] = { ...old, ...{ focused, error, displayError } }
+    setAnswers(tmp)
   }
-  const getAnswerExplanationError = (index: number, value: string | undefined = undefined) => {
-    value = value === undefined ? answers[index]['explanation']?.value : value;
+  const getAnswerExplanationError = (index: number, value: string | undefined = undefined): string => {
+    value = value === undefined ? answers[index]['explanation']?.value : value
 
     if (value && !/^[a-zA-Z0-9 ,]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed';
+      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
     }
 
-    return '';
+    return ''
   }
-  const setAnswerExplanationValue = (index: number, value: any) => {
-    const tmp = answers.slice();
-    const old: InputState = tmp[index]['explanation']!;
-    const error = getAnswerExplanationError(index, value);
-    tmp[index]['explanation'] = { ...old, ...{ value, error } };
-    setAnswers(tmp);
+  const setAnswerExplanationValue = (index: number, value: any): void => {
+    const tmp = answers.slice()
+    const old: InputState = tmp[index]['explanation']!
+    const error = getAnswerExplanationError(index, value)
+    tmp[index]['explanation'] = { ...old, ...{ value, error } }
+    setAnswers(tmp)
   }
-  const setAnswerExplanationFocused = (index: number, focused: boolean) => {
-    const tmp = answers.slice();
-    const old: InputState = tmp[index]['explanation']!;
-    const error = focused ? old.error : getAnswerExplanationError(index);
-    const displayError = error && !focused ? true : old.displayError;
-    tmp[index]['explanation'] = { ...old, ...{ focused, error, displayError } };
-    setAnswers(tmp);
+  const setAnswerExplanationFocused = (index: number, focused: boolean): void => {
+    const tmp = answers.slice()
+    const old: InputState = tmp[index]['explanation']!
+    const error = focused ? old.error : getAnswerExplanationError(index)
+    const displayError = error && !focused ? true : old.displayError
+    tmp[index]['explanation'] = { ...old, ...{ focused, error, displayError } }
+    setAnswers(tmp)
   }
-  const setAnswerCorrect = (index: number, key: string, value: any) => setAnswer(index, 'correct', key, value);
-  const addAnswer = () => {
-    const tmp = answers.slice();
-    tmp.push({ ...defaultAnswerInputState });
-    setAnswers(tmp);
+  const setAnswerCorrect = (index: number, key: string, value: any) => setAnswer(index, 'correct', key, value)
+  const addAnswer = (): void => {
+    const tmp = answers.slice()
+    tmp.push({ ...defaultAnswerInputState })
+    setAnswers(tmp)
   }
-  const removeAnswer = (index: number) => {
-    const tmp = answers.slice();
-    tmp.splice(index, 1);
-    setAnswers(tmp);
+  const removeAnswer = (index: number): void => {
+    const tmp = answers.slice()
+    tmp.splice(index, 1)
+    setAnswers(tmp)
   }
 
   const defaultChoiceInputState = {
     title: { ...defaultInputState },
     correct: { value: false },
     explanation: { ...defaultInputState }
-  } as ChoiceInputState;
-  const [ choices, setChoices ] = useState<ChoiceInputState[]>([ { ...defaultChoiceInputState } ]);
-  const [ choicesError, setChoicesError ] = useState<string>('');
-  const setChoice = (index: number, prop: string, key: string, value: any) => {
-    const tmp = choices.slice();
-    tmp[index][prop][key] = value;
-    setChoices(tmp);
+  } as ChoiceInputState
+  const [ choices, setChoices ] = useState<ChoiceInputState[]>([ { ...defaultChoiceInputState } ])
+  const [ choicesError, setChoicesError ] = useState<string>('')
+  const setChoice = (index: number, prop: string, key: string, value: any): void => {
+    const tmp = choices.slice()
+    tmp[index][prop][key] = value
+    setChoices(tmp)
   }
-  const getChoiceTitleError = (index: number, value: string | undefined = undefined) => {
-    value = value === undefined ? choices[index]['title'].value : value;
+  const getChoiceTitleError = (index: number, value: string | undefined = undefined): string => {
+    value = value === undefined ? choices[index]['title'].value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
     if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed';
+      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
     }
 
-    return '';
+    return ''
   }
-  const setChoiceTitleValue = (index: number, value: string) => {
-    const tmp = choices.slice();
-    const old: InputState = tmp[index]['title'];
-    const error = getChoiceTitleError(index, value);
-    tmp[index]['title'] = { ...old, ...{ value, error } };
-    setChoices(tmp);
+  const setChoiceTitleValue = (index: number, value: string): void => {
+    const tmp = choices.slice()
+    const old: InputState = tmp[index]['title']
+    const error = getChoiceTitleError(index, value)
+    tmp[index]['title'] = { ...old, ...{ value, error } }
+    setChoices(tmp)
   }
-  const setChoiceTitleFocused = (index: number, focused: boolean) => {
-    const tmp = choices.slice();
-    const old: InputState = tmp[index]['title'];
-    const error = focused ? old.error : getChoiceTitleError(index);
-    const displayError = error && !focused ? true : old.displayError;
-    tmp[index]['title'] = { ...old, ...{ focused, error, displayError } };
-    setChoices(tmp);
+  const setChoiceTitleFocused = (index: number, focused: boolean): void => {
+    const tmp = choices.slice()
+    const old: InputState = tmp[index]['title']
+    const error = focused ? old.error : getChoiceTitleError(index)
+    const displayError = error && !focused ? true : old.displayError
+    tmp[index]['title'] = { ...old, ...{ focused, error, displayError } }
+    setChoices(tmp)
   }
-  const getChoiceExplanationError = (index: number, value: string | undefined = undefined) => {
-    value = value === undefined ? choices[index]['explanation']?.value : value;
+  const getChoiceExplanationError = (index: number, value: string | undefined = undefined): string => {
+    value = value === undefined ? choices[index]['explanation']?.value : value
 
     if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed';
+      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
     }
 
-    return '';
+    return ''
   }
-  const setChoiceExplanationValue = (index: number, value: any) => {
-    const tmp = choices.slice();
-    const old: InputState = tmp[index]['explanation']!;
-    const error = getChoiceExplanationError(index, value);
-    tmp[index]['explanation'] = { ...old, ...{ value, error } };
-    setChoices(tmp);
+  const setChoiceExplanationValue = (index: number, value: any): void => {
+    const tmp = choices.slice()
+    const old: InputState = tmp[index]['explanation']!
+    const error = getChoiceExplanationError(index, value)
+    tmp[index]['explanation'] = { ...old, ...{ value, error } }
+    setChoices(tmp)
   }
-  const setChoiceExplanationFocused = (index: number, focused: boolean) => {
-    const tmp = choices.slice();
-    const old: InputState = tmp[index]['explanation']!;
-    const error = focused ? old.error : getChoiceExplanationError(index);
-    const displayError = error && !focused ? true : old.displayError;
-    tmp[index]['explanation'] = { ...old, ...{ focused, error, displayError } };
-    setChoices(tmp);
+  const setChoiceExplanationFocused = (index: number, focused: boolean): void => {
+    const tmp = choices.slice()
+    const old: InputState = tmp[index]['explanation']!
+    const error = focused ? old.error : getChoiceExplanationError(index)
+    const displayError = error && !focused ? true : old.displayError
+    tmp[index]['explanation'] = { ...old, ...{ focused, error, displayError } }
+    setChoices(tmp)
   }
-  const setChoiceCorrect = (index: number, key: string, value: any) => setChoice(index, 'correct', key, value);
-  const addChoice = () => {
-    const tmp = choices.slice();
-    tmp.push({ ...defaultChoiceInputState });
-    setChoices(tmp);
+  const setChoiceCorrect = (index: number, key: string, value: any) => setChoice(index, 'correct', key, value)
+  const addChoice = (): void => {
+    const tmp = choices.slice()
+    tmp.push({ ...defaultChoiceInputState })
+    setChoices(tmp)
   }
-  const removeChoice = (index: number) => {
-    const tmp = choices.slice();
-    tmp.splice(index, 1);
-    setChoices(tmp);
+  const removeChoice = (index: number): void => {
+    const tmp = choices.slice()
+    tmp.splice(index, 1)
+    setChoices(tmp)
   }
 
-  const [ difficulty, setDifficulty ] = useState<InputState>({ ...defaultInputState });
-  const getDifficultyError = (value: string | undefined = undefined) => {
-    value = value === undefined ? difficulty.value : value;
+  const [ difficulty, setDifficulty ] = useState<InputState>({ ...defaultInputState })
+  const getDifficultyError = (value: string | undefined = undefined): string => {
+    value = value === undefined ? difficulty.value : value
 
     if (!value) {
-      return 'Should not be empty';
+      return 'Should not be empty'
     }
 
-    return '';
+    return ''
   }
-  const setDifficultyValue = (value: string) => {
-    const error = getDifficultyError(value);
-    setDifficulty({ ...difficulty, ...{ value, error } });
+  const setDifficultyValue = (value: string): void => {
+    const error = getDifficultyError(value)
+    setDifficulty({ ...difficulty, ...{ value, error } })
   }
-  const setDifficultyFocused = (focused: boolean) => {
-    const error = focused ? difficulty.error : getDifficultyError();
-    const displayError = error && !focused ? true : difficulty.displayError;
-    setDifficulty({ ...difficulty, ...{ focused, error, displayError } });
+  const setDifficultyFocused = (focused: boolean): void => {
+    const error = focused ? difficulty.error : getDifficultyError()
+    const displayError = error && !focused ? true : difficulty.displayError
+    setDifficulty({ ...difficulty, ...{ focused, error, displayError } })
   }
-  const setDifficultyError = (error: string) => {
-    const displayError = !!error;
-    setDifficulty({ ...difficulty, ...{ error, displayError } });
+  const setDifficultyError = (error: string): void => {
+    const displayError = !!error
+    setDifficulty({ ...difficulty, ...{ error, displayError } })
   }
 
-  const [ disabled, setDisabled ] = useState<boolean>(true);
-  const [ submitting, setSubmitting ] = useState<boolean>(false);
-  const [ error, setError ] = useState<string>('');
+  const [ disabled, setDisabled ] = useState<boolean>(true)
+  const [ submitting, setSubmitting ] = useState<boolean>(false)
+  const [ error, setError ] = useState<string>('')
 
-  const isDisabled = () => {
-    const invalid = !title.value || title.error || !type.value || type.error || !difficulty.value || difficulty.error || submitting;
+  const isDisabled = (): boolean => {
+    const invalid = !title.value || title.error || !type.value || type.error || !difficulty.value || difficulty.error || submitting
 
     if (invalid) {
-      return true;
+      return true
     }
 
     if (type.value === QuestionType.TYPE) {
       const invalidAnswers = answers.filter((answer: AnswerInputState): boolean => {
         if (!answer.variants.value || answer.variants.error) {
-          return true;
+          return true
         }
         if (answer.explanation?.value && answer.explanation?.error) {
-          return true;
+          return true
         }
-      });
+      })
 
       if (invalidAnswers.length > 0) {
-        return true;
+        return true
       }
     }
 
     if (type.value === QuestionType.CHOICE) {
       const invalidChoices = choices.filter((choice: ChoiceInputState): boolean => {
         if (!choice.title.value || choice.title.error) {
-          return true;
+          return true
         }
         if (choice.explanation?.value && choice.explanation?.error) {
-          return true;
+          return true
         }
-      });
+      })
 
       if (invalidChoices.length > 0) {
-        return true;
+        return true
       }
     }
 
-    return false;
+    return false
   }
   const validate = (): boolean => {
     if (type.value === QuestionType.TYPE) {
-      const correct = answers.filter((answer: AnswerInputState): boolean => !!answer.correct.value);
+      const correct = answers.filter((answer: AnswerInputState): boolean => !!answer.correct.value)
 
       if (correct.length === 0) {
-        setAnswersError('At least one correct answer should be there');
-        return false;
+        setAnswersError('At least one correct answer should be there')
+        return false
       }
     }
 
     if (type.value === QuestionType.CHOICE) {
-      const correct = choices.filter((choice: ChoiceInputState): boolean => !!choice.correct.value);
+      const correct = choices.filter((choice: ChoiceInputState): boolean => !!choice.correct.value)
 
       if (correct.length === 0) {
-        setChoicesError('At least one correct choice should be there');
-        return false;
+        setChoicesError('At least one correct choice should be there')
+        return false
       }
     }
 
-    return true;
+    return true
   }
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
 
     try {
       if (!validate()) {
-        return;
+        return
       }
 
-      setSubmitting(true);
+      setSubmitting(true)
 
       const transfer: QuestionTransfer = {
         category: categoryId as string,
         title: title.value,
         type: type.value,
         difficulty: difficulty.value,
-      };
+      }
 
       if (type.value === QuestionType.TYPE) {
         transfer.answers = answers.map((answer: AnswerInputState): QuestionAnswer => {
           const answerTransfer: QuestionAnswer = {
             variants: answer.variants.value.split(',').map((variant) => variant.trim()),
             correct: answer.correct.value,
-          };
-
-          if (answer.explanation?.value) {
-            answerTransfer['explanation'] = answer.explanation.value;
           }
 
-          return answerTransfer;
+          if (answer.explanation?.value) {
+            answerTransfer['explanation'] = answer.explanation.value
+          }
+
+          return answerTransfer
         })
       }
 
@@ -364,33 +358,33 @@ export default () => {
           const choiceTransfer: QuestionChoice = {
             title: choice.title.value,
             correct: choice.correct.value,
-          };
-
-          if (choice.explanation?.value) {
-            choiceTransfer['explanation'] = choice.explanation.value;
           }
 
-          return choiceTransfer;
+          if (choice.explanation?.value) {
+            choiceTransfer['explanation'] = choice.explanation.value
+          }
+
+          return choiceTransfer
         })
       }
 
-      const question = await postQuestion(transfer);
-      navigate(Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id));
+      const question = await postQuestion(transfer)
+      navigate(Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id))
     } catch (err) {
-      const errors = normalizeApiErrors(err);
-      console.log(errors);
-      setTitleError(errors?.title);
-      setTypeError(errors?.type);
-      setAnswersError(errors?.answers);
-      setChoicesError(errors?.choices);
-      setDifficultyError(errors?.difficulty);
-      setError(errors?.unknown);
+      const errors = normalizeApiErrors(err)
+      console.log(errors)
+      setTitleError(errors?.title)
+      setTypeError(errors?.type)
+      setAnswersError(errors?.answers)
+      setChoicesError(errors?.choices)
+      setDifficultyError(errors?.difficulty)
+      setError(errors?.unknown)
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     getCategory(categoryId as string).then((category) => setCategory(category))
   }, [])
   useEffect(() => setDisabled(isDisabled()), [ title, type, choices, answers, difficulty ])
@@ -411,7 +405,7 @@ export default () => {
       <Typography variant="small" color="gray" className="mt-1 font-normal">
         Create new question
       </Typography>
-      <Form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
+      <form className="mt-6 mb-2 w-80 max-w-screen-lg sm:w-96 flex flex-col gap-6" onSubmit={ handleSubmit }
             method="post">
 
         <div className="flex flex-col gap-2">
@@ -531,7 +525,6 @@ export default () => {
                 </div>
                 <div className="flex flex-col gap-1 -mt-3">
                   <Checkbox
-                    size="md"
                     label={
                       <div>
                         <Typography variant="small" color="gray" className="font-normal">
@@ -634,7 +627,6 @@ export default () => {
                 </div>
                 <div className="flex flex-col gap-1 -mt-3">
                   <Checkbox
-                    size="md"
                     label={
                       <div>
                         <Typography variant="small" color="gray" className="font-normal">Correct</Typography>
@@ -724,7 +716,7 @@ export default () => {
             { submitting ? 'Adding...' : 'Add' }
           </Button>
         </div>
-      </Form>
+      </form>
     </>
-  );
+  )
 }
