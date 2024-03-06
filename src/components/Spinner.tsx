@@ -1,5 +1,4 @@
-import { Spinner as TailwindSpinner } from "@material-tailwind/react";
+import { Spinner as TailwindSpinner } from '@material-tailwind/react'
+import { ReactNode } from 'react'
 
-export default function Spinner() {
-  return <TailwindSpinner className="h-16 w-16 text-gray-900/50"/>;
-}
+export default (): ReactNode => <TailwindSpinner className="h-16 w-16 text-gray-900/50"/>
