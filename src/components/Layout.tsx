@@ -8,10 +8,8 @@ export default function Layout() {
   return (
     <div className="min-h-full">
       <NavBar/>
-      <main>
-        <div className="mx-auto max-w-4xl py-6 sm:px-6 lg:px-8">
-          {navigation.state === "loading" ? <Spinner/> : <Outlet/>}
-        </div>
+      <main className="mx-auto max-w-4xl py-6 sm:px-6 lg:px-8">
+        { navigation.state === "loading" ? <Spinner/> : <Outlet/> }
       </main>
     </div>
   )
