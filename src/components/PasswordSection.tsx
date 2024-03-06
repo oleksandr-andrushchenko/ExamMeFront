@@ -2,6 +2,7 @@ import { Input, Typography } from "@material-tailwind/react";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react";
 import InputState, { defaultInputState } from "../types/InputState";
+import testsRunning from '../utils/testsRunning';
 
 interface PasswordSectionProps {
   setValue: (password?: string) => void,
@@ -65,7 +66,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
   const ref = useRef<HTMLInputElement>();
   const confirmRef = useRef<HTMLInputElement>();
   useEffect(() => {
-    setTimeout(() => {
+    const restore = (): void => {
       ref.current.name = 'password';
       ref.current.type = 'password';
       ref.current.disabled = false;
@@ -76,7 +77,8 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
         confirmRef.current.value = '';
         confirmRef.current.disabled = false;
       }
-    }, 300);
+    }
+    testsRunning() ? restore() : setTimeout(() => restore, 300)
   }, []);
 
   return (
