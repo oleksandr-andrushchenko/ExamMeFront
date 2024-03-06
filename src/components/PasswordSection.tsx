@@ -100,6 +100,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
           value={ password.value }
           aria-invalid={ password.error ? "true" : "false" }
           error={ !!password.error && password.displayError }
+          placeholder="Password"
           required
         />
         { password.error && password.displayError && <Typography
@@ -133,6 +134,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
             aria-invalid={ confirmPassword.error ? "true" : "false" }
             error={ !!confirmPassword.error && confirmPassword.displayError }
             aria-describedby="confirmnote"
+            placeholder="Confirm Password"
             required
           />
           { confirmPassword.error && confirmPassword.displayError && <Typography
