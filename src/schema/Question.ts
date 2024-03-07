@@ -1,4 +1,4 @@
-import QuestionTransfer from "./QuestionTransfer";
+import QuestionTransfer from './QuestionTransfer'
 
 export default interface Question extends QuestionTransfer {
   id: string,

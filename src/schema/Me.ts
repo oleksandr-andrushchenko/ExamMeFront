@@ -1,4 +1,4 @@
-import Permission from "../enum/Permission";
+import Permission from '../enum/Permission'
 
 export default interface Me {
   id: string,

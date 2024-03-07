@@ -36,7 +36,7 @@ export default (): ReactNode => {
           <Link
             key={ category.id }
             to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-            { category.name }
+            { category.name } [ { category.questionCount || 0 } ]
           </Link>
         </ListItem>
       }) }
