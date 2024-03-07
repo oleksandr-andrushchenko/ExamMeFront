@@ -85,7 +85,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
     <div className="flex flex-col gap-2">
       <Typography
         variant="h6"
-        color={ password.error && password.displayError ? "red" : "blue-gray" }>
+        color={ password.error && password.displayError ? 'red' : 'blue-gray' }>
         Password
       </Typography>
       <Input
@@ -99,7 +99,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
         onFocus={ (): void => setPasswordFocused(true) }
         onBlur={ (): void => setPasswordFocused(false) }
         value={ password.value }
-        aria-invalid={ password.error ? "true" : "false" }
+        aria-invalid={ password.error ? 'true' : 'false' }
         error={ !!password.error && password.displayError }
         placeholder="Password"
         required
@@ -118,7 +118,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
       <div className="flex flex-col gap-2">
         <Typography
           variant="h6"
-          color={ confirmPassword.error && confirmPassword.displayError ? "red" : "blue-gray" }>
+          color={ confirmPassword.error && confirmPassword.displayError ? 'red' : 'blue-gray' }>
           Confirm Password
         </Typography>
         <Input
@@ -132,7 +132,7 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
           onFocus={ (): void => setConfirmPasswordFocused(true) }
           onBlur={ (): void => setConfirmPasswordFocused(false) }
           value={ confirmPassword.value }
-          aria-invalid={ confirmPassword.error ? "true" : "false" }
+          aria-invalid={ confirmPassword.error ? 'true' : 'false' }
           error={ !!confirmPassword.error && confirmPassword.displayError }
           aria-describedby="confirmnote"
           placeholder="Confirm Password"

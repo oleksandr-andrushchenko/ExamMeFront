@@ -49,7 +49,7 @@ export default (): ReactNode => {
             to={ item.href }
             className={ classNames(
               current ? 'underline' : '',
-              'flex items-center'
+              'flex items-center',
             ) }
             aria-current={ current ? 'page' : undefined }>
             { item.name }

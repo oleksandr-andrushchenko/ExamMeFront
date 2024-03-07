@@ -18,7 +18,7 @@ export default (err: any): { [key: string]: string } => {
         errors[validationError['property']] = Object.values(validationError['constraints'])
           .map((error) => Array.isArray(error) ? (error[0].toUpperCase() + error.slice(1)) : undefined)
           .filter((error) => error !== undefined)
-          .join("\r\n")
+          .join('\r\n')
       }
 
       return errors

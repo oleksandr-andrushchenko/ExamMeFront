@@ -77,7 +77,7 @@ export default (): ReactNode => {
       <div className="flex flex-col gap-2">
         <Typography
           variant="h6"
-          color={ name.error && name.displayError ? "red" : "blue-gray" }>
+          color={ name.error && name.displayError ? 'red' : 'blue-gray' }>
           Name
         </Typography>
         <Input
@@ -89,7 +89,7 @@ export default (): ReactNode => {
           onFocus={ () => setNameFocused(true) }
           onBlur={ () => setNameFocused(false) }
           value={ name.value }
-          aria-invalid={ name.error ? "true" : "false" }
+          aria-invalid={ name.error ? 'true' : 'false' }
           error={ !!name.error && name.displayError }
           required
         />

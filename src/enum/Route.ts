@@ -10,4 +10,4 @@ enum Route {
   TERMS_AND_CONDITIONS = '/terms-and-conditions',
 }
 
-export default Route;
+export default Route

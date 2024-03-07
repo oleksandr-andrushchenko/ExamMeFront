@@ -13,4 +13,4 @@ enum Permission {
   ALL = '*',
 }
 
-export default Permission;
+export default Permission

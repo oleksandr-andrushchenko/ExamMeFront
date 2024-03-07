@@ -1,5 +1,5 @@
 import { Breadcrumbs, Button, Checkbox, Input, Option, Select, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, HomeIcon, PlusIcon, SquaresPlusIcon, XMarkIcon, } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, HomeIcon, PlusIcon, SquaresPlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../enum/Route'
@@ -8,7 +8,7 @@ import QuestionTransfer, {
   QuestionAnswer,
   QuestionChoice,
   QuestionDifficulty,
-  QuestionType
+  QuestionType,
 } from '../schema/QuestionTransfer'
 import InputState, { defaultInputState } from '../types/InputState'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
@@ -84,7 +84,7 @@ export default (): ReactNode => {
   const defaultAnswerInputState = {
     variants: { ...defaultInputState },
     correct: { value: false },
-    explanation: { ...defaultInputState }
+    explanation: { ...defaultInputState },
   } as AnswerInputState
   const [ answers, setAnswers ] = useState<AnswerInputState[]>([ { ...defaultAnswerInputState } ])
   const [ answersError, setAnswersError ] = useState<string>('')
@@ -161,7 +161,7 @@ export default (): ReactNode => {
   const defaultChoiceInputState = {
     title: { ...defaultInputState },
     correct: { value: false },
-    explanation: { ...defaultInputState }
+    explanation: { ...defaultInputState },
   } as ChoiceInputState
   const [ choices, setChoices ] = useState<ChoiceInputState[]>([ { ...defaultChoiceInputState } ])
   const [ choicesError, setChoicesError ] = useState<string>('')
@@ -411,7 +411,7 @@ export default (): ReactNode => {
         <div className="flex flex-col gap-2">
           <Typography
             variant="h6"
-            color={ title.error && title.displayError ? "red" : "blue-gray" }>
+            color={ title.error && title.displayError ? 'red' : 'blue-gray' }>
             Title
           </Typography>
           <Input
@@ -423,7 +423,7 @@ export default (): ReactNode => {
             onFocus={ () => setTitleFocused(true) }
             onBlur={ () => setTitleFocused(false) }
             value={ title.value }
-            aria-invalid={ title.error ? "true" : "false" }
+            aria-invalid={ title.error ? 'true' : 'false' }
             error={ !!title.error && title.displayError }
             required/>
           { title.error && title.displayError && <Typography
@@ -438,7 +438,7 @@ export default (): ReactNode => {
         <div className="flex flex-col gap-2">
           <Typography
             variant="h6"
-            color={ type.error && type.displayError ? "red" : "blue-gray" }>
+            color={ type.error && type.displayError ? 'red' : 'blue-gray' }>
             Type
           </Typography>
           <Select
@@ -448,11 +448,11 @@ export default (): ReactNode => {
             onChange={ (type) => setTypeValue(type!) }
             onFocus={ () => setTypeFocused(true) }
             containerProps={ {
-              onBlur: (e) => !e.nativeEvent.relatedTarget && setTypeFocused(false)
+              onBlur: (e) => !e.nativeEvent.relatedTarget && setTypeFocused(false),
             } }
             value={ type.value }
             className="capitalize"
-            aria-invalid={ type.error ? "true" : "false" }
+            aria-invalid={ type.error ? 'true' : 'false' }
             error={ !!type.error && type.displayError }>
             { Object.values(QuestionType)
               .map(type => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
@@ -475,7 +475,7 @@ export default (): ReactNode => {
                 <div className="flex flex-col gap-1">
                   <Typography
                     variant="small"
-                    color={ answer.variants.error && answer.variants.displayError ? "red" : "blue-gray" }>
+                    color={ answer.variants.error && answer.variants.displayError ? 'red' : 'blue-gray' }>
                     Variants
                   </Typography>
                   <Input
@@ -487,7 +487,7 @@ export default (): ReactNode => {
                     onFocus={ () => setAnswerVariantsFocused(index, true) }
                     onBlur={ () => setAnswerVariantsFocused(index, false) }
                     value={ answer.variants.value }
-                    aria-invalid={ answer.variants.error ? "true" : "false" }
+                    aria-invalid={ answer.variants.error ? 'true' : 'false' }
                     error={ !!answer.variants.error && answer.variants.displayError }
                     required/>
                   { answer.variants.error && answer.variants.displayError && <Typography
@@ -501,7 +501,7 @@ export default (): ReactNode => {
                 <div className="flex flex-col gap-1">
                   <Typography
                     variant="small"
-                    color={ answer.explanation?.error && answer.explanation.displayError ? "red" : "blue-gray" }>
+                    color={ answer.explanation?.error && answer.explanation.displayError ? 'red' : 'blue-gray' }>
                     Explanation
                   </Typography>
                   <Input
@@ -513,7 +513,7 @@ export default (): ReactNode => {
                     onFocus={ () => setAnswerExplanationFocused(index, true) }
                     onBlur={ () => setAnswerExplanationFocused(index, false) }
                     value={ answer.explanation?.value }
-                    aria-invalid={ answer.explanation?.error ? "true" : "false" }
+                    aria-invalid={ answer.explanation?.error ? 'true' : 'false' }
                     error={ !!answer.explanation?.error && answer.explanation?.displayError }/>
                   { answer.explanation?.error && answer.explanation.displayError && <Typography
                     variant="small"
@@ -577,7 +577,7 @@ export default (): ReactNode => {
                 <div className="flex flex-col gap-1">
                   <Typography
                     variant="small"
-                    color={ choice.title.error && choice.title.displayError ? "red" : "blue-gray" }>
+                    color={ choice.title.error && choice.title.displayError ? 'red' : 'blue-gray' }>
                     Title
                   </Typography>
                   <Input
@@ -589,7 +589,7 @@ export default (): ReactNode => {
                     onFocus={ () => setChoiceTitleFocused(index, true) }
                     onBlur={ () => setChoiceTitleFocused(index, false) }
                     value={ choice.title.value }
-                    aria-invalid={ choice.title.error ? "true" : "false" }
+                    aria-invalid={ choice.title.error ? 'true' : 'false' }
                     error={ !!choice.title.error && choice.title.displayError }
                     required/>
                   { choice.title.error && choice.title.displayError && <Typography
@@ -603,7 +603,7 @@ export default (): ReactNode => {
                 <div className="flex flex-col gap-1">
                   <Typography
                     variant="small"
-                    color={ choice.explanation?.error && choice.explanation.displayError ? "red" : "blue-gray" }>
+                    color={ choice.explanation?.error && choice.explanation.displayError ? 'red' : 'blue-gray' }>
                     Explanation
                   </Typography>
                   <Input
@@ -615,7 +615,7 @@ export default (): ReactNode => {
                     onFocus={ () => setChoiceExplanationFocused(index, true) }
                     onBlur={ () => setChoiceExplanationFocused(index, false) }
                     value={ choice.explanation?.value }
-                    aria-invalid={ choice.explanation?.error ? "true" : "false" }
+                    aria-invalid={ choice.explanation?.error ? 'true' : 'false' }
                     error={ !!choice.explanation?.error && choice.explanation?.displayError }/>
                   { choice.explanation?.error && choice.explanation?.displayError && <Typography
                     variant="small"
@@ -671,7 +671,7 @@ export default (): ReactNode => {
         <div className="flex flex-col gap-2">
           <Typography
             variant="h6"
-            color={ difficulty.error && difficulty.displayError ? "red" : "blue-gray" }>
+            color={ difficulty.error && difficulty.displayError ? 'red' : 'blue-gray' }>
             Difficulty
           </Typography>
           <Select
@@ -681,11 +681,11 @@ export default (): ReactNode => {
             onChange={ (difficulty) => setDifficultyValue(difficulty!) }
             onFocus={ () => setDifficultyFocused(true) }
             containerProps={ {
-              onBlur: (e) => !e.nativeEvent.relatedTarget && setDifficultyFocused(false)
+              onBlur: (e) => !e.nativeEvent.relatedTarget && setDifficultyFocused(false),
             } }
             value={ difficulty.value }
             className="capitalize"
-            aria-invalid={ difficulty.error ? "true" : "false" }
+            aria-invalid={ difficulty.error ? 'true' : 'false' }
             error={ !!difficulty.error && difficulty.displayError }>
             { Object.values(QuestionDifficulty)
               .map(difficulty => <Option key={ difficulty } value={ difficulty }

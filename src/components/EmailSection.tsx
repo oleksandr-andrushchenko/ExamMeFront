@@ -59,7 +59,7 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
     <div className="flex flex-col gap-2">
       <Typography
         variant="h6"
-        color={ email.error && email.displayError ? "red" : "blue-gray" }>
+        color={ email.error && email.displayError ? 'red' : 'blue-gray' }>
         Your Email
       </Typography>
       <Input
@@ -73,7 +73,7 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
         onFocus={ (): void => setEmailFocused(true) }
         onBlur={ (): void => setEmailFocused(false) }
         value={ email.value }
-        aria-invalid={ email.error ? "true" : "false" }
+        aria-invalid={ email.error ? 'true' : 'false' }
         error={ !!email.error && email.displayError }
         placeholder="Email Address"
         required
