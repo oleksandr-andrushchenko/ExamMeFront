@@ -8,8 +8,8 @@ import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Category from '../schema/Category'
 import Question from '../schema/Question'
-import getCategory from '../api/getCategory'
-import getQuestion from '../api/getQuestion'
+import getCategory from '../api/category/getCategory'
+import getQuestion from '../api/question/getQuestion'
 
 interface Data {
   category: Category | undefined,

@@ -7,7 +7,7 @@ import { HomeIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/24/solid'
 import { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
-import getCategories from '../api/getCategories'
+import getCategories from '../api/category/getCategories'
 
 export default (): ReactNode => {
   const [ categories, setCategories ] = useState<Category[] | undefined>(undefined)

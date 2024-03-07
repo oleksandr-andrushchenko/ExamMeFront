@@ -3,7 +3,7 @@ import { ExclamationCircleIcon, HomeIcon, SquaresPlusIcon } from '@heroicons/rea
 import { Link, useNavigate } from 'react-router-dom'
 import Route from '../enum/Route'
 import React, { ReactNode, useState } from 'react'
-import postCategory from '../api/postCategory'
+import postCategory from '../api/category/postCategory'
 import InputState, { defaultInputState } from '../types/InputState'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 

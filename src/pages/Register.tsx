@@ -6,7 +6,7 @@ import EmailSection from '../components/EmailSection'
 import PasswordSection from '../components/PasswordSection'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
-import postMe from '../api/postMe'
+import postMe from '../api/me/postMe'
 import postAuth from '../api/postAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 

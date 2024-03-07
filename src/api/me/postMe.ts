@@ -1,5 +1,5 @@
-import client from './client'
-import Me from '../schema/Me'
+import client from '../client'
+import Me from '../../schema/Me'
 
 export default async ({ email, password }: {
   email: string,

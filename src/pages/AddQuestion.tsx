@@ -3,7 +3,7 @@ import { ExclamationCircleIcon, HomeIcon, PlusCircleIcon, SquaresPlusIcon, XMark
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../enum/Route'
-import postQuestion from '../api/postQuestion'
+import postQuestion from '../api/question/postQuestion'
 import QuestionTransfer, {
   QuestionAnswer,
   QuestionChoice,
@@ -13,7 +13,7 @@ import QuestionTransfer, {
 import InputState, { defaultInputState } from '../types/InputState'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 import Category from '../schema/Category'
-import getCategory from '../api/getCategory'
+import getCategory from '../api/category/getCategory'
 import Spinner from '../components/Spinner'
 
 type AnswerInputState = {
