@@ -16,6 +16,7 @@ import { default as Path } from '../enum/Route'
 import AddQuestion from '../pages/AddQuestion'
 import RequireLoggedOut from './RequireLoggedOut'
 import { ReactNode } from 'react'
+import Question from '../pages/Question'
 
 const routes = <Routes>
   <Route element={ <Layout/> }>
@@ -28,6 +29,7 @@ const routes = <Routes>
     <Route element={ <RequireLoggedIn permission={ Permission.CREATE_QUESTION }/> }>
       <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
     </Route>
+    <Route path={ Path.QUESTION } element={ <Question/> }/>
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.LOGIN } element={ <Login/> }/>
     </Route>
