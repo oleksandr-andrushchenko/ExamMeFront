@@ -1,5 +1,5 @@
 import { Breadcrumbs, Button, Checkbox, Input, Option, Select, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, HomeIcon, PlusCircleIcon, SquaresPlusIcon, XMarkIcon, } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, HomeIcon, PlusIcon, SquaresPlusIcon, XMarkIcon, } from '@heroicons/react/24/solid'
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../enum/Route'
@@ -555,7 +555,7 @@ export default (): ReactNode => {
                 type="button"
                 onClick={ () => addAnswer() }
                 className="rounded capitalize font-normal">
-                <PlusCircleIcon className="inline-block h-4 w-4"/> Add
+                <PlusIcon className="inline-block h-4 w-4"/> Add
               </Button>
             </div>
             { answersError && <Typography
@@ -655,7 +655,7 @@ export default (): ReactNode => {
                 type="button"
                 onClick={ () => addChoice() }
                 className="rounded capitalize font-normal">
-                <PlusCircleIcon className="inline-block h-4 w-4"/> Add
+                <PlusIcon className="inline-block h-4 w-4"/> Add
               </Button>
             </div>
             { choicesError && <Typography
