@@ -1,8 +1,8 @@
-import { Link, Params, useParams } from 'react-router-dom'
+import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, HomeIcon, PlusIcon } from '@heroicons/react/24/solid'
-import { ReactNode, useEffect, useState } from 'react'
+import { CubeIcon, HomeIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/solid'
+import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
@@ -20,6 +20,7 @@ export default (): ReactNode => {
   const { categoryId } = useParams<Params>() as { categoryId: string }
   const [ { category, questions }, setData ] = useState<Data>({ category: undefined, questions: undefined })
   const { auth, me, checkAuth } = useAuth()
+  const navigate = useNavigate()
 
   useEffect((): void => {
     Promise.all<any>([ getCategory(categoryId), getCategoryQuestions(categoryId) ])
@@ -64,5 +65,12 @@ export default (): ReactNode => {
         <PlusIcon className="inline-block h-4 w-4"/> Add Question
       </Button>
     </Link> }
+
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) && <Button
+      size="sm"
+      className="rounded capitalize font-normal mt-3"
+      onClick={ () => navigate(Route.CATEGORIES, { replace: true }) }>
+      <MinusIcon className="inline-block h-4 w-4"/> Remove Category
+    </Button> }
   </>
 }
