@@ -3,7 +3,7 @@ import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailw
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { HomeIcon, Squares2X2Icon, SquaresPlusIcon } from '@heroicons/react/24/solid'
+import { HomeIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/24/solid'
 import { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
@@ -47,7 +47,7 @@ export default (): ReactNode => {
       <Button
         size="sm"
         className="rounded capitalize font-normal mt-3">
-        <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Category
+        <PlusIcon className="inline-block h-4 w-4"/> Add Category
       </Button>
     </Link> }
   </>
