@@ -1,7 +1,7 @@
 import { Link, Params, useParams } from 'react-router-dom'
 import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, HomeIcon, SquaresPlusIcon } from '@heroicons/react/24/solid'
+import { CubeIcon, HomeIcon, PlusIcon } from '@heroicons/react/24/solid'
 import { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -61,7 +61,7 @@ export default (): ReactNode => {
       <Button
         size="sm"
         className="rounded capitalize font-normal mt-3">
-        <SquaresPlusIcon className="inline-block h-4 w-4"/> Add Question
+        <PlusIcon className="inline-block h-4 w-4"/> Add Question
       </Button>
     </Link> }
   </>
