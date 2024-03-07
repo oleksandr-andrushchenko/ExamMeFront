@@ -11,7 +11,7 @@ import Question from '../schema/Question'
 import getCategory from '../api/category/getCategory'
 import getCategoryQuestions from '../api/question/getCategoryQuestions'
 import deleteCategory from '../api/category/deleteCategory'
-import normalizeApiErrors from '../utils/normalizeApiErrors.ts'
+import normalizeApiErrors from '../utils/normalizeApiErrors'
 
 interface Data {
   category: Category | undefined,
