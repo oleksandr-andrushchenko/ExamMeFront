@@ -30,7 +30,7 @@ export default ({ refresh }: Params): ReactNode => {
 
     try {
       setAuth(await postAuth({ email, password }))
-      refresh ? navigate(0) : navigate(Route.HOME, { replace: true })
+      refresh ? navigate(0) : navigate(Route.CATEGORIES, { replace: true })
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)

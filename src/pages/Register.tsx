@@ -29,7 +29,7 @@ export default (): ReactNode => {
     try {
       await postMe({ email, password })
       setAuth(await postAuth({ email, password }))
-      navigate(Route.HOME, { replace: true })
+      navigate(Route.CATEGORIES, { replace: true })
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
