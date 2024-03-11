@@ -1,7 +1,7 @@
 import { Link, Params, useParams } from 'react-router-dom'
-import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, List, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, HomeIcon, PlusIcon } from '@heroicons/react/24/solid'
+import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -11,6 +11,7 @@ import Question from '../schema/Question'
 import getCategory from '../api/category/getCategory'
 import getCategoryQuestions from '../api/question/getCategoryQuestions'
 import DeleteCategory from '../components/category/DeleteCategory'
+import AddQuestion from '../components/question/AddQuestion'
 
 interface Data {
   category: Category | undefined,
@@ -57,14 +58,7 @@ export default (): ReactNode => {
       }) }
     </List> }
 
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <Link
-      to={ Route.ADD_QUESTION.replace(':categoryId', categoryId) }>
-      <Button
-        size="sm"
-        className="rounded capitalize font-normal">
-        <PlusIcon className="inline-block h-4 w-4"/> Add Question
-      </Button>
-    </Link> }
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
       (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
