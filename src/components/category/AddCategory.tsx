@@ -1,13 +1,13 @@
 import { Button, Card, CardBody, Dialog, Input, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PlusIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import InputState, { defaultInputState } from '../../types/InputState'
 import postCategory from '../../api/category/postCategory'
 
-export default () => {
+export default (): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)

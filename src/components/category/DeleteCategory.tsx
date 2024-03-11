@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import Category from '../../schema/Category'
@@ -11,7 +11,7 @@ interface Props {
   category: Category,
 }
 
-export default ({ category }: Props) => {
+export default ({ category }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
