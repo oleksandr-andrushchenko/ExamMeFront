@@ -9,7 +9,6 @@ import Register from '../pages/Register'
 import NotFound from '../pages/NotFound'
 import TermsAndConditions from '../pages/TermsAndConditions'
 import AuthProvider from '../context/AuthProvider'
-import AddCategory from '../pages/AddCategory'
 import RequireLoggedIn from './RequireLoggedIn'
 import Permission from '../enum/Permission'
 import { default as Path } from '../enum/Route'
@@ -22,19 +21,14 @@ const routes = <Routes>
   <Route element={ <Layout/> }>
     <Route path={ Path.HOME } element={ <Home/> }/>
     <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
-    <Route element={ <RequireLoggedIn permission={ Permission.CREATE_CATEGORY }/> }>
-      <Route path={ Path.ADD_CATEGORY } element={ <AddCategory/> }/>
-    </Route>
     <Route path={ Path.CATEGORY } element={ <Category/> }/>
     <Route element={ <RequireLoggedIn permission={ Permission.CREATE_QUESTION }/> }>
       <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
     </Route>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
-    {/*todo: https://www.material-tailwind.com/docs/react/dialog#dialog-with-form*/}
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.LOGIN } element={ <Login/> }/>
     </Route>
-    {/*todo: https://www.material-tailwind.com/docs/react/dialog#dialog-with-form*/}
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.REGISTER } element={ <Register/> }/>
     </Route>
