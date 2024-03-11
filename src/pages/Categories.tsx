@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
-import { Breadcrumbs, Button, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, List, ListItem, Typography } from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { HomeIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/24/solid'
+import { HomeIcon, Squares2X2Icon } from '@heroicons/react/24/solid'
 import { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import getCategories from '../api/category/getCategories'
+import AddCategory from '../components/category/AddCategory'
 
 export default (): ReactNode => {
   const [ categories, setCategories ] = useState<Category[] | undefined>(undefined)
@@ -42,13 +43,6 @@ export default (): ReactNode => {
       }) }
     </List> }
 
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <Link
-      to={ Route.ADD_CATEGORY }>
-      <Button
-        size="sm"
-        className="rounded capitalize font-normal mt-3">
-        <PlusIcon className="inline-block h-4 w-4"/> Add Category
-      </Button>
-    </Link> }
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
   </>
 }
