@@ -1,7 +1,7 @@
-import { Link, Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
+import { Link, Params, useParams } from 'react-router-dom'
+import { Breadcrumbs, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, ExclamationCircleIcon, HomeIcon, MinusIcon } from '@heroicons/react/24/solid'
+import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -10,8 +10,7 @@ import Category from '../schema/Category'
 import Question from '../schema/Question'
 import getCategory from '../api/category/getCategory'
 import getQuestion from '../api/question/getQuestion'
-import normalizeApiErrors from '../utils/normalizeApiErrors'
-import deleteQuestion from '../api/question/deleteQuestion'
+import DeleteQuestion from '../components/question/DeleteQuestion'
 
 interface Data {
   category: Category | undefined,
@@ -21,28 +20,12 @@ interface Data {
 export default (): ReactNode => {
   const { categoryId, questionId } = useParams<Params>() as { categoryId: string, questionId: string }
   const [ { category, question }, setData ] = useState<Data>({ category: undefined, question: undefined })
-  const [ deletingQuestion, setDeletingQuestion ] = useState<boolean>(false)
-  const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
-  const navigate = useNavigate()
 
   useEffect((): void => {
     Promise.all<any>([ getCategory(categoryId), getQuestion(questionId) ])
       .then(([ category, question ]): void => setData({ category, question }))
   }, [])
-
-  useEffect(() => {
-    if (deletingQuestion) {
-      deleteQuestion(questionId)
-        .then(() => navigate(Route.CATEGORY.replace(':categoryId', categoryId), { replace: true }))
-        .catch((error) => {
-          const errors = normalizeApiErrors(error)
-          console.log(errors)
-          setError(errors?.unknown || '')
-        })
-        .finally(() => setDeletingQuestion(false))
-    }
-  }, [ deletingQuestion ])
 
   return <>
     <Breadcrumbs>
@@ -61,18 +44,7 @@ export default (): ReactNode => {
         </span>
     </Typography>
 
-    { error && <Typography
-      color="red"
-      className="flex items-center gap-1">
-      <ExclamationCircleIcon className="inline-block h-4 w-4"/> { error }
-    </Typography> }
-
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) && <Button
-      size="sm"
-      className="rounded capitalize font-normal mt-3"
-      onClick={ () => setDeletingQuestion(true) }
-      disabled={ deletingQuestion }>
-      <MinusIcon className="inline-block h-4 w-4"/> { deletingQuestion ? 'Removing Question...' : 'Remove Question' }
-    </Button> }
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+      (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
   </>
 }
