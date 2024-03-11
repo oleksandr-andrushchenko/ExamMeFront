@@ -16,7 +16,11 @@ export default (err: any): { [key: string]: string } => {
       for (const validationError of validationErrors) {
         // @ts-ignore
         errors[validationError['property']] = Object.values(validationError['constraints'])
-          .map((error) => Array.isArray(error) ? (error[0].toUpperCase() + error.slice(1)) : undefined)
+          .map((error) => Array.isArray(error) ? (error[0].toUpperCase() + error.slice(1)) : error)
+          .map((error) => {
+            const echo = Array.isArray(error) ? error[0] : error
+            return echo[0].toUpperCase() + echo.slice(1)
+          })
           .filter((error) => error !== undefined)
           .join('\r\n')
       }
