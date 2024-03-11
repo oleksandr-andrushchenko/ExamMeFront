@@ -30,9 +30,11 @@ const routes = <Routes>
       <Route path={ Path.ADD_QUESTION } element={ <AddQuestion/> }/>
     </Route>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
+    {/*todo: https://www.material-tailwind.com/docs/react/dialog#dialog-with-form*/}
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.LOGIN } element={ <Login/> }/>
     </Route>
+    {/*todo: https://www.material-tailwind.com/docs/react/dialog#dialog-with-form*/}
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.REGISTER } element={ <Register/> }/>
     </Route>
