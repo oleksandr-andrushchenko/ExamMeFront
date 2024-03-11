@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
-import Route from '../../enum/Route.ts'
+import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import Category from '../../schema/Category'
 import deleteCategory from '../../api/category/deleteCategory'
