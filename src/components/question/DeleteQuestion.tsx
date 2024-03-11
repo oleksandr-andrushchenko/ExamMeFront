@@ -66,7 +66,6 @@ export default ({ question }: Props) => {
             onClick={ handleOpen }>
             Cancel
           </Button>
-
           <Button
             size="md"
             color="red"

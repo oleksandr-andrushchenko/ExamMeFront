@@ -67,7 +67,6 @@ export default ({ category }: Props) => {
             onClick={ handleOpen }>
             Cancel
           </Button>
-
           <Button
             size="md"
             color="red"
