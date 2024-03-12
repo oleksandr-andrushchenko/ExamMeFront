@@ -9,11 +9,11 @@ import Route from '../enum/Route'
 import postAuth from '../api/postAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 
-interface Params {
+interface Props {
   refresh?: boolean,
 }
 
-export default ({ refresh }: Params): ReactNode => {
+export default ({ refresh }: Props): ReactNode => {
   const [ email, setEmail ] = useState<string>('')
   const [ emailError, setEmailError ] = useState<string>('')
   const [ password, setPassword ] = useState<string>('')
@@ -69,7 +69,9 @@ export default ({ refresh }: Params): ReactNode => {
       </Typography> }
 
       <div>
-        <Button className="block rounded capitalize" type="submit" disabled={ !email || !password || submitting }>
+        <Button
+          type="submit"
+          disabled={ !email || !password || submitting }>
           { submitting ? 'Logging in...' : 'Login' }
         </Button>
         <Typography variant="small" color="gray" className="mt-4 font-normal">
