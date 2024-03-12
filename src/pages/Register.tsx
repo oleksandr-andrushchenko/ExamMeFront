@@ -84,8 +84,9 @@ export default (): ReactNode => {
       </Typography> }
 
       <div className="-mt-4">
-        <Button className="block rounded capitalize" type="submit"
-                disabled={ !email || !password || !terms || submitting }>
+        <Button
+          type="submit"
+          disabled={ !email || !password || !terms || submitting }>
           { submitting ? 'Registering in...' : 'Register' }
         </Button>
 

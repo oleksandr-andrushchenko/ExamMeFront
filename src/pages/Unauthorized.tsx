@@ -21,7 +21,7 @@ export default (): ReactNode => {
     </Typography>
     <Button
       size="sm"
-      className="rounded capitalize font-normal mt-3"
+      className="mt-3"
       onClick={ goBack }>
       <ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back
     </Button>

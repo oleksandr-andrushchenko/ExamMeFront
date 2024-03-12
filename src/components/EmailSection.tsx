@@ -4,13 +4,13 @@ import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 
 import InputState, { defaultInputState } from '../types/InputState'
 import testsRunning from '../utils/testsRunning'
 
-interface EmailSectionProps {
+interface Props {
   setValue: (email?: string) => void,
   error: string,
   focus?: boolean,
 }
 
-export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNode => {
+export default ({ setValue, error, focus = false }: Props): ReactNode => {
 
   const [ email, setEmail ] = useState<InputState>({ ...defaultInputState })
   const getEmailError = (value: string | undefined = undefined): string => {
@@ -75,7 +75,6 @@ export default ({ setValue, error, focus = false }: EmailSectionProps): ReactNod
         value={ email.value }
         aria-invalid={ email.error ? 'true' : 'false' }
         error={ !!email.error && email.displayError }
-        placeholder="Email Address"
         required
       />
       { email.error && email.displayError && <Typography

@@ -395,7 +395,6 @@ export default (): ReactNode => {
     <Button
       size="sm"
       color="green"
-      className="rounded capitalize font-normal"
       onClick={ handleOpen }
       disabled={ processing }>
       <PlusIcon className="inline-block h-4 w-4"/> { processing ? 'Adding Question...' : 'Add Question' }
@@ -712,14 +711,14 @@ export default (): ReactNode => {
             <div>
               <Button
                 size="sm"
-                className="rounded capitalize font-normal"
+                type="reset"
                 onClick={ handleOpen }>
                 Cancel
               </Button>
               <Button
                 size="md"
                 color="green"
-                className="rounded capitalize ml-1"
+                className="ml-1"
                 type="submit"
                 disabled={ disabled }>
                 { processing ? 'Adding...' : 'Add' }

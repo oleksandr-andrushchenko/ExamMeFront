@@ -35,7 +35,6 @@ export default ({ category }: Props): ReactNode => {
     <Button
       size="sm"
       color="red"
-      className="rounded capitalize font-normal"
       onClick={ handleOpen }
       disabled={ processing }>
       <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Category...' : 'Delete Category' }
@@ -63,14 +62,13 @@ export default ({ category }: Props): ReactNode => {
         <CardFooter className="pt-0">
           <Button
             size="sm"
-            className="rounded capitalize font-normal"
             onClick={ handleOpen }>
             Cancel
           </Button>
           <Button
             size="md"
             color="red"
-            className="rounded capitalize font-normal ml-1"
+            className="ml-1"
             onClick={ () => setProcessing(true) }
             disabled={ processing }>
             <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting...' : 'Delete' }

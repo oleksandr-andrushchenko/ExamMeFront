@@ -6,11 +6,11 @@ import Unauthorized from '../pages/Unauthorized'
 import Login from '../pages/Login'
 import { ReactNode } from 'react'
 
-interface RequireAuthParams {
+interface Props {
   permission: Permission,
 }
 
-export default ({ permission }: RequireAuthParams): ReactNode => {
+export default ({ permission }: Props): ReactNode => {
   const { auth, me, checkAuth } = useAuth()
 
   return auth && me === undefined ? <Spinner/> : (checkAuth(permission) ? <Outlet/> : (me ? <Unauthorized/> :
