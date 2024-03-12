@@ -4,13 +4,13 @@ import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 
 import InputState, { defaultInputState } from '../types/InputState'
 import testsRunning from '../utils/testsRunning'
 
-interface PasswordSectionProps {
+interface Props {
   setValue: (password?: string) => void,
   error: string,
   confirm?: boolean,
 }
 
-export default ({ setValue, error, confirm = false }: PasswordSectionProps): ReactNode => {
+export default ({ setValue, error, confirm = false }: Props): ReactNode => {
 
   const [ password, setPassword ] = useState<InputState>({ ...defaultInputState })
   const getPasswordError = (value: string | undefined = undefined): string => {
