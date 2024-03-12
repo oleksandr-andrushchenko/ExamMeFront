@@ -23,6 +23,15 @@ const theme = {
       },
     },
   },
+  dialog: {
+    styles: {
+      base: {
+        backdrop: {
+          position: 'fixed overscroll-y-auto overflow-auto',
+        },
+      },
+    },
+  },
 }
 
 export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
