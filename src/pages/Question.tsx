@@ -1,5 +1,5 @@
 import { Link, Params, useParams } from 'react-router-dom'
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Chip, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -11,6 +11,7 @@ import Question from '../schema/Question'
 import getCategory from '../api/category/getCategory'
 import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
+import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/QuestionTransfer'
 
 interface Data {
   category: Category | undefined,
@@ -43,6 +44,47 @@ export default (): ReactNode => {
           { question === undefined ? <Spinner/> : question.title }
         </span>
     </Typography>
+
+    { category === undefined || question === undefined ? <Spinner/> : <div>
+      <ListItem>
+        <Typography variant="h6" color="blue-gray" className="inline-block">{ category.name }</Typography>
+        <Chip color="blue" value="Category" className="inline-block ml-1"/>
+      </ListItem>
+      <ListItem>
+        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.title }</Typography>
+        <Chip color="blue" value="Title" className="inline-block ml-1"/>
+      </ListItem>
+      <ListItem>
+        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.type }</Typography>
+        <Chip color="blue" value="Type" className="inline-block ml-1"/>
+      </ListItem>
+      <ListItem>
+        { question.type === QuestionType.TYPE && <div>
+          { question.answers?.map((answer: QuestionAnswer) => {
+            return <div>
+              <div>{ answer.variants.join(', ') }</div>
+              <div>{ answer.explanation }</div>
+              <div>{ answer.correct }</div>
+            </div>
+          }) }
+          <Chip color="blue" value="Answers" className="inline-block ml-1"/>
+        </div> }
+        { question.type === QuestionType.CHOICE && <div>
+          { question.choices?.map((choice: QuestionChoice) => {
+            return <div>
+              <div>{ choice.title }</div>
+              <div>{ choice.explanation }</div>
+              <div>{ choice.correct }</div>
+            </div>
+          }) }
+          <Chip color="blue" value="Choices" className="inline-block ml-1"/>
+        </div> }
+      </ListItem>
+      <ListItem>
+        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.difficulty }</Typography>
+        <Chip color="blue" value="Difficulty" className="inline-block ml-1"/>
+      </ListItem>
+    </div> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
       (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
