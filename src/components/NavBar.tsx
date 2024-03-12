@@ -32,92 +32,85 @@ export default (): ReactNode => {
     )
   }, [])
 
-  const navList = (
-    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      { navigation.map((item) => {
-        const resolvedPath = useResolvedPath(item.href)
-        const current = useMatch({ path: resolvedPath.pathname, end: true })
+  const navList = <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    { navigation.map((item) => {
+      const resolvedPath = useResolvedPath(item.href)
+      const current = useMatch({ path: resolvedPath.pathname, end: true })
 
-        return <Typography
+      return <Typography
+        as="li"
+        key={ item.href }
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-normal">
+        <Link
+          key={ item.name }
+          to={ item.href }
+          className={ classNames(
+            current ? 'underline' : '',
+            'flex items-center',
+          ) }
+          aria-current={ current ? 'page' : undefined }>
+          { item.name }
+        </Link>
+      </Typography>
+    }) }
+    {
+      auth && me === undefined
+        ? <Typography
           as="li"
-          key={ item.href }
           variant="small"
-          color="blue-gray"
           className="p-1 font-normal">
-          <Link
-            key={ item.name }
-            to={ item.href }
-            className={ classNames(
-              current ? 'underline' : '',
-              'flex items-center',
-            ) }
-            aria-current={ current ? 'page' : undefined }>
-            { item.name }
-          </Link>
+          <Spinner/>
         </Typography>
-      }) }
-      {
-        auth && me === undefined
-          ? <Typography
-            as="li"
-            variant="small"
-            className="p-1 font-normal">
-            <Spinner/>
-          </Typography>
-          : (
-            me
-              ? <>
-                <Typography
-                  as="li"
-                  variant="small"
-                  className="p-1 font-normal truncate">
-                  <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
-                  { me.email }
-                </Typography>
-                <Typography
-                  as="li"
-                  variant="small"
-                  className="p-1 font-normal">
-                  <Button
-                    size="sm"
-                    className="rounded capitalize font-normal"
-                    onClick={ () => setAuth(undefined) }>
-                    <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
+        : (
+          me
+            ? <>
+              <Typography
+                as="li"
+                variant="small"
+                className="p-1 font-normal truncate">
+                <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
+                { me.email }
+              </Typography>
+              <Typography
+                as="li"
+                variant="small"
+                className="p-1 font-normal">
+                <Button
+                  size="sm"
+                  onClick={ () => setAuth(undefined) }>
+                  <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
+                </Button>
+              </Typography>
+            </>
+            : <>
+              <Typography
+                as="li"
+                variant="small"
+                className="p-1 font-normal">
+                <Link
+                  to={ Route.LOGIN }>
+                  <Button size="md">
+                    <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
                   </Button>
-                </Typography>
-              </>
-              : <>
-                <Typography
-                  as="li"
-                  variant="small"
-                  className="p-1 font-normal">
-                  <Link
-                    to={ Route.LOGIN }>
-                    <Button
-                      size="md"
-                      className="rounded capitalize font-normal">
-                      <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-                    </Button>
-                  </Link>
-                </Typography>
-                <Typography
-                  as="li"
-                  variant="small"
-                  className="p-1 font-normal">
-                  <Link
-                    to={ Route.REGISTER }>
-                    <Button
-                      size="sm"
-                      className="rounded capitalize font-normal">
-                      <UserPlusIcon className="inline-block h-4 w-4"/> Register
-                    </Button>
-                  </Link>
-                </Typography>
-              </>
-          )
-      }
-    </ul>
-  )
+                </Link>
+              </Typography>
+              <Typography
+                as="li"
+                variant="small"
+                className="p-1 font-normal">
+                <Link
+                  to={ Route.REGISTER }>
+                  <Button size="sm">
+                    <UserPlusIcon className="inline-block h-4 w-4"/> Register
+                  </Button>
+                </Link>
+              </Typography>
+            </>
+        )
+    }
+  </ul>
 
   return (
     <Navbar className="h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4" fullWidth={ true }>

@@ -101,7 +101,6 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
         value={ password.value }
         aria-invalid={ password.error ? 'true' : 'false' }
         error={ !!password.error && password.displayError }
-        placeholder="Password"
         required
       />
       { password.error && password.displayError && <Typography
@@ -113,39 +112,35 @@ export default ({ setValue, error, confirm = false }: PasswordSectionProps): Rea
       </Typography> }
     </div>
 
-    {
-      confirm &&
-      <div className="flex flex-col gap-2">
-        <Typography
-          variant="h6"
-          color={ confirmPassword.error && confirmPassword.displayError ? 'red' : 'blue-gray' }>
-          Confirm Password
-        </Typography>
-        <Input
-          inputRef={ confirmRef as MutableRefObject<any> }
-          name={ `temp${ Date.now() }` }
-          type="number"
-          disabled={ true }
-          size="lg"
-          label="Confirm Password"
-          onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setConfirmPasswordValue(e.target.value) }
-          onFocus={ (): void => setConfirmPasswordFocused(true) }
-          onBlur={ (): void => setConfirmPasswordFocused(false) }
-          value={ confirmPassword.value }
-          aria-invalid={ confirmPassword.error ? 'true' : 'false' }
-          error={ !!confirmPassword.error && confirmPassword.displayError }
-          aria-describedby="confirmnote"
-          placeholder="Confirm Password"
-          required
-        />
-        { confirmPassword.error && confirmPassword.displayError && <Typography
-          variant="small"
-          color="red"
-          className="flex items-center gap-1 font-normal">
-          <ExclamationCircleIcon className="w-1/12"/>
-          <span className="w-11/12">{ confirmPassword.error }</span>
-        </Typography> }
-      </div>
-    }
+    { confirm && <div className="flex flex-col gap-2">
+      <Typography
+        variant="h6"
+        color={ confirmPassword.error && confirmPassword.displayError ? 'red' : 'blue-gray' }>
+        Confirm Password
+      </Typography>
+      <Input
+        inputRef={ confirmRef as MutableRefObject<any> }
+        name={ `temp${ Date.now() }` }
+        type="number"
+        disabled={ true }
+        size="lg"
+        label="Confirm Password"
+        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setConfirmPasswordValue(e.target.value) }
+        onFocus={ (): void => setConfirmPasswordFocused(true) }
+        onBlur={ (): void => setConfirmPasswordFocused(false) }
+        value={ confirmPassword.value }
+        aria-invalid={ confirmPassword.error ? 'true' : 'false' }
+        error={ !!confirmPassword.error && confirmPassword.displayError }
+        aria-describedby="confirmnote"
+        required
+      />
+      { confirmPassword.error && confirmPassword.displayError && <Typography
+        variant="small"
+        color="red"
+        className="flex items-center gap-1 font-normal">
+        <ExclamationCircleIcon className="w-1/12"/>
+        <span className="w-11/12">{ confirmPassword.error }</span>
+      </Typography> }
+    </div> }
   </>
 }
