@@ -1,4 +1,15 @@
-import { Button, Card, CardBody, Checkbox, Dialog, Input, Option, Select, Typography } from '@material-tailwind/react'
+import {
+  Button,
+  Card,
+  CardBody,
+  Checkbox,
+  Dialog,
+  Input,
+  Option,
+  Select,
+  Textarea,
+  Typography,
+} from '@material-tailwind/react'
 import { ExclamationCircleIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { Params, useNavigate, useParams } from 'react-router-dom'
@@ -414,7 +425,7 @@ export default (): ReactNode => {
                 color={ title.error && title.displayError ? 'red' : 'blue-gray' }>
                 Title
               </Typography>
-              <Input
+              <Textarea
                 name="title"
                 type="text"
                 size="md"
@@ -504,7 +515,7 @@ export default (): ReactNode => {
                         color={ answer.explanation?.error && answer.explanation.displayError ? 'red' : 'blue-gray' }>
                         Explanation
                       </Typography>
-                      <Input
+                      <Textarea
                         name={ `answer-${ index }-explanation` }
                         type="text"
                         size="md"
@@ -580,7 +591,7 @@ export default (): ReactNode => {
                         color={ choice.title.error && choice.title.displayError ? 'red' : 'blue-gray' }>
                         Title
                       </Typography>
-                      <Input
+                      <Textarea
                         name={ `choice-${ index }-title` }
                         type="text"
                         size="md"
@@ -606,7 +617,7 @@ export default (): ReactNode => {
                         color={ choice.explanation?.error && choice.explanation.displayError ? 'red' : 'blue-gray' }>
                         Explanation
                       </Typography>
-                      <Input
+                      <Textarea
                         name={ `choice-${ index }-explanation` }
                         type="text"
                         size="md"
