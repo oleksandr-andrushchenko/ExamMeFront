@@ -32,6 +32,17 @@ const theme = {
       },
     },
   },
+  breadcrumbs: {
+    styles: {
+      base: {
+        root: {
+          initial: {
+            width: 'max-w-max',
+          },
+        },
+      },
+    },
+  },
 }
 
 export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
