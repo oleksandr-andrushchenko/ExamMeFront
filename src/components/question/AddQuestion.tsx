@@ -52,8 +52,8 @@ export default (): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/^[a-zA-Z0-9-() ]{2,}$/.test(value)) {
-      return 'Should be from 2 to 1024 characters long, lowercase and digits allowed'
+    if (value && !/.*[a-zA-Z]{5,3000}/.test(value)) {
+      return 'Should be from 5 to 3000 characters long, should have alpha characters'
     }
 
     return ''
