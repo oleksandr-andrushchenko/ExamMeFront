@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Dialog, Input, Typography } from '@material-tailwind/react'
+import { Button, Card, CardBody, Dialog, Textarea, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
@@ -98,7 +98,7 @@ export default ({ category, onSubmit }: Props): ReactNode => {
                 color={ name.error && name.displayError ? 'red' : 'blue-gray' }>
                 Name
               </Typography>
-              <Input
+              <Textarea
                 name="name"
                 type="text"
                 size="lg"
