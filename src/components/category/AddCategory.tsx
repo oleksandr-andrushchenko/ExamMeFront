@@ -1,20 +1,28 @@
 import { Button, Card, CardBody, Dialog, Input, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, PlusIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import InputState, { defaultInputState } from '../../types/InputState'
 import postCategory from '../../api/category/postCategory'
+import Category from '../../schema/Category'
+import replaceCategory from '../../api/category/replaceCategory'
+import getCategory from '../../api/category/getCategory'
 
-export default (): ReactNode => {
+interface Props {
+  category?: Category,
+  onSubmit?: (question: Category) => void
+}
+
+export default ({ category, onSubmit }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  const [ name, setName ] = useState<InputState>({ ...defaultInputState })
+  const [ name, setName ] = useState<InputState>({ ...defaultInputState, ...{ value: category?.name } })
   const getNameError = (value: string | undefined = undefined): string => {
     value = value === undefined ? name.value : value
 
@@ -47,8 +55,15 @@ export default (): ReactNode => {
     setProcessing(true)
 
     try {
-      const category = await postCategory({ name: name.value })
-      navigate(Route.CATEGORY.replace(':categoryId', category.id))
+      const transfer = { name: name.value }
+      const categoryResp = category ? (await replaceCategory(category.id, transfer)) : (await postCategory(transfer))
+      setOpen(false)
+      const id = category ? category.id : categoryResp.id
+      navigate(Route.CATEGORY.replace(':categoryId', id))
+
+      if (onSubmit) {
+        getCategory(id).then((category: Category): void => onSubmit(category))
+      }
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
@@ -62,16 +77,17 @@ export default (): ReactNode => {
   return <>
     <Button
       size="sm"
-      color="green"
+      color={ category ? 'orange' : 'green' }
       onClick={ handleOpen }
       disabled={ processing }>
-      <PlusIcon className="inline-block h-4 w-4"/> { processing ? 'Adding Category...' : 'Add Category' }
+      { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+        className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating Category...' : 'Update Category') : (processing ? 'Adding Category...' : 'Add Category') }
     </Button>
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
-            Add category
+            { category ? 'Update category' : 'Add category' }
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
                 method="post">
@@ -121,11 +137,11 @@ export default (): ReactNode => {
               </Button>
               <Button
                 size="md"
-                color="green"
+                color={ category ? 'orange' : 'green' }
                 className="ml-1"
                 type="submit"
                 disabled={ !name.value || !!name.error || processing }>
-                { processing ? 'Adding...' : 'Add' }
+                { category ? (processing ? 'Updating...' : 'Update') : (processing ? 'Adding...' : 'Add') }
               </Button>
             </div>
           </form>
