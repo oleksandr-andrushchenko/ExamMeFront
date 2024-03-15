@@ -47,41 +47,37 @@ export default (): ReactNode => {
     { category === undefined || question === undefined ? <Spinner/> : <div>
       <ListItem>
         <Typography variant="h6" color="blue-gray" className="inline-block">{ category.name }</Typography>
-        <Chip color="blue" value="Category" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Category" className="inline-block ml-1"/>
       </ListItem>
       <ListItem>
         <Typography variant="h6" color="blue-gray" className="inline-block">{ question.title }</Typography>
-        <Chip color="blue" value="Title" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Title" className="inline-block ml-1"/>
       </ListItem>
       <ListItem>
         <Typography variant="h6" color="blue-gray" className="inline-block">{ question.type }</Typography>
-        <Chip color="blue" value="Type" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Type" className="inline-block ml-1"/>
       </ListItem>
       <ListItem>
         { question.type === QuestionType.TYPE && <div>
-          { question.answers?.map((answer: QuestionAnswer) => {
-            return <div>
-              <div>{ answer.variants.join(', ') }</div>
-              <div>{ answer.explanation }</div>
-              <div>{ answer.correct }</div>
-            </div>
-          }) }
-          <Chip color="blue" value="Answers" className="inline-block ml-1"/>
+          { question.answers?.map((answer: QuestionAnswer): ReactNode => <div>
+            <div>{ answer.variants.join(', ') }</div>
+            <div>{ answer.explanation }</div>
+            <div>{ answer.correct }</div>
+          </div>) }
+          <Chip variant="ghost" value="Answers" className="inline-block ml-1"/>
         </div> }
         { question.type === QuestionType.CHOICE && <div>
-          { question.choices?.map((choice: QuestionChoice) => {
-            return <div>
-              <div>{ choice.title }</div>
-              <div>{ choice.explanation }</div>
-              <div>{ choice.correct }</div>
-            </div>
-          }) }
-          <Chip color="blue" value="Choices" className="inline-block ml-1"/>
+          { question.choices?.map((choice: QuestionChoice): ReactNode => <div>
+            <div>{ choice.title }</div>
+            <div>{ choice.explanation }</div>
+            <div>{ choice.correct }</div>
+          </div>) }
+          <Chip variant="ghost" value="Choices" className="inline-block ml-1"/>
         </div> }
       </ListItem>
       <ListItem>
         <Typography variant="h6" color="blue-gray" className="inline-block">{ question.difficulty }</Typography>
-        <Chip color="blue" value="Difficulty" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Difficulty" className="inline-block ml-1"/>
       </ListItem>
     </div> }
 
