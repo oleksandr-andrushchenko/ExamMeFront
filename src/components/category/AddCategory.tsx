@@ -30,8 +30,12 @@ export default ({ category, onSubmit }: Props): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
+    if (value.length < 3 || value.length > 100) {
+      return 'Should be from 3 to 100 characters long'
+    }
+
+    if (value && !/^[a-zA-Z]/.test(value)) {
+      return 'Should have letters'
     }
 
     return ''
