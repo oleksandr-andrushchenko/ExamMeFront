@@ -59,7 +59,7 @@ export default (): ReactNode => {
       </ListItem>
       <ListItem>
         { question.type === QuestionType.TYPE && <div>
-          { question.answers?.map((answer: QuestionAnswer): ReactNode => <div>
+          { question.answers?.map((answer: QuestionAnswer, index: number): ReactNode => <div key={ index }>
             <div>{ answer.variants.join(', ') }</div>
             <div>{ answer.explanation }</div>
             <div>{ answer.correct }</div>
@@ -67,7 +67,7 @@ export default (): ReactNode => {
           <Chip variant="ghost" value="Answers" className="inline-block ml-1"/>
         </div> }
         { question.type === QuestionType.CHOICE && <div>
-          { question.choices?.map((choice: QuestionChoice): ReactNode => <div>
+          { question.choices?.map((choice: QuestionChoice, index: number): ReactNode => <div key={ index }>
             <div>{ choice.title }</div>
             <div>{ choice.explanation }</div>
             <div>{ choice.correct }</div>
