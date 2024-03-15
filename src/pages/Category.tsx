@@ -12,6 +12,7 @@ import getCategory from '../api/category/getCategory'
 import getCategoryQuestions from '../api/question/getCategoryQuestions'
 import DeleteCategory from '../components/category/DeleteCategory'
 import AddQuestion from '../components/question/AddQuestion'
+import AddCategory from '../components/category/AddCategory.tsx'
 
 interface Data {
   category: Category | undefined,
@@ -59,6 +60,11 @@ export default (): ReactNode => {
     </List> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }
+
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+      (category === undefined ? <Spinner/> :
+        <AddCategory category={ category }
+                     onSubmit={ (category: Category): void => setData({ category, questions }) }/>) }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
       (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
