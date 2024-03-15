@@ -10,7 +10,7 @@ import {
   Textarea,
   Typography,
 } from '@material-tailwind/react'
-import { ExclamationCircleIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { Params, useNavigate, useParams } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../types/InputState'
@@ -25,6 +25,14 @@ import postQuestion from '../../api/question/postQuestion'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import getCategory from '../../api/category/getCategory'
 import Route from '../../enum/Route'
+import Question from '../../schema/Question'
+import replaceQuestion from '../../api/question/replaceQuestion'
+import getQuestion from '../../api/question/getQuestion'
+
+interface Props {
+  question?: Question,
+  onSubmit?: (question: Question) => void
+}
 
 type AnswerInputState = {
   [key in keyof QuestionAnswer]: InputState
@@ -34,7 +42,7 @@ type ChoiceInputState = {
   [key in keyof QuestionChoice]: InputState
 }
 
-export default (): ReactNode => {
+export default ({ question, onSubmit }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -44,7 +52,7 @@ export default (): ReactNode => {
   const { categoryId }: Params = useParams<Params>()
   const [ category, setCategory ] = useState<Category>()
 
-  const [ title, setTitle ] = useState<InputState>({ ...defaultInputState })
+  const [ title, setTitle ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.title } })
   const getTitleError = (value: string | undefined = undefined): string => {
     value = value === undefined ? title.value : value
 
@@ -76,7 +84,7 @@ export default (): ReactNode => {
     setTitle({ ...title, ...{ error, displayError } })
   }
 
-  const [ type, setType ] = useState<InputState>({ ...defaultInputState })
+  const [ type, setType ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.type } })
   const getTypeError = (value: string | undefined = undefined): string => {
     value = value === undefined ? type.value : value
 
@@ -105,7 +113,17 @@ export default (): ReactNode => {
     correct: { value: false },
     explanation: { ...defaultInputState },
   } as AnswerInputState
-  const [ answers, setAnswers ] = useState<AnswerInputState[]>([ { ...defaultAnswerInputState } ])
+  const defaultAnswers = question && question.type === QuestionType.TYPE
+    ? (question?.answers ?? []).map((answer: QuestionAnswer): AnswerInputState => {
+      return {
+        ...defaultAnswerInputState,
+        ...{ variants: { value: answer.variants.join(', ') } },
+        ...{ correct: { value: answer.correct } },
+        ...{ explanation: { value: answer?.explanation || '' } },
+      } as any
+    })
+    : [ { ...defaultAnswerInputState } ]
+  const [ answers, setAnswers ] = useState<AnswerInputState[]>(defaultAnswers)
   const [ answersError, setAnswersError ] = useState<string>('')
   const setAnswer = (index: number, prop: string, key: string, value: any): void => {
     const tmp = answers.slice()
@@ -186,7 +204,17 @@ export default (): ReactNode => {
     correct: { value: false },
     explanation: { ...defaultInputState },
   } as ChoiceInputState
-  const [ choices, setChoices ] = useState<ChoiceInputState[]>([ { ...defaultChoiceInputState } ])
+  const defaultChoices = question && question.type === QuestionType.CHOICE
+    ? (question?.choices ?? []).map((choice: QuestionChoice): ChoiceInputState => {
+      return {
+        ...defaultChoiceInputState,
+        ...{ title: { value: choice.title } },
+        ...{ correct: { value: choice.correct } },
+        ...{ explanation: { value: choice?.explanation || '' } },
+      } as any
+    })
+    : [ { ...defaultChoiceInputState } ]
+  const [ choices, setChoices ] = useState<ChoiceInputState[]>(defaultChoices)
   const [ choicesError, setChoicesError ] = useState<string>('')
   const setChoice = (index: number, prop: string, key: string, value: any): void => {
     const tmp = choices.slice()
@@ -266,7 +294,7 @@ export default (): ReactNode => {
     setChoices(tmp)
   }
 
-  const [ difficulty, setDifficulty ] = useState<InputState>({ ...defaultInputState })
+  const [ difficulty, setDifficulty ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.difficulty } })
   const getDifficultyError = (value: string | undefined = undefined): string => {
     value = value === undefined ? difficulty.value : value
 
@@ -397,8 +425,15 @@ export default (): ReactNode => {
         })
       }
 
-      const question = await postQuestion(transfer)
-      navigate(Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id))
+      const questionResp = question ? (await replaceQuestion(question.id, transfer)) : (await postQuestion(transfer))
+      setOpen(false)
+      const catId = question ? question.category : questionResp.category
+      const questionId = question ? question.id : questionResp.id
+      navigate(Route.QUESTION.replace(':categoryId', catId).replace(':questionId', questionId))
+
+      if (onSubmit) {
+        getQuestion(questionId).then((question: Question): void => onSubmit(question))
+      }
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
@@ -421,16 +456,17 @@ export default (): ReactNode => {
   return <>
     <Button
       size="sm"
-      color="green"
+      color={ question ? 'orange' : 'green' }
       onClick={ handleOpen }
       disabled={ processing }>
-      <PlusIcon className="inline-block h-4 w-4"/> { processing ? 'Adding Question...' : 'Add Question' }
+      { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+        className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding Question...' : 'Add Question') }
     </Button>
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
-            Add question
+            { question ? 'Update question' : 'Add question' }
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
                 method="post">
@@ -563,6 +599,7 @@ export default (): ReactNode => {
                           </div>
                         }
                         name={ `answer-${ index }-correct` }
+                        defaultChecked={ answer.correct.value }
                         onChange={ (e) => setAnswerCorrect(index, 'value', e.target.checked) }/>
                     </div>
                     { answers.length > 1 && <div className="-mt-3">
@@ -663,6 +700,7 @@ export default (): ReactNode => {
                           </div>
                         }
                         name={ `choice-${ index }-correct` }
+                        defaultChecked={ choice.correct.value }
                         onChange={ (e) => setChoiceCorrect(index, 'value', e.target.checked) }/>
                     </div>
                     { choices.length > 1 && <div className="-mt-3">
@@ -744,11 +782,11 @@ export default (): ReactNode => {
               </Button>
               <Button
                 size="md"
-                color="green"
+                color={ question ? 'orange' : 'green' }
                 className="ml-1"
                 type="submit"
                 disabled={ disabled }>
-                { processing ? 'Adding...' : 'Add' }
+                { question ? (processing ? 'Updating...' : 'Update') : (processing ? 'Adding...' : 'Add') }
               </Button>
             </div>
           </form>
