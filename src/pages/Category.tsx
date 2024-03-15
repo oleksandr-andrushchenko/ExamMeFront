@@ -1,5 +1,5 @@
 import { Link, Params, useParams } from 'react-router-dom'
-import { Breadcrumbs, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Chip, List, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -48,15 +48,17 @@ export default (): ReactNode => {
     </Typography>
 
     { questions === undefined ? <Spinner/> : <List>
-      { questions.map(question => {
-        return <ListItem key={ question.id }>
-          <Link
-            key={ question.id }
-            to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
-            { question.title }
-          </Link>
-        </ListItem>
-      }) }
+      { questions.map((question: Question, index: number) => <ListItem key={ question.id }>
+        <Link
+          key={ question.id }
+          to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+          <Chip
+            variant="ghost"
+            value={ index + 1 }
+            className="rounded-full inline-block"
+          /> { question.title }
+        </Link>
+      </ListItem>) }
     </List> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }

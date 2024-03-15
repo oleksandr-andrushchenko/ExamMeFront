@@ -32,13 +32,16 @@ export default (): ReactNode => {
     </Typography>
 
     { categories === undefined ? <Spinner/> : <List>
-      { categories.map((category: Category): ReactNode => <ListItem key={ category.id }>
+      { categories.map((category: Category, index: number): ReactNode => <ListItem key={ category.id }>
         <Link
           key={ category.id }
           to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-          { category.name } <Chip
+          <Chip
+            variant="ghost"
+            value={ index + 1 }
+            className="rounded-full inline-block"
+          /> { category.name } <Chip
           value={ category.questionCount }
-          variant="ghost"
           className="rounded-full inline-block"
         />
         </Link>
