@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Breadcrumbs, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Chip, List, ListItem, Typography } from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -36,7 +36,11 @@ export default (): ReactNode => {
         <Link
           key={ category.id }
           to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-          { category.name } [ { category.questionCount || 0 } ]
+          { category.name } <Chip
+          value={ category.questionCount }
+          variant="ghost"
+          className="rounded-full inline-block"
+        />
         </Link>
       </ListItem>) }
     </List> }
