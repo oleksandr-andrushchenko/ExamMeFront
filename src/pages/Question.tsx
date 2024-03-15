@@ -12,6 +12,7 @@ import getCategory from '../api/category/getCategory'
 import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/QuestionTransfer'
+import AddQuestion from '../components/question/AddQuestion'
 
 interface Data {
   category: Category | undefined,
@@ -83,6 +84,11 @@ export default (): ReactNode => {
         <Chip color="blue" value="Difficulty" className="inline-block ml-1"/>
       </ListItem>
     </div> }
+
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+      (question === undefined ? <Spinner/> :
+        <AddQuestion question={ question }
+                     onSubmit={ (question: Question): void => setData({ category, question }) }/>) }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
       (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
