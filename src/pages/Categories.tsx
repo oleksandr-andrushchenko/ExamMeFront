@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Breadcrumbs, Chip, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Card, Chip, List, ListItem, Typography } from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -31,22 +31,24 @@ export default (): ReactNode => {
       Available categories
     </Typography>
 
-    { categories === undefined ? <Spinner/> : <List>
-      { categories.map((category: Category, index: number): ReactNode => <ListItem key={ category.id }>
-        <Link
-          key={ category.id }
-          to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-          <Chip
-            variant="ghost"
-            value={ index + 1 }
+    { categories === undefined ? <Spinner/> : <Card>
+      <List>
+        { categories.map((category: Category, index: number): ReactNode => <ListItem key={ category.id }>
+          <Link
+            key={ category.id }
+            to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+            <Chip
+              variant="ghost"
+              value={ index + 1 }
+              className="rounded-full inline-block"
+            /> { category.name } <Chip
+            value={ category.questionCount }
             className="rounded-full inline-block"
-          /> { category.name } <Chip
-          value={ category.questionCount }
-          className="rounded-full inline-block"
-        />
-        </Link>
-      </ListItem>) }
-    </List> }
+          />
+          </Link>
+        </ListItem>) }
+      </List>
+    </Card> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
   </>

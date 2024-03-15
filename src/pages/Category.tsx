@@ -1,5 +1,5 @@
 import { Link, Params, useParams } from 'react-router-dom'
-import { Breadcrumbs, Chip, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Card, Chip, List, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -47,19 +47,21 @@ export default (): ReactNode => {
       Available questions
     </Typography>
 
-    { questions === undefined ? <Spinner/> : <List>
-      { questions.map((question: Question, index: number) => <ListItem key={ question.id }>
-        <Link
-          key={ question.id }
-          to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
-          <Chip
-            variant="ghost"
-            value={ index + 1 }
-            className="rounded-full inline-block"
-          /> { question.title }
-        </Link>
-      </ListItem>) }
-    </List> }
+    { questions === undefined ? <Spinner/> : <Card>
+      <List>
+        { questions.map((question: Question, index: number) => <ListItem key={ question.id }>
+          <Link
+            key={ question.id }
+            to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+            <Chip
+              variant="ghost"
+              value={ index + 1 }
+              className="rounded-full inline-block"
+            /> { question.title }
+          </Link>
+        </ListItem>) }
+      </List>
+    </Card> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }
 
