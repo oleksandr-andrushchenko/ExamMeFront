@@ -52,8 +52,12 @@ export default (): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/.*[a-zA-Z]{5,3000}/.test(value)) {
-      return 'Should be from 5 to 3000 characters long, should have alpha characters'
+    if (value.length < 10 || value.length > 3000) {
+      return 'Should be from 10 to 3000 characters long'
+    }
+
+    if (value && !/^[a-zA-Z]/.test(value)) {
+      return 'Should have letters'
     }
 
     return ''
@@ -116,8 +120,8 @@ export default (): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/^[a-zA-Z0-9 ,]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
+    if (value && !/.*[a-zA-Z]{2,}/.test(value)) {
+      return 'Should be from 2 characters long, lowercase and digits allowed'
     }
 
     return ''
@@ -140,8 +144,12 @@ export default (): ReactNode => {
   const getAnswerExplanationError = (index: number, value: string | undefined = undefined): string => {
     value = value === undefined ? answers[index]['explanation']?.value : value
 
-    if (value && !/^[a-zA-Z0-9 ,]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
+    if (value && (value.length < 10 || value.length > 3000)) {
+      return 'Should be from 10 to 3000 characters long'
+    }
+
+    if (value && !/^[a-zA-Z]/.test(value)) {
+      return 'Should have letters'
     }
 
     return ''
@@ -193,8 +201,12 @@ export default (): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
+    if (value.length < 10 || value.length > 3000) {
+      return 'Should be from 10 to 3000 characters long'
+    }
+
+    if (value && !/^[a-zA-Z]/.test(value)) {
+      return 'Should have letters'
     }
 
     return ''
@@ -217,8 +229,12 @@ export default (): ReactNode => {
   const getChoiceExplanationError = (index: number, value: string | undefined = undefined): string => {
     value = value === undefined ? choices[index]['explanation']?.value : value
 
-    if (value && !/^[a-zA-Z0-9 ]{2,24}$/.test(value)) {
-      return 'Should be from 2 to 24 characters long, lowercase and digits allowed'
+    if (value && (value.length < 10 || value.length > 3000)) {
+      return 'Should be from 10 to 3000 characters long'
+    }
+
+    if (value && !/^[a-zA-Z]/.test(value)) {
+      return 'Should have letters'
     }
 
     return ''
