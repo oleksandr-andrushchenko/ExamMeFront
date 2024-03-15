@@ -135,8 +135,12 @@ export default ({ question, onSubmit }: Props): ReactNode => {
       return 'Should not be empty'
     }
 
-    if (value && !/.*[a-zA-Z]{2,}/.test(value)) {
-      return 'Should be from 2 characters long, lowercase and digits allowed'
+    if (value.length < 2) {
+      return 'Should be from 2 characters long'
+    }
+
+    if (value && !/^[a-zA-Z0-9]/.test(value)) {
+      return 'Should have letters or numbers'
     }
 
     return ''
