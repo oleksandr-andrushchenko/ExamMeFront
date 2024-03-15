@@ -43,6 +43,33 @@ const theme = {
       },
     },
   },
+  chip: {
+    styles: {
+      base: {
+        chip: {
+          fontWeight: '',
+          textTransform: '',
+        },
+      },
+      sizes: {
+        sm: {
+          chip: {
+            borderRadius: 'rounded',
+          },
+        },
+        md: {
+          chip: {
+            borderRadius: 'rounded',
+          },
+        },
+        lg: {
+          chip: {
+            borderRadius: 'rounded',
+          },
+        },
+      },
+    },
+  },
 }
 
 export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
