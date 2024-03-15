@@ -12,7 +12,7 @@ import {
 } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { Params, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../types/InputState'
 import QuestionTransfer, {
   QuestionAnswer,
@@ -26,8 +26,10 @@ import Route from '../../enum/Route'
 import Question from '../../schema/Question'
 import replaceQuestion from '../../api/question/replaceQuestion'
 import getQuestion from '../../api/question/getQuestion'
+import Category from '../../schema/Category'
 
 interface Props {
+  category?: Category,
   question?: Question,
   onSubmit?: (question: Question) => void
 }
@@ -40,14 +42,12 @@ type ChoiceInputState = {
   [key in keyof QuestionChoice]: InputState
 }
 
-export default ({ question, onSubmit }: Props): ReactNode => {
+export default ({ category, question, onSubmit }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
-
-  const { categoryId }: Params = useParams<Params>()
 
   const [ title, setTitle ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.title } })
   const getTitleError = (value: string | undefined = undefined): string => {
@@ -390,7 +390,7 @@ export default ({ question, onSubmit }: Props): ReactNode => {
       setProcessing(true)
 
       const transfer: QuestionTransfer = {
-        category: categoryId as string,
+        category: category?.id || question?.category || '',
         title: title.value,
         type: type.value,
         difficulty: difficulty.value,

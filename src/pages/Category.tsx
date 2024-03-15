@@ -63,7 +63,8 @@ export default (): ReactNode => {
       </List>
     </Card> }
 
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }
+    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && (category === undefined ?
+      <Spinner/> : <AddQuestion category={ category }/>) }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
       (category === undefined ? <Spinner/> :
