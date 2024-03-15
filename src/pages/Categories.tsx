@@ -32,15 +32,13 @@ export default (): ReactNode => {
     </Typography>
 
     { categories === undefined ? <Spinner/> : <List>
-      { categories.map(category => {
-        return <ListItem key={ category.id }>
-          <Link
-            key={ category.id }
-            to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-            { category.name } [ { category.questionCount || 0 } ]
-          </Link>
-        </ListItem>
-      }) }
+      { categories.map((category: Category): ReactNode => <ListItem key={ category.id }>
+        <Link
+          key={ category.id }
+          to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+          { category.name } [ { category.questionCount || 0 } ]
+        </Link>
+      </ListItem>) }
     </List> }
 
     { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
