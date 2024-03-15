@@ -14,7 +14,6 @@ import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroico
 import React, { ReactNode, useEffect, useState } from 'react'
 import { Params, useNavigate, useParams } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../types/InputState'
-import Category from '../../schema/Category'
 import QuestionTransfer, {
   QuestionAnswer,
   QuestionChoice,
@@ -23,7 +22,6 @@ import QuestionTransfer, {
 } from '../../schema/QuestionTransfer'
 import postQuestion from '../../api/question/postQuestion'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
-import getCategory from '../../api/category/getCategory'
 import Route from '../../enum/Route'
 import Question from '../../schema/Question'
 import replaceQuestion from '../../api/question/replaceQuestion'
@@ -50,7 +48,6 @@ export default ({ question, onSubmit }: Props): ReactNode => {
   const navigate = useNavigate()
 
   const { categoryId }: Params = useParams<Params>()
-  const [ category, setCategory ] = useState<Category>()
 
   const [ title, setTitle ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.title } })
   const getTitleError = (value: string | undefined = undefined): string => {
@@ -448,9 +445,6 @@ export default ({ question, onSubmit }: Props): ReactNode => {
     }
   }
 
-  useEffect((): void => {
-    getCategory(categoryId as string).then((category) => setCategory(category))
-  }, [])
   useEffect(() => setDisabled(isDisabled()), [ title, type, choices, answers, difficulty ])
 
   return <>
