@@ -9,3 +9,10 @@
 
 * https://github.com/oleksandr-andrushchenko/ExamMeLocal
 * If you like it - give me a star, thank you
+
+# TODO
+
+* Login & Register as in-place (dialogs)
+* Copy category/question
+* AddCategory new props: as icon, target redirect, custom text
+* AddQuestion new props: as icon, target redirect, custom text

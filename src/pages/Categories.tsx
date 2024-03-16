@@ -46,7 +46,7 @@ export default (): ReactNode => {
             /> { category.name }
           </Link>
 
-          <ListItemSuffix>
+          <ListItemSuffix className="inline-flex flex-row gap-1">
             <Chip
               value={ category.questionCount }
               className="rounded-full inline-block"

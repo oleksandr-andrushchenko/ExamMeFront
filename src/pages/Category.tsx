@@ -59,7 +59,7 @@ export default (): ReactNode => {
             /> { question.title }
           </Link>
 
-          <ListItemSuffix>
+          <ListItemSuffix className="inline-flex flex-row gap-1">
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
               <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
 
