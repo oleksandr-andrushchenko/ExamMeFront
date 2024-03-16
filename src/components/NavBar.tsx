@@ -9,6 +9,7 @@ import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Login from './Login'
 import Register from './Register'
+import Auth from './Auth.tsx'
 
 export default (): ReactNode => {
 
@@ -84,13 +85,13 @@ export default (): ReactNode => {
                 as="li"
                 variant="small"
                 className="p-1 font-normal">
-                <Login/>
+                <Auth/>
               </Typography>
               <Typography
                 as="li"
                 variant="small"
                 className="p-1 font-normal">
-                <Register/>
+                <Auth register/>
               </Typography>
             </>
         )
