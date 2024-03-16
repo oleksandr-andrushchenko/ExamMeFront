@@ -1,5 +1,4 @@
 import {
-  ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   UserCircleIcon,
@@ -14,6 +13,7 @@ import { Button, Collapse, IconButton, Navbar, Typography } from '@material-tail
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
+import Login from './Login'
 
 export default (): ReactNode => {
 
@@ -89,12 +89,7 @@ export default (): ReactNode => {
                 as="li"
                 variant="small"
                 className="p-1 font-normal">
-                <Link
-                  to={ Route.LOGIN }>
-                  <Button size="md">
-                    <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-                  </Button>
-                </Link>
+                <Login/>
               </Typography>
               <Typography
                 as="li"
