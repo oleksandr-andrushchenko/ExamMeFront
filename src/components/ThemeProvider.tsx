@@ -87,6 +87,15 @@ const theme = {
       },
     },
   },
+  tabsBody: {
+    defaultProps: {
+      animate: {
+        initial: { y: 0 },
+        mount: { y: 0 },
+        unmount: { y: 250 },
+      },
+    },
+  },
 }
 
 export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
