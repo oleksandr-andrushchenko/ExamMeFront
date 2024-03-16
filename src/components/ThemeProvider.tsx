@@ -70,6 +70,20 @@ const theme = {
       },
     },
   },
+  list: {
+    defaultProps: {
+      ripple: false,
+    },
+    styles: {
+      base: {
+        item: {
+          initial: {
+            bg: '',
+          },
+        },
+      },
+    },
+  },
 }
 
 export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
