@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Checkbox, Dialog, Typography } from '@material-tailwind/react'
-import { ArrowRightEndOnRectangleIcon, ExclamationCircleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import EmailSection from './EmailSection'
@@ -34,7 +34,7 @@ export default ({}: Props): ReactNode => {
     try {
       await postMe({ email, password })
       setAuth(await postAuth({ email, password }))
-      navigate(Route.CATEGORIES, { replace: true })
+      navigate(0)
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
