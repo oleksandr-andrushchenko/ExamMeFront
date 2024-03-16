@@ -1,7 +1,7 @@
 import { Link, Params, useParams } from 'react-router-dom'
 import { Breadcrumbs, Chip, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -39,10 +39,8 @@ export default (): ReactNode => {
       { question === undefined ? <Spinner/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="truncate mt-1">
-      <CubeIcon className="inline-block h-8 w-8 mr-1"/>
-      { question === undefined ? <Spinner/> : question.title }
-    </Typography>
+    <Typography variant="h1" color="blue-gray" className="truncate mt-1">{ question === undefined ?
+      <Spinner/> : question.title }</Typography>
 
     { category === undefined || question === undefined ? <Spinner/> : <div>
       <ListItem>

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Breadcrumbs, Button, Checkbox, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, HomeIcon, UserPlusIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import EmailSection from '../components/EmailSection'
 import PasswordSection from '../components/PasswordSection'
@@ -47,9 +47,7 @@ export default (): ReactNode => {
         className="inline-block w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.REGISTER }>Register</Link>
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
-      <UserPlusIcon className="inline-block h-8 w-8 mr-1"/> Register
-    </Typography>
+    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">Register</Typography>
     <Typography variant="small" color="gray" className="mt-1 font-normal">
       Enter your details to register
     </Typography>
