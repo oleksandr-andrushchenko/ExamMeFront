@@ -1,10 +1,4 @@
-import {
-  ArrowRightStartOnRectangleIcon,
-  Bars3Icon,
-  UserCircleIcon,
-  UserPlusIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/solid'
+import { ArrowRightStartOnRectangleIcon, Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom'
 import classNames from '../utils/classNames'
@@ -14,6 +8,7 @@ import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Login from './Login'
+import Register from './Register'
 
 export default (): ReactNode => {
 
@@ -95,12 +90,7 @@ export default (): ReactNode => {
                 as="li"
                 variant="small"
                 className="p-1 font-normal">
-                <Link
-                  to={ Route.REGISTER }>
-                  <Button size="sm">
-                    <UserPlusIcon className="inline-block h-4 w-4"/> Register
-                  </Button>
-                </Link>
+                <Register/>
               </Typography>
             </>
         )
