@@ -4,7 +4,6 @@ import Home from '../pages/Home'
 import Categories from '../pages/Categories'
 import ThemeProvider from './ThemeProvider'
 import Category from '../pages/Category'
-import Login from '../pages/Login'
 import Register from '../pages/Register'
 import NotFound from '../pages/NotFound'
 import TermsAndConditions from '../pages/TermsAndConditions'
@@ -20,9 +19,6 @@ const routes = <Routes>
     <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
     <Route path={ Path.CATEGORY } element={ <Category/> }/>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
-    <Route element={ <RequireLoggedOut/> }>
-      <Route path={ Path.LOGIN } element={ <Login/> }/>
-    </Route>
     <Route element={ <RequireLoggedOut/> }>
       <Route path={ Path.REGISTER } element={ <Register/> }/>
     </Route>
