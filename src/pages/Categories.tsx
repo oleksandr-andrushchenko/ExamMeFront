@@ -53,13 +53,13 @@ export default (): ReactNode => {
             />
 
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
-              <AddQuestion category={ category } onSubmit={ refresh }/> }
+              <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
 
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
-              <AddCategory category={ category } onSubmit={ refresh }/> }
+              <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
 
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-              <DeleteCategory category={ category } onSubmit={ refresh }/> }
+              <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
           </ListItemSuffix>
         </ListItem>) }
       </List>

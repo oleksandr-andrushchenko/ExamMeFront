@@ -61,10 +61,10 @@ export default (): ReactNode => {
 
           <ListItemSuffix>
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
-              <AddQuestion question={ question } onSubmit={ refresh }/> }
+              <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
 
             { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
-              <DeleteQuestion question={ question } onSubmit={ refresh }/> }
+              <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
           </ListItemSuffix>
         </ListItem>) }
       </List>
