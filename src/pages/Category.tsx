@@ -1,7 +1,7 @@
 import { Link, Params, useParams } from 'react-router-dom'
-import { Breadcrumbs, Card, Chip, List, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Card, Chip, List, ListItem, ListItemSuffix, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { CubeIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -12,7 +12,8 @@ import getCategory from '../api/category/getCategory'
 import getCategoryQuestions from '../api/question/getCategoryQuestions'
 import DeleteCategory from '../components/category/DeleteCategory'
 import AddQuestion from '../components/question/AddQuestion'
-import AddCategory from '../components/category/AddCategory.tsx'
+import AddCategory from '../components/category/AddCategory'
+import DeleteQuestion from '../components/question/DeleteQuestion'
 
 interface Data {
   category: Category | undefined,
@@ -24,10 +25,12 @@ export default (): ReactNode => {
   const [ { category, questions }, setData ] = useState<Data>({ category: undefined, questions: undefined })
   const { auth, me, checkAuth } = useAuth()
 
-  useEffect((): void => {
+  const refresh = (): void => {
     Promise.all<any>([ getCategory(categoryId), getCategoryQuestions(categoryId) ])
       .then(([ category, questions ]): void => setData({ category, questions }))
-  }, [])
+  }
+
+  useEffect(refresh, [])
 
   return <>
     <Breadcrumbs>
@@ -37,12 +40,8 @@ export default (): ReactNode => {
       { category === undefined ? <Spinner/> : <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }
                                                     className="capitalize">{ category.name }</Link> }
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">
-      <CubeIcon className="inline-block h-8 w-8 mr-1"/>
-      <span className="capitalize">
-          { category === undefined ? <Spinner/> : category.name }
-        </span>
-    </Typography>
+    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">{ category === undefined ?
+      <Spinner/> : category.name }</Typography>
     <Typography variant="small" color="gray" className="mt-1 font-normal">
       Available questions
     </Typography>
@@ -59,6 +58,14 @@ export default (): ReactNode => {
               className="rounded-full inline-block"
             /> { question.title }
           </Link>
+
+          <ListItemSuffix>
+            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+              <AddQuestion question={ question } onSubmit={ refresh }/> }
+
+            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+              <DeleteQuestion question={ question } onSubmit={ refresh }/> }
+          </ListItemSuffix>
         </ListItem>) }
       </List>
     </Card> }
