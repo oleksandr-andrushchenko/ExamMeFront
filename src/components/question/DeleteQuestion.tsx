@@ -9,25 +9,29 @@ import deleteQuestion from '../../api/question/deleteQuestion'
 
 interface Props {
   question: Question,
+  onSubmit?: () => void
 }
 
-export default ({ question }: Props): ReactNode => {
+export default ({ question, onSubmit }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  useEffect(() => {
+  useEffect((): void => {
     if (processing) {
       deleteQuestion(question.id)
-        .then(() => navigate(Route.CATEGORY.replace(':categoryId', question.category), { replace: true }))
-        .catch((error) => {
+        .then((): void => {
+          navigate(Route.CATEGORY.replace(':categoryId', question.category), { replace: true })
+          onSubmit && onSubmit()
+        })
+        .catch((error): void => {
           const errors = normalizeApiErrors(error)
           console.log(errors)
           setError(errors?.unknown || '')
         })
-        .finally(() => setProcessing(false))
+        .finally((): void => setProcessing(false))
     }
   }, [ processing ])
 
