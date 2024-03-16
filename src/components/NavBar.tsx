@@ -7,9 +7,7 @@ import { Button, Collapse, IconButton, Navbar, Typography } from '@material-tail
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
-import Login from './Login'
-import Register from './Register'
-import Auth from './Auth.tsx'
+import Auth from './Auth'
 
 export default (): ReactNode => {
 
