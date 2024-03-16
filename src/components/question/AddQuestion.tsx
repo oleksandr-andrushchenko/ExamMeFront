@@ -4,10 +4,12 @@ import {
   CardBody,
   Checkbox,
   Dialog,
+  IconButton,
   Input,
   Option,
   Select,
   Textarea,
+  Tooltip,
   Typography,
 } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
@@ -31,7 +33,8 @@ import Category from '../../schema/Category'
 interface Props {
   category?: Category,
   question?: Question,
-  onSubmit?: (question: Question) => void
+  onSubmit?: (question: Question) => void,
+  iconButton?: boolean,
 }
 
 type AnswerInputState = {
@@ -42,7 +45,7 @@ type ChoiceInputState = {
   [key in keyof QuestionChoice]: InputState
 }
 
-export default ({ category, question, onSubmit }: Props): ReactNode => {
+export default ({ category, question, onSubmit, iconButton }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -452,14 +455,26 @@ export default ({ category, question, onSubmit }: Props): ReactNode => {
   useEffect(() => setDisabled(isDisabled()), [ title, type, choices, answers, difficulty ])
 
   return <>
-    <Button
-      size="sm"
-      color={ question ? 'orange' : 'green' }
-      onClick={ handleOpen }
-      disabled={ processing }>
-      { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
-        className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding Question...' : 'Add Question') }
-    </Button>
+    {
+      iconButton
+        ? <Tooltip content={ question ? 'Update question' : 'Add question' }>
+          <IconButton
+            size="sm"
+            color={ question ? 'orange' : 'green' }
+            onClick={ handleOpen }
+            disabled={ processing }>
+            { question ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
+          </IconButton>
+        </Tooltip>
+        : <Button
+          size="sm"
+          color={ question ? 'orange' : 'green' }
+          onClick={ handleOpen }
+          disabled={ processing }>
+          { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+            className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding Question...' : 'Add Question') }
+        </Button>
+    }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">

@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
+import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
@@ -10,9 +10,10 @@ import deleteQuestion from '../../api/question/deleteQuestion'
 interface Props {
   question: Question,
   onSubmit?: () => void
+  iconButton?: boolean,
 }
 
-export default ({ question, onSubmit }: Props): ReactNode => {
+export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -36,13 +37,25 @@ export default ({ question, onSubmit }: Props): ReactNode => {
   }, [ processing ])
 
   return <>
-    <Button
-      size="sm"
-      color="red"
-      onClick={ handleOpen }
-      disabled={ processing }>
-      <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Question...' : 'Delete Question' }
-    </Button>
+    {
+      iconButton
+        ? <Tooltip content="Delete question">
+          <IconButton
+            size="sm"
+            color="red"
+            onClick={ handleOpen }
+            disabled={ processing }>
+            <XMarkIcon className="h-4 w-4"/>
+          </IconButton>
+        </Tooltip>
+        : <Button
+          size="sm"
+          color="red"
+          onClick={ handleOpen }
+          disabled={ processing }>
+          <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Question...' : 'Delete Question' }
+        </Button>
+    }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card className="mx-auto w-full max-w-[24rem] text-center">
         <CardBody className="flex flex-col gap-4">

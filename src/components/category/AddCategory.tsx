@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Dialog, Textarea, Typography } from '@material-tailwind/react'
+import { Button, Card, CardBody, Dialog, IconButton, Textarea, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
@@ -12,10 +12,11 @@ import getCategory from '../../api/category/getCategory'
 
 interface Props {
   category?: Category,
-  onSubmit?: (question: Category) => void
+  onSubmit?: (question: Category) => void,
+  iconButton?: boolean,
 }
 
-export default ({ category, onSubmit }: Props): ReactNode => {
+export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -79,14 +80,26 @@ export default ({ category, onSubmit }: Props): ReactNode => {
   }
 
   return <>
-    <Button
-      size="sm"
-      color={ category ? 'orange' : 'green' }
-      onClick={ handleOpen }
-      disabled={ processing }>
-      { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
-        className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating Category...' : 'Update Category') : (processing ? 'Adding Category...' : 'Add Category') }
-    </Button>
+    {
+      iconButton
+        ? <Tooltip content={ category ? 'Update category' : 'Add category' }>
+          <IconButton
+            size="sm"
+            color={ category ? 'orange' : 'green' }
+            onClick={ handleOpen }
+            disabled={ processing }>
+            { category ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
+          </IconButton>
+        </Tooltip>
+        : <Button
+          size="sm"
+          color={ category ? 'orange' : 'green' }
+          onClick={ handleOpen }
+          disabled={ processing }>
+          { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+            className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating Category...' : 'Update Category') : (processing ? 'Adding Category...' : 'Add Category') }
+        </Button>
+    }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">
