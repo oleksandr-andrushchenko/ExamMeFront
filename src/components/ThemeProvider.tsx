@@ -3,6 +3,9 @@ import { ReactNode } from 'react'
 
 const theme = {
   button: {
+    defaultProps: {
+      ripple: false,
+    },
     styles: {
       base: {
         initial: {
