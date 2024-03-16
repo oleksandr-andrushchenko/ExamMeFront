@@ -87,14 +87,6 @@ export default ({}: Props): ReactNode => {
                                              className="font-medium text-gray-900">Register</Link>
               </Typography>
             </div>
-
-            { error && <Typography
-              variant="small"
-              color="red"
-              className="flex items-center gap-1 font-normal">
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">{ error }</span>
-            </Typography> }
           </form>
         </CardBody>
       </Card>
