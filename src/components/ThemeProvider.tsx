@@ -34,6 +34,7 @@ const theme = {
   },
   button: {
     defaultProps: {
+      size: 'sm',
       ripple: false,
     },
     styles: {
@@ -58,6 +59,7 @@ const theme = {
   },
   iconButton: {
     defaultProps: {
+      size: 'sm',
       ripple: false,
     },
     styles: {
