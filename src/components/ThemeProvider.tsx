@@ -70,6 +70,7 @@ const theme = {
     styles: {
       base: {
         chip: {
+          display: 'inline-block',
           fontWeight: '',
           textTransform: '',
         },
