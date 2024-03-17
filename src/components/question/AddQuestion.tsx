@@ -470,7 +470,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
           onClick={ handleOpen }
           disabled={ processing }>
           { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
-            className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding Question...' : 'Add Question') }
+            className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding question...' : 'Add question') }
         </Button>
     }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
@@ -525,7 +525,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   onBlur: (e) => !e.nativeEvent.relatedTarget && setTypeFocused(false),
                 } }
                 value={ type.value }
-                className="capitalize"
                 aria-invalid={ type.error ? 'true' : 'false' }
                 error={ !!type.error && type.displayError }>
                 { Object.values(QuestionType)
@@ -618,8 +617,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Button
                       size="sm"
                       type="button"
-                      onClick={ () => removeAnswer(index) }
-                      className="rounded capitalize">
+                      onClick={ () => removeAnswer(index) }>
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
                     </Button>
                   </div> }
@@ -628,8 +626,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   <Button
                     size="sm"
                     type="button"
-                    onClick={ () => addAnswer() }
-                    className="rounded capitalize">
+                    onClick={ () => addAnswer() }>
                     <PlusIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
@@ -718,8 +715,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Button
                       size="sm"
                       type="button"
-                      onClick={ () => removeChoice(index) }
-                      className="rounded capitalize">
+                      onClick={ () => removeChoice(index) }>
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
                     </Button>
                   </div> }
@@ -728,8 +724,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   <Button
                     size="sm"
                     type="button"
-                    onClick={ () => addChoice() }
-                    className="rounded capitalize">
+                    onClick={ () => addChoice() }>
                     <PlusIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
@@ -759,7 +754,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   onBlur: (e) => !e.nativeEvent.relatedTarget && setDifficultyFocused(false),
                 } }
                 value={ difficulty.value }
-                className="capitalize"
                 aria-invalid={ difficulty.error ? 'true' : 'false' }
                 error={ !!difficulty.error && difficulty.displayError }>
                 { Object.values(QuestionDifficulty)

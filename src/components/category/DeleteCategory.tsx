@@ -51,7 +51,7 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
           size="sm"
           onClick={ handleOpen }
           disabled={ processing }>
-          <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Category...' : 'Delete Category' }
+          <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting category...' : 'Delete category' }
         </Button>
     }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
