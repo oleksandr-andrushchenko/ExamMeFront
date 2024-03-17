@@ -6,6 +6,16 @@ const theme = {
     styles: {
       variants: {
         outlined: {
+          base: {
+            label: {
+              before: {
+                borderRadius: 'before:rounded-tl',
+              },
+              after: {
+                borderRadius: 'after:rounded-tr',
+              },
+            },
+          },
           sizes: {
             md: {
               input: {
