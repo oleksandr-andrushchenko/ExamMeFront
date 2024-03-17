@@ -1,15 +1,5 @@
 import { Link } from 'react-router-dom'
-import {
-  Breadcrumbs,
-  Button,
-  IconButton,
-  Input,
-  Tab,
-  Tabs,
-  TabsHeader,
-  Tooltip,
-  Typography,
-} from '@material-tailwind/react'
+import { Breadcrumbs, Button, IconButton, Input, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -21,7 +11,7 @@ import getCategories from '../api/category/getCategories'
 import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
-import { EyeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 export default (): ReactNode => {
   const [ categories, setCategories ] = useState<Category[] | undefined>(undefined)
@@ -62,7 +52,11 @@ export default (): ReactNode => {
       Available categories
     </Typography>
 
-    <div className="flex flex-col items-center justify-between gap-4 md:flex-row mt-4">
+    <div className="flex gap-1 items-center mt-4">
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
+    </div>
+
+    <div className="flex gap-1 items-center mt-4">
       <Tabs value="all" className="w-full md:w-max">
         <TabsHeader>
           { tableFilters.map(({ label, value }) => <Tab key={ value } value={ value }
@@ -70,9 +64,7 @@ export default (): ReactNode => {
         </TabsHeader>
       </Tabs>
 
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
-
-      <div className="w-full md:w-72">
+      <div>
         <Input
           label="Search"
           icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }
@@ -80,7 +72,7 @@ export default (): ReactNode => {
       </div>
     </div>
 
-    <table className="w-full min-w-max table-auto text-left mt-4">
+    <table className="w-full table-auto text-left text-xs mt-4">
       <thead>
       <tr>
         { tableColumns.map((head) => (
@@ -97,55 +89,51 @@ export default (): ReactNode => {
       </tr>
       </thead>
       { categories === undefined ? <Spinner/> : <tbody>
-      { categories.map((category: Category, index: number): ReactNode => <tr key={ index }
-                                                                             className={ index === 0 ? 'border-b' : '' }>
-        <td className="py-2 px-4">
-          <Typography variant="small">
-            { index + 1 }
-          </Typography>
-        </td>
+      { categories
+        ? categories.map((category: Category, index: number): ReactNode => <tr
+          key={ index }
+          className={ index === 0 ? 'border-b' : '' }>
+          <td className="py-2 px-4">
+            <Typography variant="small">
+              { index + 1 }
+            </Typography>
+          </td>
 
-        <td className="py-2 px-4">
-          <Typography variant="small">
-            <Link
-              key={ category.id }
-              to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-              { category.name }
-            </Link>
-          </Typography>
-        </td>
+          <td className="py-2 px-4">
+            <Typography variant="small">
+              <Link
+                key={ category.id }
+                to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+                { category.name }
+              </Link>
+            </Typography>
+          </td>
 
-        <td className="py-2 px-4">
-          <Typography variant="small">
-            { category.questionCount }
-          </Typography>
-        </td>
+          <td className="py-2 px-4">
+            <Typography variant="small">
+              { category.questionCount }
+            </Typography>
+          </td>
 
-        <td className="py-2 px-4 flex justify-end gap-1">
-          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
-            <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
+          <td className="py-2 px-4 flex justify-end gap-1">
+            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
+              <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
 
-          <Tooltip content="View category">
-            <Link
-              key={ category.id }
-              to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-              <IconButton>
-                <EyeIcon className="h-4 w-4"/>
-              </IconButton>
-            </Link>
-          </Tooltip>
+            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+              <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
 
-          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
-            <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
-
-          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-            <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
-        </td>
-      </tr>) }
+            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
+              <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+          </td>
+        </tr>)
+        : <tr>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+        </tr> }
       </tbody> }
     </table>
 
-    <div className="flex gap-1 mt-4">
+
+    { categories === undefined ? <Spinner/> : (categories && <div className="flex gap-1 mt-4">
       <Button variant="outlined">Previous</Button>
       <div className="flex items-center gap-2">
         <IconButton variant="outlined">1</IconButton>
@@ -157,6 +145,6 @@ export default (): ReactNode => {
         <IconButton variant="text">10</IconButton>
       </div>
       <Button variant="outlined">Next</Button>
-    </div>
+    </div>) }
   </>
 }
