@@ -2,6 +2,26 @@ import { ThemeProvider as TailwindThemeProvider } from '@material-tailwind/react
 import { ReactNode } from 'react'
 
 const theme = {
+  input: {
+    styles: {
+      variants: {
+        outlined: {
+          sizes: {
+            md: {
+              input: {
+                borderRadius: 'rounded',
+              },
+            },
+            lg: {
+              input: {
+                borderRadius: 'rounded',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   button: {
     defaultProps: {
       ripple: false,
