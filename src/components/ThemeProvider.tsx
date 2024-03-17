@@ -41,7 +41,7 @@ const theme = {
       base: {
         initial: {
           fontWeight: 'font-normal',
-          textTransform: 'capitalize',
+          textTransform: '',
         },
       },
       sizes: {
