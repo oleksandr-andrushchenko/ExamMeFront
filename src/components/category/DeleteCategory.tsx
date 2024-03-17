@@ -42,7 +42,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
         ? <Tooltip content="Delete category">
           <IconButton
             size="sm"
-            color="red"
             onClick={ handleOpen }
             disabled={ processing }>
             <XMarkIcon className="h-4 w-4"/>
@@ -50,7 +49,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
         </Tooltip>
         : <Button
           size="sm"
-          color="red"
           onClick={ handleOpen }
           disabled={ processing }>
           <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Category...' : 'Delete Category' }
@@ -63,10 +61,9 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
             Are you sure you want to delete "{ category.name }" category?
           </Typography>
           <Typography
-            className="mb-3 font-normal"
+            className="mb-3"
             variant="paragraph"
-            color="gray"
-          >
+            color="gray">
             This will delete "{ category.name }" category and all its questions [ { category.questionCount } ]
             permanently.
             <br/>
@@ -84,7 +81,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
           </Button>
           <Button
             size="md"
-            color="red"
             className="ml-1"
             onClick={ () => setProcessing(true) }
             disabled={ processing }>

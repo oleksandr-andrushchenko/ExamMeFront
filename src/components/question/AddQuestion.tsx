@@ -460,7 +460,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
         ? <Tooltip content={ question ? 'Update question' : 'Add question' }>
           <IconButton
             size="sm"
-            color={ question ? 'orange' : 'green' }
             onClick={ handleOpen }
             disabled={ processing }>
             { question ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
@@ -468,7 +467,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
         </Tooltip>
         : <Button
           size="sm"
-          color={ question ? 'orange' : 'green' }
           onClick={ handleOpen }
           disabled={ processing }>
           { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
@@ -478,7 +476,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4" color="blue-gray">
+          <Typography variant="h4">
             { question ? 'Update question' : 'Add question' }
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
@@ -505,7 +503,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               { title.error && title.displayError && <Typography
                 variant="small"
                 color="red"
-                className="flex items-center gap-1 font-normal">
+                className="flex items-center gap-1">
                 <ExclamationCircleIcon className="w-1/12"/>
                 <span className="w-11/12">{ title.error }</span>
               </Typography> }
@@ -537,14 +535,14 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               { type.error && type.displayError && <Typography
                 variant="small"
                 color="red"
-                className="flex items-center gap-1 font-normal">
+                className="flex items-center gap-1">
                 <ExclamationCircleIcon className="w-1/12"/>
                 <span className="w-11/12">{ type.error }</span>
               </Typography> }
             </div>
 
             { type.value === QuestionType.TYPE && <div className="flex flex-col gap-2">
-              <Typography variant="h6" color="blue-gray">Answers</Typography>
+              <Typography variant="h6">Answers</Typography>
               <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
                 { answers.map((answer: AnswerInputState, index: number): ReactNode => <div key={ `answer-${ index }` }
                                                                                            className="flex flex-col gap-3">
@@ -570,7 +568,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     { answer.variants.error && answer.variants.displayError && <Typography
                       variant="small"
                       color="red"
-                      className="flex items-center gap-1 font-normal">
+                      className="flex items-center gap-1">
                       <ExclamationCircleIcon className="w-1/12"/>
                       <span className="w-11/12">{ answer.variants.error }</span>
                     </Typography> }
@@ -595,7 +593,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     { answer.explanation?.error && answer.explanation.displayError && <Typography
                       variant="small"
                       color="red"
-                      className="flex items-center gap-1 font-normal">
+                      className="flex items-center gap-1">
                       <ExclamationCircleIcon className="w-1/12"/>
                       <span className="w-11/12">{ answer.explanation.error }</span>
                     </Typography> }
@@ -604,10 +602,10 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Checkbox
                       label={
                         <div>
-                          <Typography variant="small" color="gray" className="font-normal">
+                          <Typography variant="small">
                             Correct
                           </Typography>
-                          <Typography variant="small" color="gray" className="font-normal text-xs">
+                          <Typography variant="small" className="text-xs">
                             Question answer #{ index + 1 } correct
                           </Typography>
                         </div>
@@ -621,7 +619,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                       size="sm"
                       type="button"
                       onClick={ () => removeAnswer(index) }
-                      className="rounded capitalize font-normal">
+                      className="rounded capitalize">
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
                     </Button>
                   </div> }
@@ -631,14 +629,14 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     size="sm"
                     type="button"
                     onClick={ () => addAnswer() }
-                    className="rounded capitalize font-normal">
+                    className="rounded capitalize">
                     <PlusIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
                 { answersError && <Typography
                   variant="small"
                   color="red"
-                  className="flex items-center gap-1 font-normal">
+                  className="flex items-center gap-1">
                   <ExclamationCircleIcon className="w-1/12"/>
                   <span className="w-11/12">{ answersError }</span>
                 </Typography> }
@@ -646,7 +644,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
             </div> }
 
             { type.value === QuestionType.CHOICE && <div className="flex flex-col gap-2">
-              <Typography variant="h6" color="blue-gray">Choices</Typography>
+              <Typography variant="h6">Choices</Typography>
               <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
                 { choices.map((choice: ChoiceInputState, index: number): ReactNode => <div key={ `choice-${ index }` }
                                                                                            className="flex flex-col gap-3">
@@ -672,7 +670,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     { choice.title.error && choice.title.displayError && <Typography
                       variant="small"
                       color="red"
-                      className="flex items-center gap-1 font-normal">
+                      className="flex items-center gap-1">
                       <ExclamationCircleIcon className="w-1/12"/>
                       <span className="w-11/12">{ choice.title.error }</span>
                     </Typography> }
@@ -697,7 +695,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     { choice.explanation?.error && choice.explanation?.displayError && <Typography
                       variant="small"
                       color="red"
-                      className="flex items-center gap-1 font-normal">
+                      className="flex items-center gap-1">
                       <ExclamationCircleIcon className="w-1/12"/>
                       <span className="w-11/12">{ choice.explanation.error }</span>
                     </Typography> }
@@ -706,8 +704,8 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Checkbox
                       label={
                         <div>
-                          <Typography variant="small" color="gray" className="font-normal">Correct</Typography>
-                          <Typography variant="small" color="gray" className="font-normal text-xs">
+                          <Typography variant="small">Correct</Typography>
+                          <Typography variant="small" className="text-xs">
                             Question choice #{ index + 1 } correct
                           </Typography>
                         </div>
@@ -721,7 +719,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                       size="sm"
                       type="button"
                       onClick={ () => removeChoice(index) }
-                      className="rounded capitalize font-normal">
+                      className="rounded capitalize">
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
                     </Button>
                   </div> }
@@ -731,14 +729,14 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     size="sm"
                     type="button"
                     onClick={ () => addChoice() }
-                    className="rounded capitalize font-normal">
+                    className="rounded capitalize">
                     <PlusIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
                 { choicesError && <Typography
                   variant="small"
                   color="red"
-                  className="flex items-center gap-1 font-normal">
+                  className="flex items-center gap-1">
                   <ExclamationCircleIcon className="w-1/12"/>
                   <span className="w-11/12">{ choicesError }</span>
                 </Typography> }
@@ -771,7 +769,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               { difficulty.error && difficulty.displayError && <Typography
                 variant="small"
                 color="red"
-                className="flex items-center gap-1 font-normal">
+                className="flex items-center gap-1">
                 <ExclamationCircleIcon className="w-1/12"/>
                 <span className="w-11/12">{ difficulty.error }</span>
               </Typography> }
@@ -780,7 +778,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
             { error && <Typography
               variant="small"
               color="red"
-              className="flex items-center gap-1 font-normal">
+              className="flex items-center gap-1">
               <ExclamationCircleIcon className="w-1/12"/>
               <span className="w-11/12">{ error }</span>
             </Typography> }
@@ -794,7 +792,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               </Button>
               <Button
                 size="md"
-                color={ question ? 'orange' : 'green' }
                 className="ml-1"
                 type="submit"
                 disabled={ disabled }>

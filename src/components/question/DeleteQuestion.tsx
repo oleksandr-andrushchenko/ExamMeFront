@@ -42,7 +42,6 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
         ? <Tooltip content="Delete question">
           <IconButton
             size="sm"
-            color="red"
             onClick={ handleOpen }
             disabled={ processing }>
             <XMarkIcon className="h-4 w-4"/>
@@ -50,7 +49,6 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
         </Tooltip>
         : <Button
           size="sm"
-          color="red"
           onClick={ handleOpen }
           disabled={ processing }>
           <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Question...' : 'Delete Question' }
@@ -63,10 +61,9 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
             Are you sure you want to delete "{ question.title }" question?
           </Typography>
           <Typography
-            className="mb-3 font-normal"
+            className="mb-3"
             variant="paragraph"
-            color="gray"
-          >
+            color="gray">
             This will delete "{ question.title }" question permanently.
             <br/>
             You cannot undo this action.
@@ -83,7 +80,6 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
           </Button>
           <Button
             size="md"
-            color="red"
             className="ml-1"
             onClick={ () => setProcessing(true) }
             disabled={ processing }>

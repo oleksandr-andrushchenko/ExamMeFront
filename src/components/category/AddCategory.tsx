@@ -85,7 +85,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
         ? <Tooltip content={ category ? 'Update category' : 'Add category' }>
           <IconButton
             size="sm"
-            color={ category ? 'orange' : 'green' }
             onClick={ handleOpen }
             disabled={ processing }>
             { category ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
@@ -93,21 +92,19 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
         </Tooltip>
         : <Button
           size="sm"
-          color={ category ? 'orange' : 'green' }
           onClick={ handleOpen }
           disabled={ processing }>
           { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
-            className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating Category...' : 'Update Category') : (processing ? 'Adding Category...' : 'Add Category') }
+            className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating category...' : 'Update category') : (processing ? 'Adding category...' : 'Add category') }
         </Button>
     }
     <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4" color="blue-gray">
+          <Typography variant="h4">
             { category ? 'Update category' : 'Add category' }
           </Typography>
-          <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
-                method="post">
+          <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
 
             <div className="flex flex-col gap-2">
               <Typography
@@ -131,7 +128,7 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
               { name.error && name.displayError && <Typography
                 variant="small"
                 color="red"
-                className="flex items-center gap-1 font-normal">
+                className="flex items-center gap-1">
                 <ExclamationCircleIcon className="w-1/12"/>
                 <span className="w-11/12">{ name.error }</span>
               </Typography> }
@@ -140,7 +137,7 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
             { error && <Typography
               variant="small"
               color="red"
-              className="flex items-center gap-1 font-normal">
+              className="flex items-center gap-1">
               <ExclamationCircleIcon className="w-1/12"/>
               <span className="w-11/12">{ error }</span>
             </Typography> }
@@ -154,7 +151,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
               </Button>
               <Button
                 size="md"
-                color={ category ? 'orange' : 'green' }
                 className="ml-1"
                 type="submit"
                 disabled={ !name.value || !!name.error || processing }>
