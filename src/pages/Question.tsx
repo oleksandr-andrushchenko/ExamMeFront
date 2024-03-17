@@ -39,43 +39,45 @@ export default (): ReactNode => {
       { question === undefined ? <Spinner/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="truncate mt-1">{ question === undefined ?
+    <Typography variant="h1" className="truncate mt-1">{ question === undefined ?
       <Spinner/> : question.title }</Typography>
 
     { category === undefined || question === undefined ? <Spinner/> : <div>
       <ListItem>
-        <Typography variant="h6" color="blue-gray" className="inline-block">{ category.name }</Typography>
-        <Chip variant="ghost" value="Category" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Title"/>
+        <Typography variant="h6">{ question.title }</Typography>
       </ListItem>
       <ListItem>
-        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.title }</Typography>
-        <Chip variant="ghost" value="Title" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Category"/>
+        <Typography variant="h6">{ category.name }</Typography>
       </ListItem>
       <ListItem>
-        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.type }</Typography>
-        <Chip variant="ghost" value="Type" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Type"/>
+        <Typography variant="h6">{ question.type }</Typography>
       </ListItem>
       <ListItem>
         { question.type === QuestionType.TYPE && <div>
+          <Chip variant="ghost" value="Answers"/>
           { question.answers?.map((answer: QuestionAnswer, index: number): ReactNode => <div key={ index }>
-            <div>{ answer.variants.join(', ') }</div>
-            <div>{ answer.explanation }</div>
-            <div>{ answer.correct }</div>
+            <Chip variant="ghost" value={ `Answer #${ index + 1 }` }/>
+            <div><Chip variant="ghost" value="Variants"/> { answer.variants.join(', ') }</div>
+            { answer.explanation && <div><Chip variant="ghost" value="Explanation"/> { answer.explanation }</div> }
+            <div><Chip variant="ghost" value="Correct"/> { answer.correct ? 'Yes' : 'No' }</div>
           </div>) }
-          <Chip variant="ghost" value="Answers" className="inline-block ml-1"/>
         </div> }
         { question.type === QuestionType.CHOICE && <div>
+          <Chip variant="ghost" value="Choices"/>
           { question.choices?.map((choice: QuestionChoice, index: number): ReactNode => <div key={ index }>
-            <div>{ choice.title }</div>
-            <div>{ choice.explanation }</div>
-            <div>{ choice.correct }</div>
+            <Chip variant="ghost" value={ `Choice #${ index + 1 }` }/>
+            <div><Chip variant="ghost" value="Title"/> { choice.title }</div>
+            { choice.explanation && <div><Chip variant="ghost" value="Explanation"/> { choice.explanation }</div> }
+            <div><Chip variant="ghost" value="Correct"/> { choice.correct ? 'Yes' : 'No' }</div>
           </div>) }
-          <Chip variant="ghost" value="Choices" className="inline-block ml-1"/>
         </div> }
       </ListItem>
       <ListItem>
-        <Typography variant="h6" color="blue-gray" className="inline-block">{ question.difficulty }</Typography>
-        <Chip variant="ghost" value="Difficulty" className="inline-block ml-1"/>
+        <Chip variant="ghost" value="Difficulty"/>
+        <Typography variant="h6">{ question.difficulty }</Typography>
       </ListItem>
     </div> }
 
