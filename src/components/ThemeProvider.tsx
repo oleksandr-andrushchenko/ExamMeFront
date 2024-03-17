@@ -46,6 +46,24 @@ const theme = {
       },
     },
   },
+  iconButton: {
+    defaultProps: {
+      ripple: false,
+    },
+    styles: {
+      sizes: {
+        sm: {
+          borderRadius: 'rounded',
+        },
+        md: {
+          borderRadius: 'rounded',
+        },
+        lg: {
+          borderRadius: 'rounded',
+        },
+      },
+    },
+  },
   dialog: {
     styles: {
       base: {
