@@ -72,7 +72,6 @@ export default (): ReactNode => {
                 variant="small"
                 className="p-1 font-normal">
                 <Button
-                  size="sm"
                   onClick={ () => setAuth(undefined) }>
                   <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
                 </Button>

@@ -84,14 +84,12 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
       iconButton
         ? <Tooltip content={ category ? 'Update category' : 'Add category' }>
           <IconButton
-            size="sm"
             onClick={ handleOpen }
             disabled={ processing }>
             { category ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
           </IconButton>
         </Tooltip>
         : <Button
-          size="sm"
           onClick={ handleOpen }
           disabled={ processing }>
           { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
@@ -115,7 +113,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
               <Textarea
                 name="name"
                 type="text"
-                size="lg"
                 label="Name"
                 onChange={ (e) => setNameValue(e.target.value) }
                 onFocus={ () => setNameFocused(true) }
@@ -144,7 +141,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
 
             <div>
               <Button
-                size="sm"
                 type="reset"
                 onClick={ handleOpen }>
                 Cancel

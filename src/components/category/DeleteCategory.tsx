@@ -41,14 +41,12 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
       iconButton
         ? <Tooltip content="Delete category">
           <IconButton
-            size="sm"
             onClick={ handleOpen }
             disabled={ processing }>
             <XMarkIcon className="h-4 w-4"/>
           </IconButton>
         </Tooltip>
         : <Button
-          size="sm"
           onClick={ handleOpen }
           disabled={ processing }>
           <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting category...' : 'Delete category' }
@@ -75,7 +73,6 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
         </CardBody>
         <CardFooter className="pt-0">
           <Button
-            size="sm"
             onClick={ handleOpen }>
             Cancel
           </Button>

@@ -459,14 +459,12 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
       iconButton
         ? <Tooltip content={ question ? 'Update question' : 'Add question' }>
           <IconButton
-            size="sm"
             onClick={ handleOpen }
             disabled={ processing }>
             { question ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
           </IconButton>
         </Tooltip>
         : <Button
-          size="sm"
           onClick={ handleOpen }
           disabled={ processing }>
           { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
@@ -491,7 +489,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               <Textarea
                 name="title"
                 type="text"
-                size="md"
                 label="Question title"
                 onChange={ (e) => setTitleValue(e.target.value) }
                 onFocus={ () => setTitleFocused(true) }
@@ -517,7 +514,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               </Typography>
               <Select
                 name="type"
-                size="md"
                 label="Question type"
                 onChange={ (type) => setTypeValue(type!) }
                 onFocus={ () => setTypeFocused(true) }
@@ -555,7 +551,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Input
                       name={ `answer-${ index }-variants` }
                       type="text"
-                      size="md"
                       label={ `Question answer #${ index + 1 } variants (separated by comma)` }
                       onChange={ (e) => setAnswerVariantsValue(index, e.target.value) }
                       onFocus={ () => setAnswerVariantsFocused(index, true) }
@@ -581,7 +576,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Textarea
                       name={ `answer-${ index }-explanation` }
                       type="text"
-                      size="md"
                       label={ `Question answer #${ index + 1 } explanation` }
                       onChange={ (e) => setAnswerExplanationValue(index, e.target.value) }
                       onFocus={ () => setAnswerExplanationFocused(index, true) }
@@ -615,7 +609,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   </div>
                   { answers.length > 1 && <div className="-mt-3">
                     <Button
-                      size="sm"
                       type="button"
                       onClick={ () => removeAnswer(index) }>
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
@@ -624,7 +617,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                 </div>) }
                 <div key="control">
                   <Button
-                    size="sm"
                     type="button"
                     onClick={ () => addAnswer() }>
                     <PlusIcon className="inline-block h-4 w-4"/> Add
@@ -655,7 +647,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Textarea
                       name={ `choice-${ index }-title` }
                       type="text"
-                      size="md"
                       label={ `Question choice #${ index + 1 } title` }
                       onChange={ (e) => setChoiceTitleValue(index, e.target.value) }
                       onFocus={ () => setChoiceTitleFocused(index, true) }
@@ -681,7 +672,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                     <Textarea
                       name={ `choice-${ index }-explanation` }
                       type="text"
-                      size="md"
                       label={ `Question choice #${ index + 1 } explanation` }
                       onChange={ (e) => setChoiceExplanationValue(index, e.target.value) }
                       onFocus={ () => setChoiceExplanationFocused(index, true) }
@@ -713,7 +703,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                   </div>
                   { choices.length > 1 && <div className="-mt-3">
                     <Button
-                      size="sm"
                       type="button"
                       onClick={ () => removeChoice(index) }>
                       <XMarkIcon className="inline-block h-4 w-4"/> Remove
@@ -722,7 +711,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
                 </div>) }
                 <div key="control">
                   <Button
-                    size="sm"
                     type="button"
                     onClick={ () => addChoice() }>
                     <PlusIcon className="inline-block h-4 w-4"/> Add
@@ -746,7 +734,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
               </Typography>
               <Select
                 name="difficulty"
-                size="md"
                 label="Question difficulty"
                 onChange={ (difficulty) => setDifficultyValue(difficulty!) }
                 onFocus={ () => setDifficultyFocused(true) }
@@ -779,7 +766,6 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
 
             <div>
               <Button
-                size="sm"
                 type="reset"
                 onClick={ handleOpen }>
                 Cancel

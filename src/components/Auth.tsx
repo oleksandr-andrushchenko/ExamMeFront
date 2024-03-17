@@ -16,7 +16,6 @@ export default ({ register }: Props): ReactNode => {
 
   const [ activeTab, setActiveTab ] = useState<string>(register ? 'register' : 'login')
   const cancelButton = <Button
-    size="sm"
     type="reset"
     onClick={ handleOpen }>
     Cancel
@@ -45,7 +44,6 @@ export default ({ register }: Props): ReactNode => {
     {
       register
         ? <Button
-          size="sm"
           onClick={ handleOpen }>
           <UserPlusIcon className="inline-block h-4 w-4"/> Register
         </Button>

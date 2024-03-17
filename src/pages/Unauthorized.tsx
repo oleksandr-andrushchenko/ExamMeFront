@@ -18,7 +18,6 @@ export default (): ReactNode => {
       You do not have access to the requested page
     </Typography>
     <Button
-      size="sm"
       className="mt-3"
       onClick={ goBack }>
       <ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back

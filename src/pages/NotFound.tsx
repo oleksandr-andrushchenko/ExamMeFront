@@ -15,7 +15,6 @@ export default (): ReactNode => <>
   </Typography>
   <Link to={ Route.HOME }>
     <Button
-      size="sm"
       className="mt-3">
       <HomeIcon className="inline-block h-4 w-4"/> Go Home
     </Button>
