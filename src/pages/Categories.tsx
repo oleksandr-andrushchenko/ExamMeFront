@@ -55,8 +55,10 @@ export default (): ReactNode => {
         className="inline-block w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">Categories</Typography>
-    <Typography variant="small" color="gray" className="mt-1 font-normal">
+
+    <Typography variant="h1" className="flex items-baseline mt-1">Categories</Typography>
+
+    <Typography variant="small" className="mt-1">
       Available categories
     </Typography>
 
@@ -84,11 +86,10 @@ export default (): ReactNode => {
         { tableColumns.map((head) => (
           <th
             key={ head }
-            className="border-y border-blue-gray-100 bg-blue-gray-50/50 py-2 px-4">
+            className="bg-blue-gray-50/50 py-2 px-4">
             <Typography
               variant="small"
-              color="blue-gray"
-              className="font-normal leading-none opacity-70">
+              className="opacity-70">
               { head }
             </Typography>
           </th>
@@ -96,54 +97,51 @@ export default (): ReactNode => {
       </tr>
       </thead>
       { categories === undefined ? <Spinner/> : <tbody>
-      { categories.map((category: Category, index: number): ReactNode => {
-        const isLast = index === categories.length - 1
-        const classes = isLast
-          ? 'py-2 px-4'
-          : 'py-2 px-4 border-b border-blue-gray-50'
+      { categories.map((category: Category, index: number): ReactNode => <tr key={ index }
+                                                                             className={ index === 0 ? 'border-b' : '' }>
+        <td className="py-2 px-4">
+          <Typography variant="small">
+            { index + 1 }
+          </Typography>
+        </td>
 
-        return <tr key={ index }>
-          <td className={ classes }>
-            <Typography variant="small">
-              { index + 1 }
-            </Typography>
-          </td>
-          <td className={ classes }>
-            <Typography variant="small">
-              <Link
-                key={ category.id }
-                to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-                { category.name }
-              </Link>
-            </Typography>
-          </td>
-          <td className={ classes }>
-            <Typography variant="small">
-              { category.questionCount }
-            </Typography>
-          </td>
-          <td className={ `${ classes } flex justify-end gap-1` }>
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
-              <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
+        <td className="py-2 px-4">
+          <Typography variant="small">
+            <Link
+              key={ category.id }
+              to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+              { category.name }
+            </Link>
+          </Typography>
+        </td>
 
-            <Tooltip content="View category">
-              <Link
-                key={ category.id }
-                to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-                <IconButton>
-                  <EyeIcon className="h-4 w-4"/>
-                </IconButton>
-              </Link>
-            </Tooltip>
+        <td className="py-2 px-4">
+          <Typography variant="small">
+            { category.questionCount }
+          </Typography>
+        </td>
 
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
-              <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
+        <td className="py-2 px-4 flex justify-end gap-1">
+          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
+            <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
 
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-              <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
-          </td>
-        </tr>
-      }) }
+          <Tooltip content="View category">
+            <Link
+              key={ category.id }
+              to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+              <IconButton>
+                <EyeIcon className="h-4 w-4"/>
+              </IconButton>
+            </Link>
+          </Tooltip>
+
+          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+            <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
+
+          { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
+            <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+        </td>
+      </tr>) }
       </tbody> }
     </table>
 
