@@ -1,5 +1,5 @@
 import { ArrowRightStartOnRectangleIcon, Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { CheckCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon as Logo } from '@heroicons/react/24/solid'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom'
 import classNames from '../utils/classNames'
 import { ReactNode, useEffect, useState } from 'react'
@@ -101,8 +101,8 @@ export default (): ReactNode => {
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link
           to={ Route.HOME }
-          className="inline-flex items-center w-2/12">
-          <CheckCircleIcon className="h-12 w-12"/> Exam Me
+          className="inline-flex items-center gap-1 w-2/12">
+          <Logo className="h-12 w-12"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
           <div className="hidden lg:block">{ navList }</div>
