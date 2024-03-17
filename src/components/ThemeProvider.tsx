@@ -138,12 +138,28 @@ const theme = {
       },
     },
   },
+  tabsHeader: {
+    styles: {
+      base: {
+        borderRadius: 'rounded',
+      },
+    },
+  },
   tabsBody: {
     defaultProps: {
       animate: {
         initial: { y: 0 },
         mount: { y: 0 },
         unmount: { y: 250 },
+      },
+    },
+  },
+  tab: {
+    styles: {
+      base: {
+        indicator: {
+          borderRadius: "rounded",
+        },
       },
     },
   },
