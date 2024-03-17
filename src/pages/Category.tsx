@@ -60,7 +60,7 @@ export default (): ReactNode => {
     },
   ]
 
-  const tableColumns = [ '#', 'Title', 'Type', 'Difficulty', '' ]
+  const tableColumns = [ '#', 'Title', 'Difficulty', 'Type', '' ]
 
   return <>
     <Breadcrumbs>
@@ -101,24 +101,24 @@ export default (): ReactNode => {
 
       <div>
         <Select
-          label="Type"
-          onChange={ () => {
-          } }
-          value={ '' }>
-          <Option key="" value="">All</Option>
-          { Object.values(QuestionType)
-            .map((type): ReactNode => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
-        </Select>
-      </div>
-
-      <div>
-        <Select
           label="Difficulty"
           onChange={ () => {
           } }
           value={ '' }>
           <Option key="" value="">All</Option>
           { Object.values(QuestionDifficulty)
+            .map((type): ReactNode => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
+        </Select>
+      </div>
+
+      <div>
+        <Select
+          label="Type"
+          onChange={ () => {
+          } }
+          value={ '' }>
+          <Option key="" value="">All</Option>
+          { Object.values(QuestionType)
             .map((type): ReactNode => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
         </Select>
       </div>
@@ -169,22 +169,24 @@ export default (): ReactNode => {
 
           <td className="py-2 px-4">
             <Typography variant="small" className="capitalize">
-              { question.type }
+              { question.difficulty }
             </Typography>
           </td>
 
           <td className="py-2 px-4">
             <Typography variant="small" className="capitalize">
-              { question.difficulty }
+              { question.type }
             </Typography>
           </td>
 
-          <td className="py-2 px-4 flex justify-end gap-1">
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
-              <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
+          <td className="py-2 px-4">
+            <div className="flex justify-end gap-1">
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+                <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
 
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
-              <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+                <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
+            </div>
           </td>
         </tr>)
         : <tr>

@@ -115,15 +115,17 @@ export default (): ReactNode => {
             </Typography>
           </td>
 
-          <td className="py-2 px-4 flex justify-end gap-1">
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
-              <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
+          <td className="py-2 px-4">
+            <div className="flex justify-end gap-1">
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
+                <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
 
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
-              <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+                <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
 
-            { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-              <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
+                <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+            </div>
           </td>
         </tr>)
         : <tr>
