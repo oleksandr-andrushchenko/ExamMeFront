@@ -1,10 +1,6 @@
 import client from '../client'
 import Question from '../../schema/Question'
-import { AxiosRequestConfig } from 'axios'
+import Pagination from '../../types/pagination/Pagination'
+import Paginated from '../../types/pagination/Paginated'
 
-export default async (categoryId: string, cursor: string = 'id', size: number = 20, order: 'asc' | 'desc' = 'desc'): Promise<Question[]> => {
-  const params = { cursor, size, order }
-  const response = await client.get(`/categories/${ categoryId }/questions`, { params } as AxiosRequestConfig)
-
-  return response.data.data
-}
+export default async (categoryId: string, pagination: Pagination = {}): Promise<Paginated<Question>> => (await client.get(`/categories/${ categoryId }/questions`, { params: pagination })).data
