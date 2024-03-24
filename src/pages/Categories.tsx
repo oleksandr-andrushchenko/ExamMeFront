@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Breadcrumbs, Button, IconButton, Input, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Button, Input, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -12,15 +12,37 @@ import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import Paginated from '../types/pagination/Paginated'
+import Pagination from '../types/pagination/Pagination'
 
 export default (): ReactNode => {
-  const [ categories, setCategories ] = useState<Category[] | undefined>(undefined)
+  const [ categories, setCategories ] = useState<Paginated<Category>>()
+  const [ pagination, setPagination ] = useState<Pagination>({ size: 20 })
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    queryCategories().then((categories): void => setCategories(categories))
+    queryCategories(pagination).then((categories): void => setCategories(categories))
   }
-  useEffect(refresh, [])
+  const onPrevClick = (): void => {
+    setCategories(undefined)
+    setPagination({
+      ...pagination, ...{
+        prevCursor: categories.meta.prevCursor,
+        nextCursor: undefined,
+      },
+    })
+  }
+  const onNextClick = (): void => {
+    setCategories(undefined)
+    setPagination({
+      ...pagination, ...{
+        prevCursor: undefined,
+        nextCursor: categories.meta.nextCursor,
+      },
+    })
+  }
+
+  useEffect(refresh, [ pagination ])
 
   const tableFilters = [
     {
@@ -89,8 +111,8 @@ export default (): ReactNode => {
       </tr>
       </thead>
       { categories === undefined ? <Spinner/> : <tbody>
-      { categories
-        ? categories.map((category: Category, index: number): ReactNode => <tr
+      { categories.data
+        ? categories.data.map((category: Category, index: number): ReactNode => <tr
           key={ index }
           className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
@@ -134,19 +156,10 @@ export default (): ReactNode => {
       </tbody> }
     </table>
 
-
-    { categories === undefined ? <Spinner/> : (categories && <div className="flex gap-1 mt-4">
-      <Button variant="outlined">Previous</Button>
-      <div className="flex items-center gap-2">
-        <IconButton variant="outlined">1</IconButton>
-        <IconButton variant="text">2</IconButton>
-        <IconButton variant="text">3</IconButton>
-        <IconButton variant="text">...</IconButton>
-        <IconButton variant="text">8</IconButton>
-        <IconButton variant="text">9</IconButton>
-        <IconButton variant="text">10</IconButton>
-      </div>
-      <Button variant="outlined">Next</Button>
-    </div>) }
+    { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
+      <div className="flex gap-1 mt-4">
+        { categories.meta.prevCursor && <Button variant="outlined" onClick={ onPrevClick }>Previous</Button> }
+        { categories.meta.nextCursor && <Button variant="outlined" onClick={ onNextClick }>Next</Button> }
+      </div>) }
   </>
 }

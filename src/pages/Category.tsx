@@ -1,8 +1,7 @@
-import { Link, Params, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
   Breadcrumbs,
   Button,
-  IconButton,
   Input,
   Option,
   Select,
@@ -27,23 +26,43 @@ import AddCategory from '../components/category/AddCategory'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/QuestionTransfer'
-
-interface Data {
-  category: Category | undefined,
-  questions: Question[] | undefined,
-}
+import Paginated from '../types/pagination/Paginated'
+import Pagination from '../types/pagination/Pagination'
 
 export default (): ReactNode => {
-  const { categoryId } = useParams<Params>() as { categoryId: string }
-  const [ { category, questions }, setData ] = useState<Data>({ category: undefined, questions: undefined })
+  const { categoryId } = useParams<{ categoryId: string }>()
+  const [ category, setCategory ] = useState<Category>()
+  const [ questions, setQuestions ] = useState<Paginated<Question>>()
+  const [ pagination, setPagination ] = useState<Pagination>({ size: 20 })
   const { auth, me, checkAuth } = useAuth()
 
+  useEffect((): void => {
+    getCategory(categoryId).then((category): void => setCategory(category))
+  }, [ categoryId ])
+
   const refresh = (): void => {
-    Promise.all<any>([ getCategory(categoryId), queryCategoryQuestions(categoryId) ])
-      .then(([ category, questions ]): void => setData({ category, questions }))
+    queryCategoryQuestions(categoryId, pagination).then((questions): void => setQuestions(questions))
+  }
+  const onPrevClick = (): void => {
+    setQuestions(undefined)
+    setPagination({
+      ...pagination, ...{
+        prevCursor: questions.meta.prevCursor,
+        nextCursor: undefined,
+      },
+    })
+  }
+  const onNextClick = (): void => {
+    setQuestions(undefined)
+    setPagination({
+      ...pagination, ...{
+        prevCursor: undefined,
+        nextCursor: questions.meta.nextCursor,
+      },
+    })
   }
 
-  useEffect(refresh, [])
+  useEffect(refresh, [ pagination ])
 
   const tableFilters = category === undefined ? [] : [
     {
@@ -85,7 +104,7 @@ export default (): ReactNode => {
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
         (category === undefined ? <Spinner/> :
           <AddCategory category={ category }
-                       onSubmit={ (category: Category): void => setData({ category, questions }) }/>) }
+                       onSubmit={ (category: Category): void => setCategory(category) }/>) }
 
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
         (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
@@ -149,8 +168,8 @@ export default (): ReactNode => {
       </thead>
       { questions === undefined ? <Spinner/> : <tbody>
       { questions
-        ? questions.map((question: Question, index: number): ReactNode => <tr key={ index }
-                                                                              className={ index === 0 ? 'border-b' : '' }>
+        ? questions.data.map((question: Question, index: number): ReactNode => <tr key={ index }
+                                                                                   className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
             <Typography variant="small">
               { index + 1 }
@@ -195,18 +214,10 @@ export default (): ReactNode => {
       </tbody> }
     </table>
 
-    { questions === undefined ? <Spinner/> : (questions && <div className="flex gap-1 mt-4">
-      <Button variant="outlined">Previous</Button>
-      <div className="flex items-center gap-2">
-        <IconButton variant="outlined">1</IconButton>
-        <IconButton variant="text">2</IconButton>
-        <IconButton variant="text">3</IconButton>
-        <IconButton variant="text">...</IconButton>
-        <IconButton variant="text">8</IconButton>
-        <IconButton variant="text">9</IconButton>
-        <IconButton variant="text">10</IconButton>
-      </div>
-      <Button variant="outlined">Next</Button>
-    </div>) }
+    { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
+      <div className="flex gap-1 mt-4">
+        { questions.meta.prevCursor && <Button variant="outlined" onClick={ onPrevClick }>Previous</Button> }
+        { questions.meta.nextCursor && <Button variant="outlined" onClick={ onNextClick }>Next</Button> }
+      </div>) }
   </>
 }
