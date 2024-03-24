@@ -7,7 +7,7 @@ import { HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
-import getCategories from '../api/category/getCategories'
+import queryCategories from '../api/category/queryCategories'
 import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
@@ -18,7 +18,7 @@ export default (): ReactNode => {
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    getCategories().then((categories): void => setCategories(categories))
+    queryCategories().then((categories): void => setCategories(categories))
   }
   useEffect(refresh, [])
 

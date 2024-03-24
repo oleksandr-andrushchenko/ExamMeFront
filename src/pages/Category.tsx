@@ -20,13 +20,13 @@ import Spinner from '../components/Spinner'
 import Category from '../schema/Category'
 import Question from '../schema/Question'
 import getCategory from '../api/category/getCategory'
-import getCategoryQuestions from '../api/question/getCategoryQuestions'
+import queryCategoryQuestions from '../api/question/queryCategoryQuestions'
 import DeleteCategory from '../components/category/DeleteCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import AddCategory from '../components/category/AddCategory'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { QuestionDifficulty, QuestionType } from '../schema/QuestionTransfer.ts'
+import { QuestionDifficulty, QuestionType } from '../schema/QuestionTransfer'
 
 interface Data {
   category: Category | undefined,
@@ -39,7 +39,7 @@ export default (): ReactNode => {
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    Promise.all<any>([ getCategory(categoryId), getCategoryQuestions(categoryId) ])
+    Promise.all<any>([ getCategory(categoryId), queryCategoryQuestions(categoryId) ])
       .then(([ category, questions ]): void => setData({ category, questions }))
   }
 
