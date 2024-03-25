@@ -113,8 +113,9 @@ export default (): ReactNode => {
     <div className="flex gap-1 items-center mt-4">
       <Tabs value="all" className="w-full md:w-max">
         <TabsHeader>
-          { tableFilters.map(({ label, value }) => <Tab key={ value } value={ value }
-                                                        className="text-xs small text-small">{ label }</Tab>) }
+          { tableFilters.map(({ label, value }) => (
+            <Tab key={ value } value={ value } className="text-xs small text-small">{ label }</Tab>
+          )) }
         </TabsHeader>
       </Tabs>
 
@@ -166,10 +167,15 @@ export default (): ReactNode => {
         )) }
       </tr>
       </thead>
-      { questions === undefined ? <Spinner/> : <tbody>
-      { questions
-        ? questions.data.map((question: Question, index: number): ReactNode => <tr key={ index }
-                                                                                   className={ index === 0 ? 'border-b' : '' }>
+      <tbody>
+      { questions === undefined && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center"><Spinner/></td>
+      </tr> }
+      { questions && !questions.data && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      </tr> }
+      { questions && questions.data && questions.data.map((question: Question, index: number): ReactNode => (
+        <tr key={ index } className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
             <Typography variant="small">
               { index + 1 }
@@ -207,11 +213,9 @@ export default (): ReactNode => {
                 <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
             </div>
           </td>
-        </tr>)
-        : <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
-        </tr> }
-      </tbody> }
+        </tr>
+      )) }
+      </tbody>
     </table>
 
     { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
