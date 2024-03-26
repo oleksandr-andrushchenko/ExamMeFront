@@ -1,9 +1,21 @@
-import { Link } from 'react-router-dom'
-import { Breadcrumbs, Button, Input, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
+import { Link, useSearchParams } from 'react-router-dom'
+import {
+  Breadcrumbs,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Input,
+  Option,
+  Select,
+  Tab,
+  Tabs,
+  TabsHeader,
+  Typography,
+} from '@material-tailwind/react'
 import Category from '../schema/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
@@ -15,50 +27,47 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
 
+interface QueryParams extends Pagination {
+  price?: string
+  search?: string
+}
+
 export default (): ReactNode => {
+  const defaultSearchParams = { size: 10 }
+  const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
-  const [ pagination, setPagination ] = useState<Pagination>({ size: 20 })
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    queryCategories(pagination).then((categories): void => setCategories(categories))
+    queryCategories(searchParams).then((categories): void => setCategories(categories))
   }
-  const onPrevClick = (): void => {
+  const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
     setCategories(undefined)
-    setPagination({
-      ...pagination, ...{
-        prevCursor: categories.meta.prevCursor,
-        nextCursor: undefined,
-      },
-    })
+
+    searchParams.delete('prevCursor')
+    searchParams.delete('nextCursor')
+
+    for (const key in partialQueryParams) {
+      if (partialQueryParams[key] === undefined || partialQueryParams[key] === '') {
+        searchParams.delete(key)
+      } else {
+        searchParams.set(key, partialQueryParams[key])
+      }
+    }
+
+    searchParams.sort()
+
+    setSearchParams(searchParams)
   }
-  const onNextClick = (): void => {
+  const clearSearchParams = (): void => {
     setCategories(undefined)
-    setPagination({
-      ...pagination, ...{
-        prevCursor: undefined,
-        nextCursor: categories.meta.nextCursor,
-      },
-    })
+
+    setSearchParams(defaultSearchParams)
   }
 
-  useEffect(refresh, [ pagination ])
+  useEffect(refresh, [ searchParams ])
 
-  const tableFilters = [
-    {
-      label: <Link to={ Route.CATEGORIES }>All</Link>,
-      value: 'all',
-    },
-    {
-      label: <Link to={ `${ Route.CATEGORIES }?free=1` }>Free</Link>,
-      value: 'free',
-    },
-    {
-      label: <Link to={ `${ Route.CATEGORIES }?premium=1` }>Premium</Link>,
-      value: 'premium',
-    },
-  ]
-
+  const tableFilters = [ 'all', 'free', 'subscription' ]
   const tableColumns = [ '#', 'Title', 'Questions', '' ]
 
   return <>
@@ -79,26 +88,57 @@ export default (): ReactNode => {
     </div>
 
     <div className="flex gap-1 items-center mt-4">
-      <Tabs value="all" className="w-full md:w-max">
-        <TabsHeader>
-          { tableFilters.map(({ label, value }) => (
-            <Tab key={ value } value={ value } className="text-xs small text-small">{ label }</Tab>
-          )) }
-        </TabsHeader>
-      </Tabs>
-
       <div>
-        <Input
-          label="Search"
-          icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }
-        />
+        <Tabs value="all" className="w-full md:w-max">
+          <TabsHeader>
+            { tableFilters.map((value): ReactNode => (
+              <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
+                   onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+                { value }
+              </Tab>
+            )) }
+          </TabsHeader>
+        </Tabs>
       </div>
+
+      <Input
+        label="Search"
+        value={ searchParams.get('search') || '' }
+        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => applySearchParams({ search: e.target.value }) }
+        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }/>
+
+      <Select
+        label="Size"
+        onChange={ (size: string): void => applySearchParams({ size: +size }) }
+        value={ searchParams.get('size') || '' }
+        className="capitalize">
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => <Option key={ size }
+                                                                                value={ `${ size }` }>{ size }</Option>) }
+      </Select>
+
+      { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
+        <ButtonGroup variant="outlined">
+          { categories.meta.prevCursor && (
+            <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }>
+              <ArrowLeftIcon className="w-4 h-4"/>
+            </IconButton>
+          ) }
+          { categories.meta.nextCursor && (
+            <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }>
+              <ArrowRightIcon className="w-4 h-4"/>
+            </IconButton>
+          ) }
+        </ButtonGroup>) }
+
+      { searchParams.toString().length > 0 && <div>
+        <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
+      </div> }
     </div>
 
     <table className="w-full table-auto text-left text-xs mt-4">
       <thead>
       <tr>
-        { tableColumns.map((head) => (
+        { tableColumns.map((head): ReactNode => (
           <th
             key={ head }
             className="bg-blue-gray-50/50 py-2 px-4">
@@ -115,8 +155,10 @@ export default (): ReactNode => {
       { categories === undefined && <tr>
         <td colSpan={ tableColumns.length } className="p-5 text-center"><Spinner/></td>
       </tr> }
-      { categories && !categories.data && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      { categories && categories.data.length === 0 && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Typography variant="small">No data</Typography>
+        </td>
       </tr> }
       { categories && categories.data && categories.data.map((category: Category, index: number): ReactNode => (
         <tr
@@ -160,11 +202,5 @@ export default (): ReactNode => {
       )) }
       </tbody>
     </table>
-
-    { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
-      <div className="flex gap-1 mt-4">
-        { categories.meta.prevCursor && <Button variant="outlined" onClick={ onPrevClick }>Previous</Button> }
-        { categories.meta.nextCursor && <Button variant="outlined" onClick={ onNextClick }>Next</Button> }
-      </div>) }
   </>
 }
