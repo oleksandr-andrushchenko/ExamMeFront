@@ -1,7 +1,9 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import {
   Breadcrumbs,
   Button,
+  ButtonGroup,
+  IconButton,
   Input,
   Option,
   Select,
@@ -11,7 +13,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -29,11 +31,19 @@ import { QuestionDifficulty, QuestionType } from '../schema/QuestionTransfer'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
 
+interface QueryParams extends Pagination {
+  price?: string
+  search?: string
+  difficulty?: string
+  type?: string
+}
+
 export default (): ReactNode => {
+  const defaultSearchParams = { size: 10 }
   const { categoryId } = useParams<{ categoryId: string }>()
+  const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ category, setCategory ] = useState<Category>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
-  const [ pagination, setPagination ] = useState<Pagination>({ size: 20 })
   const { auth, me, checkAuth } = useAuth()
 
   useEffect((): void => {
@@ -41,44 +51,35 @@ export default (): ReactNode => {
   }, [ categoryId ])
 
   const refresh = (): void => {
-    queryCategoryQuestions(categoryId, pagination).then((questions): void => setQuestions(questions))
+    queryCategoryQuestions(categoryId, searchParams).then((questions): void => setQuestions(questions))
   }
-  const onPrevClick = (): void => {
+  const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
     setQuestions(undefined)
-    setPagination({
-      ...pagination, ...{
-        prevCursor: questions.meta.prevCursor,
-        nextCursor: undefined,
-      },
-    })
+
+    searchParams.delete('prevCursor')
+    searchParams.delete('nextCursor')
+
+    for (const key in partialQueryParams) {
+      if (partialQueryParams[key] === undefined || partialQueryParams[key] === '') {
+        searchParams.delete(key)
+      } else {
+        searchParams.set(key, partialQueryParams[key])
+      }
+    }
+
+    searchParams.sort()
+
+    setSearchParams(searchParams)
   }
-  const onNextClick = (): void => {
+  const clearSearchParams = (): void => {
     setQuestions(undefined)
-    setPagination({
-      ...pagination, ...{
-        prevCursor: undefined,
-        nextCursor: questions.meta.nextCursor,
-      },
-    })
+
+    setSearchParams(defaultSearchParams)
   }
 
-  useEffect(refresh, [ pagination ])
+  useEffect(refresh, [ searchParams ])
 
-  const tableFilters = category === undefined ? [] : [
-    {
-      label: <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>All</Link>,
-      value: 'all',
-    },
-    {
-      label: <Link to={ `${ Route.CATEGORY.replace(':categoryId', category.id) }?free=1` }>Free</Link>,
-      value: 'free',
-    },
-    {
-      label: <Link to={ `${ Route.CATEGORY.replace(':categoryId', category.id) }?premium=1` }>Premium</Link>,
-      value: 'premium',
-    },
-  ]
-
+  const tableFilters = [ 'all', 'free', 'subscription' ]
   const tableColumns = [ '#', 'Title', 'Difficulty', 'Type', '' ]
 
   return <>
@@ -111,44 +112,71 @@ export default (): ReactNode => {
     </div>
 
     <div className="flex gap-1 items-center mt-4">
-      <Tabs value="all" className="w-full md:w-max">
-        <TabsHeader>
-          { tableFilters.map(({ label, value }) => (
-            <Tab key={ value } value={ value } className="text-xs small text-small">{ label }</Tab>
-          )) }
-        </TabsHeader>
-      </Tabs>
-
       <div>
-        <Select
-          label="Difficulty"
-          onChange={ () => {
-          } }
-          value={ '' }>
-          <Option key="" value="">All</Option>
-          { Object.values(QuestionDifficulty)
-            .map((type): ReactNode => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
-        </Select>
+        <Tabs value="all">
+          <TabsHeader>
+            { tableFilters.map((value): ReactNode => (
+              <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
+                   onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+                { value }
+              </Tab>
+            )) }
+          </TabsHeader>
+        </Tabs>
       </div>
 
-      <div>
-        <Select
-          label="Type"
-          onChange={ () => {
-          } }
-          value={ '' }>
-          <Option key="" value="">All</Option>
-          { Object.values(QuestionType)
-            .map((type): ReactNode => <Option key={ type } value={ type } className="capitalize">{ type }</Option>) }
-        </Select>
-      </div>
+      <Select
+        label="Difficulty"
+        onChange={ (difficulty: string): void => applySearchParams({ difficulty }) }
+        value={ searchParams.get('difficulty') || '' }
+        className="capitalize">
+        { Object.values(QuestionDifficulty)
+          .map((type: string): ReactNode => <Option key={ type } value={ type }
+                                                    className="capitalize">{ type }</Option>) }
+      </Select>
 
-      <div>
-        <Input
-          label="Search"
-          icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }
-        />
-      </div>
+      <Select
+        label="Type"
+        onChange={ (type: string): void => applySearchParams({ type }) }
+        value={ searchParams.get('type') || '' }
+        className="capitalize">
+        { Object.values(QuestionType)
+          .map((type: string): ReactNode => <Option key={ type } value={ type }
+                                                    className="capitalize">{ type }</Option>) }
+      </Select>
+
+      <Input
+        label="Search"
+        value={ searchParams.get('search') || '' }
+        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => applySearchParams({ search: e.target.value }) }
+        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }/>
+
+      <Select
+        label="Size"
+        onChange={ (size: string): void => applySearchParams({ size: +size }) }
+        value={ searchParams.get('size') || '' }
+        className="capitalize">
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => <Option key={ size }
+                                                                                value={ `${ size }` }>{ size }</Option>) }
+      </Select>
+
+      { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
+        <ButtonGroup variant="outlined">
+          { questions.meta.prevCursor && (
+            <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }>
+              <ArrowLeftIcon className="w-4 h-4"/>
+            </IconButton>
+          ) }
+          { questions.meta.nextCursor && (
+            <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }>
+              <ArrowRightIcon className="w-4 h-4"/>
+            </IconButton>
+          ) }
+        </ButtonGroup>) }
+
+      { searchParams.toString().length > 0 && <div>
+        <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
+      </div> }
     </div>
 
     <table className="w-full table-auto text-left mt-4">
@@ -168,11 +196,13 @@ export default (): ReactNode => {
       </tr>
       </thead>
       <tbody>
-      { questions === undefined && <tr>
+      { questions === undefined && <tr key={ 0 }>
         <td colSpan={ tableColumns.length } className="p-5 text-center"><Spinner/></td>
       </tr> }
-      { questions && !questions.data && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      { questions && questions.data.length === 0 && <tr key={ 0 }>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Typography variant="small">No data</Typography>
+        </td>
       </tr> }
       { questions && questions.data && questions.data.map((question: Question, index: number): ReactNode => (
         <tr key={ index } className={ index === 0 ? 'border-b' : '' }>
@@ -217,11 +247,5 @@ export default (): ReactNode => {
       )) }
       </tbody>
     </table>
-
-    { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
-      <div className="flex gap-1 mt-4">
-        { questions.meta.prevCursor && <Button variant="outlined" onClick={ onPrevClick }>Previous</Button> }
-        { questions.meta.nextCursor && <Button variant="outlined" onClick={ onNextClick }>Next</Button> }
-      </div>) }
   </>
 }
