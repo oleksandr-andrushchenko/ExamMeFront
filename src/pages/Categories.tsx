@@ -33,7 +33,7 @@ interface QueryParams extends Pagination {
 }
 
 export default (): ReactNode => {
-  const defaultSearchParams = { size: 10 }
+  const defaultSearchParams = { size: '10' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const { auth, me, checkAuth } = useAuth()
@@ -69,6 +69,13 @@ export default (): ReactNode => {
 
   const tableFilters = [ 'all', 'free', 'subscription' ]
   const tableColumns = [ '#', 'Title', 'Questions', '' ]
+  const showClear = (): boolean => {
+    const def = new URLSearchParams(defaultSearchParams)
+    def.sort()
+    searchParams.sort()
+
+    return def.toString() !== searchParams.toString()
+  }
 
   return <>
     <Breadcrumbs>
@@ -77,10 +84,10 @@ export default (): ReactNode => {
       <Link to={ Route.CATEGORIES }>Categories</Link>
     </Breadcrumbs>
 
-    <Typography variant="h1" className="flex items-baseline mt-1">Categories</Typography>
+    <Typography variant="h1" className="mt-1">Categories</Typography>
 
     <Typography variant="small" className="mt-1">
-      Available categories
+      Categories info
     </Typography>
 
     <div className="flex gap-1 items-center mt-4">
@@ -109,11 +116,14 @@ export default (): ReactNode => {
 
       <Select
         label="Size"
-        onChange={ (size: string): void => applySearchParams({ size: +size }) }
+        onChange={ (size: string): void => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
         className="capitalize">
-        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => <Option key={ size }
-                                                                                value={ `${ size }` }>{ size }</Option>) }
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => (
+          <Option key={ size }
+                  value={ `${ size }` }
+                  disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
+        )) }
       </Select>
 
       { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
@@ -130,7 +140,7 @@ export default (): ReactNode => {
           ) }
         </ButtonGroup>) }
 
-      { searchParams.toString().length > 0 && <div>
+      { showClear() && <div>
         <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
       </div> }
     </div>
