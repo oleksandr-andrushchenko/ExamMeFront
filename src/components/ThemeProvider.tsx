@@ -2,6 +2,24 @@ import { ThemeProvider as TailwindThemeProvider } from '@material-tailwind/react
 import { ReactNode } from 'react'
 
 const theme = {
+  checkbox: {
+    defaultProps: {
+      ripple: false,
+    },
+    styles: {
+      base: {
+        container: {
+          borderRadius: 'rounded',
+        },
+        input: {
+          borderRadius: 'rounded',
+          before: {
+            borderRadius: 'before:rounded',
+          },
+        },
+      },
+    },
+  },
   input: {
     styles: {
       variants: {
@@ -74,6 +92,12 @@ const theme = {
           borderRadius: 'rounded',
         },
       },
+    },
+  },
+  buttonGroup: {
+    defaultProps: {
+      size: 'sm',
+      ripple: false,
     },
   },
   dialog: {
@@ -158,7 +182,51 @@ const theme = {
     styles: {
       base: {
         indicator: {
-          borderRadius: "rounded",
+          borderRadius: 'rounded',
+        },
+      },
+    },
+  },
+  select: {
+    styles: {
+      base: {
+        container: {
+          width: '',
+          minWidth: 'min-w-[100px]',
+        },
+        menu: {
+          borderRadius: 'rounded',
+        },
+        option: {
+          initial: {
+            borderRadius: 'rounded',
+          },
+        },
+      },
+      variants: {
+        outlined: {
+          base: {
+            label: {
+              before: {
+                borderRadius: 'before:rounded-tl',
+              },
+              after: {
+                borderRadius: 'after:rounded-tr',
+              },
+            },
+          },
+          sizes: {
+            md: {
+              select: {
+                borderRadius: 'rounded',
+              },
+            },
+            lg: {
+              select: {
+                borderRadius: 'rounded',
+              },
+            },
+          },
         },
       },
     },
