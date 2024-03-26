@@ -39,8 +39,22 @@ export default (): ReactNode => {
       { question === undefined ? <Spinner/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
     </Breadcrumbs>
-    <Typography variant="h1" className="truncate mt-1">{ question === undefined ?
+    <Typography variant="h1" className="mt-1">{ question === undefined ?
       <Spinner/> : question.title }</Typography>
+
+    <Typography variant="small" className="mt-1">
+      Question info
+    </Typography>
+
+    <div className="flex gap-1 items-center mt-4">
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+        (question === undefined ? <Spinner/> :
+          <AddQuestion question={ question }
+                       onSubmit={ (question: Question): void => setData({ category, question }) }/>) }
+
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+        (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
+    </div>
 
     { category === undefined || question === undefined ? <Spinner/> : <div>
       <ListItem>
@@ -80,13 +94,5 @@ export default (): ReactNode => {
         <Typography variant="h6">{ question.difficulty }</Typography>
       </ListItem>
     </div> }
-
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
-      (question === undefined ? <Spinner/> :
-        <AddQuestion question={ question }
-                     onSubmit={ (question: Question): void => setData({ category, question }) }/>) }
-
-    { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
-      (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
   </>
 }
