@@ -39,7 +39,7 @@ interface QueryParams extends Pagination {
 }
 
 export default (): ReactNode => {
-  const defaultSearchParams = { size: 10 }
+  const defaultSearchParams = { size: '10' }
   const { categoryId } = useParams<{ categoryId: string }>()
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ category, setCategory ] = useState<Category>()
@@ -81,6 +81,13 @@ export default (): ReactNode => {
 
   const tableFilters = [ 'all', 'free', 'subscription' ]
   const tableColumns = [ '#', 'Title', 'Difficulty', 'Type', '' ]
+  const showClear = (): boolean => {
+    const def = new URLSearchParams(defaultSearchParams)
+    def.sort()
+    searchParams.sort()
+
+    return def.toString() !== searchParams.toString()
+  }
 
   return <>
     <Breadcrumbs>
@@ -91,11 +98,11 @@ export default (): ReactNode => {
         <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>{ category.name }</Link> }
     </Breadcrumbs>
 
-    <Typography variant="h1" className="flex items-baseline mt-1">{ category === undefined ?
+    <Typography variant="h1" className="mt-1">{ category === undefined ?
       <Spinner/> : category.name }</Typography>
 
     <Typography variant="small" className="mt-1">
-      Available questions
+      Category info
     </Typography>
 
     <div className="flex gap-1 items-center mt-4">
@@ -131,8 +138,12 @@ export default (): ReactNode => {
         value={ searchParams.get('difficulty') || '' }
         className="capitalize">
         { Object.values(QuestionDifficulty)
-          .map((type: string): ReactNode => <Option key={ type } value={ type }
-                                                    className="capitalize">{ type }</Option>) }
+          .map((difficulty: string): ReactNode => (
+            <Option key={ difficulty }
+                    value={ difficulty }
+                    disabled={ difficulty === searchParams.get('difficulty') }
+                    className="capitalize">{ difficulty }</Option>
+          )) }
       </Select>
 
       <Select
@@ -141,8 +152,12 @@ export default (): ReactNode => {
         value={ searchParams.get('type') || '' }
         className="capitalize">
         { Object.values(QuestionType)
-          .map((type: string): ReactNode => <Option key={ type } value={ type }
-                                                    className="capitalize">{ type }</Option>) }
+          .map((type: string): ReactNode => (
+            <Option key={ type }
+                    value={ type }
+                    disabled={ type === searchParams.get('type') }
+                    className="capitalize">{ type }</Option>
+          )) }
       </Select>
 
       <Input
@@ -153,11 +168,14 @@ export default (): ReactNode => {
 
       <Select
         label="Size"
-        onChange={ (size: string): void => applySearchParams({ size: +size }) }
+        onChange={ (size: string): void => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
         className="capitalize">
-        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => <Option key={ size }
-                                                                                value={ `${ size }` }>{ size }</Option>) }
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => (
+          <Option key={ size }
+                  value={ `${ size }` }
+                  disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
+        )) }
       </Select>
 
       { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
@@ -174,7 +192,7 @@ export default (): ReactNode => {
           ) }
         </ButtonGroup>) }
 
-      { searchParams.toString().length > 0 && <div>
+      { showClear() && <div>
         <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
       </div> }
     </div>
