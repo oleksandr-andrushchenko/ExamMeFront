@@ -39,6 +39,7 @@ export default (): ReactNode => {
       { question === undefined ? <Spinner/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
     </Breadcrumbs>
+
     <Typography variant="h1" className="mt-1">{ question === undefined ?
       <Spinner/> : question.title }</Typography>
 
