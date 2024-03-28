@@ -10,6 +10,7 @@ import {
   Tab,
   Tabs,
   TabsHeader,
+  Tooltip,
   Typography,
 } from '@material-tailwind/react'
 import Category from '../schema/Category'
@@ -95,18 +96,16 @@ export default (): ReactNode => {
     </div>
 
     <div className="flex gap-1 items-center mt-4">
-      <div>
-        <Tabs value="all" className="w-full md:w-max">
-          <TabsHeader>
-            { tableFilters.map((value): ReactNode => (
-              <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
-                   onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
-                { value }
-              </Tab>
-            )) }
-          </TabsHeader>
-        </Tabs>
-      </div>
+      <Tabs value="all" className="min-w-[170px]">
+        <TabsHeader>
+          { tableFilters.map((value): ReactNode => (
+            <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
+                 onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+              { value }
+            </Tab>
+          )) }
+        </TabsHeader>
+      </Tabs>
 
       <Input
         label="Search"
@@ -181,13 +180,15 @@ export default (): ReactNode => {
           </td>
 
           <td className="py-2 px-4">
-            <Typography variant="small">
-              <Link
-                key={ category.id }
-                to={ Route.CATEGORY.replace(':categoryId', category.id) }>
-                { category.name }
-              </Link>
-            </Typography>
+            <Tooltip content={ category.name }>
+              <Typography variant="small" className="capitalize truncate max-w-[500px]">
+                <Link
+                  key={ category.id }
+                  to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+                  { category.name }
+                </Link>
+              </Typography>
+            </Tooltip>
           </td>
 
           <td className="py-2 px-4">
