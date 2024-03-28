@@ -10,12 +10,14 @@ import AuthProvider from '../context/AuthProvider'
 import { default as Path } from '../enum/Route'
 import { ReactNode } from 'react'
 import Question from '../pages/Question'
+import Questions from '../pages/Questions'
 
 const routes = <Routes>
   <Route element={ <Layout/> }>
     <Route path={ Path.HOME } element={ <Home/> }/>
     <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
     <Route path={ Path.CATEGORY } element={ <Category/> }/>
+    <Route path={ Path.QUESTIONS } element={ <Questions/> }/>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
     <Route path={ Path.TERMS_AND_CONDITIONS } element={ <TermsAndConditions/> }/>
     <Route path="*" element={ <NotFound/> }/>
