@@ -10,17 +10,13 @@ export default (): ReactNode => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon
-        className="inline-block w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
     </Breadcrumbs>
-    <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">Unauthorized</Typography>
-    <Typography variant="small" color="gray" className="mt-1 font-normal">
-      You do not have access to the requested page
-    </Typography>
-    <Button
-      className="mt-3"
-      onClick={ goBack }>
-      <ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back
-    </Button>
+
+    <Typography variant="h1" className="mt-1">Unauthorized</Typography>
+
+    <Typography variant="small" className="mt-1">You do not have access to the requested page</Typography>
+
+    <Button className="mt-3" onClick={ goBack }><ArrowUturnLeftIcon className="h-4 w-4"/> Go Back</Button>
   </>
 }

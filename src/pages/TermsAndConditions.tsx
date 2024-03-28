@@ -6,12 +6,11 @@ import { ReactNode } from 'react'
 
 export default (): ReactNode => <>
   <Breadcrumbs>
-    <Link to={ Route.HOME } className="flex items-center"><HomeIcon
-      className="inline-block w-4 h-4 mr-1"/> Home</Link>
+    <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
     <Link to={ Route.TERMS_AND_CONDITIONS }>Terms and conditions</Link>
   </Breadcrumbs>
-  <Typography variant="h1" color="blue-gray" className="flex items-baseline mt-1">Terms and conditions</Typography>
-  <Typography variant="small" color="gray" className="mt-1 font-normal">
-    Our rules and policies
-  </Typography>
+
+  <Typography variant="h1" className="mt-1">Terms and conditions</Typography>
+
+  <Typography variant="small" className="mt-1">Our rules and policies</Typography>
 </>
