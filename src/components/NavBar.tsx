@@ -1,5 +1,10 @@
-import { ArrowRightStartOnRectangleIcon, Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { ArrowPathIcon as Logo } from '@heroicons/react/24/solid'
+import {
+  ArrowPathIcon as Logo,
+  ArrowRightStartOnRectangleIcon,
+  Bars3Icon,
+  UserCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom'
 import classNames from '../utils/classNames'
 import { ReactNode, useEffect, useState } from 'react'
@@ -12,8 +17,8 @@ import Auth from './Auth'
 export default (): ReactNode => {
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Categories', href: '/categories' },
+    { name: 'Categories', href: Route.CATEGORIES },
+    { name: 'Questions', href: Route.QUESTIONS },
   ]
 
   const [ openNav, setOpenNav ] = useState<boolean>(false)
