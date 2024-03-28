@@ -10,6 +10,7 @@ import {
   Tab,
   Tabs,
   TabsHeader,
+  Tooltip,
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
@@ -40,7 +41,7 @@ interface QueryParams extends Pagination {
 
 export default (): ReactNode => {
   const defaultSearchParams = { size: '10' }
-  const { categoryId } = useParams<{ categoryId: string }>()
+  const { categoryId }: { categoryId: string } = useParams()
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ category, setCategory ] = useState<Category>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
@@ -119,18 +120,16 @@ export default (): ReactNode => {
     </div>
 
     <div className="flex gap-1 items-center mt-4">
-      <div>
-        <Tabs value="all">
-          <TabsHeader>
-            { tableFilters.map((value): ReactNode => (
-              <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
-                   onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
-                { value }
-              </Tab>
-            )) }
-          </TabsHeader>
-        </Tabs>
-      </div>
+      <Tabs value="all" className="min-w-[170px]">
+        <TabsHeader>
+          { tableFilters.map((value): ReactNode => (
+            <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
+                 onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+              { value }
+            </Tab>
+          )) }
+        </TabsHeader>
+      </Tabs>
 
       <Select
         label="Difficulty"
@@ -231,13 +230,15 @@ export default (): ReactNode => {
           </td>
 
           <td className="py-2 px-4">
-            <Typography variant="small">
-              <Link
-                key={ question.id }
-                to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
-                { question.title }
-              </Link>
-            </Typography>
+            <Tooltip content={ question.title }>
+              <Typography variant="small" className="capitalize truncate max-w-[400px]">
+                <Link
+                  key={ question.id }
+                  to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+                  { question.title }
+                </Link>
+              </Typography>
+            </Tooltip>
           </td>
 
           <td className="py-2 px-4">
