@@ -8,9 +8,9 @@ import postAuth from '../api/postAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 
 interface Props {
-  onSubmit: () => void,
-  buttons?: ReactNode,
-  onRegisterClick?: () => void,
+  onSubmit: () => void
+  buttons?: ReactNode
+  onRegisterClick?: () => void
 }
 
 export default ({ onSubmit, buttons, onRegisterClick }: Props): ReactNode => {

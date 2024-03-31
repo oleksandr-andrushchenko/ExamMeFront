@@ -7,7 +7,7 @@ import Login from '../pages/Login'
 import { ReactNode } from 'react'
 
 interface Props {
-  permission: Permission,
+  permission: Permission
 }
 
 export default ({ permission }: Props): ReactNode => {

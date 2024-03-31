@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import InputState, { defaultInputState } from '../../types/InputState'
 import postCategory from '../../api/category/postCategory'
-import Category from '../../schema/Category'
+import Category from '../../schema/category/Category'
 import replaceCategory from '../../api/category/replaceCategory'
 import getCategory from '../../api/category/getCategory'
 
 interface Props {
-  category?: Category,
-  onSubmit?: (question: Category) => void,
-  iconButton?: boolean,
+  category?: Category
+  onSubmit?: (question: Category) => void
+  iconButton?: boolean
 }
 
 export default ({ category, onSubmit, iconButton }: Props): ReactNode => {

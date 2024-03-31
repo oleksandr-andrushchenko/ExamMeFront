@@ -4,13 +4,13 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
-import Question from '../../schema/Question'
+import Question from '../../schema/question/Question'
 import deleteQuestion from '../../api/question/deleteQuestion'
 
 interface Props {
-  question: Question,
+  question: Question
   onSubmit?: () => void
-  iconButton?: boolean,
+  iconButton?: boolean
 }
 
 export default ({ question, onSubmit, iconButton }: Props): ReactNode => {

@@ -1,5 +1,5 @@
 import client from '../client'
-import Question from '../../schema/Question'
+import Question from '../../schema/question/Question'
 import Pagination from '../../types/pagination/Pagination'
 import Paginated from '../../types/pagination/Paginated'
 

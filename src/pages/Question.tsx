@@ -6,17 +6,17 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
-import Category from '../schema/Category'
-import Question from '../schema/Question'
+import Category from '../schema/category/Category'
+import Question from '../schema/question/Question'
 import getCategory from '../api/category/getCategory'
 import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
-import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/QuestionTransfer'
+import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
 
 interface Data {
-  category: Category | undefined,
-  question: Question | undefined,
+  category: Category | undefined
+  question: Question | undefined
 }
 
 export default (): ReactNode => {

@@ -3,14 +3,14 @@ import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
-import Category from '../../schema/Category'
+import Category from '../../schema/category/Category'
 import deleteCategory from '../../api/category/deleteCategory'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 
 interface Props {
-  category: Category,
-  onSubmit?: () => void,
-  iconButton?: boolean,
+  category: Category
+  onSubmit?: () => void
+  iconButton?: boolean
 }
 
 export default ({ category, onSubmit, iconButton }: Props): ReactNode => {

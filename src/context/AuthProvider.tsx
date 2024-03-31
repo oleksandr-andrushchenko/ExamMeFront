@@ -10,15 +10,15 @@ import PermissionHierarchy from '../types/PermissionHierarchy'
 export const AuthContext = createContext({})
 
 export interface AuthProviderContextValue {
-  auth: Auth | undefined,
-  setAuth: (auth: Auth | undefined) => void,
-  me: Me | undefined,
-  checkAuth: (permission: Permission) => boolean,
+  auth: Auth | undefined
+  setAuth: (auth: Auth | undefined) => void
+  me: Me | undefined
+  checkAuth: (permission: Permission) => boolean
 }
 
 interface Data {
-  me: Me | undefined,
-  permissionHierarchy: PermissionHierarchy | undefined,
+  me: Me | undefined
+  permissionHierarchy: PermissionHierarchy | undefined
 }
 
 export default ({ children }: { children: React.ReactNode }): ReactNode => {

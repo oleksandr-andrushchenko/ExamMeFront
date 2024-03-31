@@ -11,9 +11,8 @@ import Route from '../enum/Route'
 import postMe from '../api/me/postMe'
 
 interface Props {
-  onSubmit: () => void,
-
-  buttons?: ReactNode,
+  onSubmit: () => void
+  buttons?: ReactNode
 }
 
 export default ({ buttons, onSubmit }: Props): ReactNode => {

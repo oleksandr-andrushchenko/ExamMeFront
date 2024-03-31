@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-tailwind/react'
-import Category from '../schema/Category'
+import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'

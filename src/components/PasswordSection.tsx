@@ -5,9 +5,9 @@ import InputState, { defaultInputState } from '../types/InputState'
 import testsRunning from '../utils/testsRunning'
 
 interface Props {
-  setValue: (password?: string) => void,
-  error: string,
-  confirm?: boolean,
+  setValue: (password?: string) => void
+  error: string
+  confirm?: boolean
 }
 
 export default ({ setValue, error, confirm = false }: Props): ReactNode => {

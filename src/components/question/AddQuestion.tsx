@@ -21,20 +21,20 @@ import QuestionTransfer, {
   QuestionChoice,
   QuestionDifficulty,
   QuestionType,
-} from '../../schema/QuestionTransfer'
+} from '../../schema/question/QuestionTransfer'
 import postQuestion from '../../api/question/postQuestion'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Route from '../../enum/Route'
-import Question from '../../schema/Question'
+import Question from '../../schema/question/Question'
 import replaceQuestion from '../../api/question/replaceQuestion'
 import getQuestion from '../../api/question/getQuestion'
-import Category from '../../schema/Category'
+import Category from '../../schema/category/Category'
 
 interface Props {
-  category?: Category,
-  question?: Question,
-  onSubmit?: (question: Question) => void,
-  iconButton?: boolean,
+  category?: Category
+  question?: Question
+  onSubmit?: (question: Question) => void
+  iconButton?: boolean
 }
 
 type AnswerInputState = {

@@ -5,9 +5,9 @@ import InputState, { defaultInputState } from '../types/InputState'
 import testsRunning from '../utils/testsRunning'
 
 interface Props {
-  setValue: (email?: string) => void,
-  error: string,
-  focus?: boolean,
+  setValue: (email?: string) => void
+  error: string
+  focus?: boolean
 }
 
 export default ({ setValue, error, focus = false }: Props): ReactNode => {

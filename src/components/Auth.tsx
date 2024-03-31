@@ -6,7 +6,7 @@ import Login from './Login'
 import { useNavigate } from 'react-router-dom'
 
 interface Props {
-  register?: boolean,
+  register?: boolean
 }
 
 export default ({ register }: Props): ReactNode => {

@@ -1,13 +1,13 @@
 export interface QuestionChoice {
-  title: string,
-  correct: boolean,
-  explanation?: string,
+  title: string
+  correct: boolean
+  explanation?: string
 }
 
 export interface QuestionAnswer {
-  variants: string[],
-  correct: boolean,
-  explanation?: string,
+  variants: string[]
+  correct: boolean
+  explanation?: string
 }
 
 export enum QuestionType {
@@ -24,10 +24,10 @@ export enum QuestionDifficulty {
 }
 
 export default interface QuestionTransfer {
-  category: string,
-  title: string,
-  type: QuestionType,
-  answers?: QuestionAnswer[],
-  choices?: QuestionChoice[],
-  difficulty: QuestionDifficulty,
+  category: string
+  title: string
+  type: QuestionType
+  answers?: QuestionAnswer[]
+  choices?: QuestionChoice[]
+  difficulty: QuestionDifficulty
 }

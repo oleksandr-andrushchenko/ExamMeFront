@@ -1,5 +1,5 @@
 import client from '../client'
-import Category from '../../schema/Category'
+import Category from '../../schema/category/Category'
 import Pagination from '../../types/pagination/Pagination'
 import Paginated from '../../types/pagination/Paginated'
 
