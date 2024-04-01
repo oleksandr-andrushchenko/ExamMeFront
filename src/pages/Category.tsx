@@ -31,6 +31,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
+import AddExam from '../components/exam/AddExam'
 
 interface QueryParams extends Pagination {
   price?: string
@@ -113,6 +114,8 @@ export default (): ReactNode => {
 
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
         (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
+
+      { category === undefined ? <Spinner/> : <AddExam category={ category }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
