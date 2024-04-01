@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default ({ register, dialogOnly }: Props): ReactNode => {
-  const [ open, setOpen ] = useState<boolean>(dialogOnly === true)
+  const [ open, setOpen ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const navigate = useNavigate()
 
@@ -38,6 +38,12 @@ export default ({ register, dialogOnly }: Props): ReactNode => {
       content: <Register onSubmit={ onRegister } buttons={ cancelButton }/>,
     },
   ]
+
+  useEffect(() => {
+    dialogOnly && setTimeout((): void => {
+      setOpen(true)
+    }, 1)
+  }, [])
 
   return <>
     { !dialogOnly && (register
