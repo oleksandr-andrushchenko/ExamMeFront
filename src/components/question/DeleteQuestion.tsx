@@ -52,8 +52,8 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
           <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Question...' : 'Delete Question' }
         </Button>
     }
-    <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
-      <Card className="mx-auto w-full max-w-[24rem] text-center">
+    <Dialog open={ open } handler={ handleOpen }>
+      <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
             Are you sure you want to delete "{ question.title }" question?

@@ -471,7 +471,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
             className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding question...' : 'Add question') }
         </Button>
     }
-    <Dialog size="xs" open={ open } handler={ handleOpen } className="bg-transparent shadow-none">
+    <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4">
