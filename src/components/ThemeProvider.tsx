@@ -101,6 +101,10 @@ const theme = {
     },
   },
   dialog: {
+    defaultProps: {
+      size: 'xs',
+      className: 'bg-transparent shadow-none text-center',
+    },
     styles: {
       base: {
         backdrop: {
