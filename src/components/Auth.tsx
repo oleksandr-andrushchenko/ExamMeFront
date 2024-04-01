@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { createElement, ReactNode, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
@@ -15,24 +15,26 @@ export default ({ register }: Props): ReactNode => {
   const navigate = useNavigate()
 
   const [ activeTab, setActiveTab ] = useState<string>(register ? 'register' : 'login')
-  const cancelButton = <Button type="reset" onClick={ handleOpen }>Cancel</Button>
+  const onLogin = () => {
+    navigate(0)
+  }
+  const onRegister = () => {
+    navigate(0)
+  }
+  const onCancel = () => {
+    handleOpen()
+  }
+  const cancelButton = <Button type="reset" onClick={ onCancel }>Cancel</Button>
   const tabs = [
     {
-      label: 'Login',
-      value: 'login',
-      icon: ArrowRightEndOnRectangleIcon,
-      content: <Login
-        onSubmit={ () => navigate(0) }
-        buttons={ cancelButton }
-        onRegisterClick={ () => setActiveTab('register') }/>,
+      key: 'login',
+      header: <div className="flex items-center gap-2"><ArrowRightEndOnRectangleIcon className="w-4 h-4"/> Login</div>,
+      content: <Login onSubmit={ onLogin } buttons={ cancelButton } onRegisterClick={ () => setActiveTab('register') }/>,
     },
     {
-      label: 'Register',
-      value: 'register',
-      icon: UserPlusIcon,
-      content: <Register
-        onSubmit={ () => navigate(0) }
-        buttons={ cancelButton }/>,
+      key: 'register',
+      header: <div className="flex items-center gap-2"><UserPlusIcon className="w-4 h-4"/> Register</div>,
+      content: <Register onSubmit={ onRegister } buttons={ cancelButton }/>,
     },
   ]
 
@@ -51,21 +53,10 @@ export default ({ register }: Props): ReactNode => {
             <TabsHeader
               className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
               indicatorProps={ { className: 'bg-transparent border-b-2 border-gray-900 shadow-none rounded-none' } }>
-              { tabs.map(({ label, value, icon }): ReactNode => (
-                <Tab key={ value } value={ value }>
-                  <div className="flex items-center gap-2">
-                    { createElement(icon, { className: 'w-4 h-4' }) }
-                    { label }
-                  </div>
-                </Tab>
-              )) }
+              { tabs.map(({ key, header }): ReactNode => <Tab key={ key } value={ key }>{ header }</Tab>) }
             </TabsHeader>
             <TabsBody>
-              { tabs.map(({ value, content }): ReactNode => (
-                <TabPanel key={ value } value={ value }>
-                  { content }
-                </TabPanel>
-              )) }
+              { tabs.map(({ key, content }): ReactNode => <TabPanel key={ key } value={ key }>{ content }</TabPanel>) }
             </TabsBody>
           </Tabs>
         </CardBody>
