@@ -7,10 +7,11 @@ import { useNavigate } from 'react-router-dom'
 
 interface Props {
   register?: boolean
+  dialogOnly?: boolean
 }
 
-export default ({ register }: Props): ReactNode => {
-  const [ open, setOpen ] = useState<boolean>(false)
+export default ({ register, dialogOnly }: Props): ReactNode => {
+  const [ open, setOpen ] = useState<boolean>(dialogOnly === true)
   const handleOpen = () => setOpen(!open)
   const navigate = useNavigate()
 
@@ -39,13 +40,13 @@ export default ({ register }: Props): ReactNode => {
   ]
 
   return <>
-    { register
+    { !dialogOnly && (register
       ? <Button onClick={ handleOpen }>
         <UserPlusIcon className="inline-block h-4 w-4"/> Register
       </Button>
       : <Button size="md" onClick={ handleOpen }>
         <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-      </Button> }
+      </Button>) }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
