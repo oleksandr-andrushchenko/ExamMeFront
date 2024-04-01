@@ -8,10 +8,12 @@ import { useNavigate } from 'react-router-dom'
 interface Props {
   register?: boolean
   dialogOnly?: boolean
+  onClose?: () => void
 }
 
-export default ({ register, dialogOnly }: Props): ReactNode => {
+export default ({ register, dialogOnly, onClose }: Props): ReactNode => {
   const [ open, setOpen ] = useState<boolean>(false)
+  const [ listenClose, setListenClose ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const navigate = useNavigate()
 
@@ -42,8 +44,13 @@ export default ({ register, dialogOnly }: Props): ReactNode => {
   useEffect(() => {
     dialogOnly && setTimeout((): void => {
       setOpen(true)
+      setListenClose(true)
     }, 1)
   }, [])
+
+  useEffect(() => {
+    !open && listenClose && onClose && setTimeout(onClose, 500)
+  }, [ open ])
 
   return <>
     { !dialogOnly && (register
