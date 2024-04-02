@@ -7,7 +7,7 @@ import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
 import Exam from '../../schema/exam/Exam'
 import ExamTransfer from '../../schema/exam/ExamTransfer'
-import postExam from '../../api/exam/postExam'
+import createExam from '../../api/exam/createExam'
 import useAuth from '../../hooks/useAuth'
 import queryCategoryExams from '../../api/exam/queryCategoryExams'
 import Paginated from '../../types/pagination/Paginated'
@@ -38,7 +38,7 @@ export default ({ category, iconButton }: Props): ReactNode => {
       const transfer: ExamTransfer = {
         category: category.id,
       }
-      const exam = await postExam(transfer)
+      const exam = await createExam(transfer)
       navigate(Route.EXAM.replace(':categoryId', exam.category).replace(':examId', exam.id))
     } catch (err) {
       const errors = normalizeApiErrors(err)

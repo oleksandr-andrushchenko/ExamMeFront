@@ -5,9 +5,9 @@ import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import InputState, { defaultInputState } from '../../types/InputState'
-import postCategory from '../../api/category/postCategory'
+import createCategory from '../../api/category/createCategory'
 import Category from '../../schema/category/Category'
-import replaceCategory from '../../api/category/putCategory'
+import replaceCategory from '../../api/category/replaceCategory'
 import getCategory from '../../api/category/getCategory'
 
 interface Props {
@@ -61,7 +61,7 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
 
     try {
       const transfer = { name: name.value }
-      const categoryResp = category ? (await replaceCategory(category.id, transfer)) : (await postCategory(transfer))
+      const categoryResp = category ? (await replaceCategory(category.id, transfer)) : (await createCategory(transfer))
       setOpen(false)
       const id = category ? category.id : categoryResp.id
       navigate(Route.CATEGORY.replace(':categoryId', id))

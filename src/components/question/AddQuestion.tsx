@@ -22,11 +22,11 @@ import QuestionTransfer, {
   QuestionDifficulty,
   QuestionType,
 } from '../../schema/question/QuestionTransfer'
-import postQuestion from '../../api/question/postQuestion'
+import createQuestion from '../../api/question/createQuestion'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Route from '../../enum/Route'
 import Question from '../../schema/question/Question'
-import replaceQuestion from '../../api/question/putQuestion'
+import replaceQuestion from '../../api/question/replaceQuestion'
 import getQuestion from '../../api/question/getQuestion'
 import Category from '../../schema/category/Category'
 
@@ -429,7 +429,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
         })
       }
 
-      const questionResp = question ? (await replaceQuestion(question.id, transfer)) : (await postQuestion(transfer))
+      const questionResp = question ? (await replaceQuestion(question.id, transfer)) : (await createQuestion(transfer))
       setOpen(false)
       const catId = question ? question.category : questionResp.category
       const questionId = question ? question.id : questionResp.id

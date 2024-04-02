@@ -60,7 +60,6 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
       Promise.all<any>([ getMe(), getPermissionHierarchy() ])
         .then(([ me, permissionHierarchy ]): void => setData({ me, permissionHierarchy }))
         .catch((): void => setAuth(undefined))
-
     } else {
       delete client.defaults.headers['Authorization']
       localStorage.removeItem('auth')

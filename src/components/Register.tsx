@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
-import postAuth from '../api/postAuth'
+import createAuth from '../api/createAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 import Route from '../enum/Route'
-import postMe from '../api/me/postMe'
+import createMe from '../api/me/createMe'
 
 interface Props {
   onSubmit: () => void
@@ -31,8 +31,8 @@ export default ({ buttons, onSubmit }: Props): ReactNode => {
     setProcessing(true)
 
     try {
-      await postMe({ email, password })
-      setAuth(await postAuth({ email, password }))
+      await createMe({ email, password })
+      setAuth(await createAuth({ email, password }))
       onSubmit()
     } catch (err) {
       const errors = normalizeApiErrors(err)

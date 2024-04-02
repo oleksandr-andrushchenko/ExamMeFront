@@ -4,7 +4,7 @@ import React, { ReactNode, useState } from 'react'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
-import postAuth from '../api/postAuth'
+import createAuth from '../api/createAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 
 interface Props {
@@ -27,7 +27,7 @@ export default ({ onSubmit, buttons, onRegisterClick }: Props): ReactNode => {
     setProcessing(true)
 
     try {
-      setAuth(await postAuth({ email, password }))
+      setAuth(await createAuth({ email, password }))
       onSubmit()
     } catch (err) {
       const errors = normalizeApiErrors(err)
