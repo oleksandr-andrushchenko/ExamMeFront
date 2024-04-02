@@ -1,7 +1,5 @@
-import Question from '../question/Question'
-
 export default interface ExamQuestion {
-  question: Question
+  question: string
   answer?: number | string
   nextQuestion?: string
   prevQuestion?: string
