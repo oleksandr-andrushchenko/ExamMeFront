@@ -26,7 +26,7 @@ import postQuestion from '../../api/question/postQuestion'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Route from '../../enum/Route'
 import Question from '../../schema/question/Question'
-import replaceQuestion from '../../api/question/replaceQuestion'
+import replaceQuestion from '../../api/question/putQuestion'
 import getQuestion from '../../api/question/getQuestion'
 import Category from '../../schema/category/Category'
 

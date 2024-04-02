@@ -7,7 +7,7 @@ import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import InputState, { defaultInputState } from '../../types/InputState'
 import postCategory from '../../api/category/postCategory'
 import Category from '../../schema/category/Category'
-import replaceCategory from '../../api/category/replaceCategory'
+import replaceCategory from '../../api/category/putCategory'
 import getCategory from '../../api/category/getCategory'
 
 interface Props {
