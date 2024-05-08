@@ -27,6 +27,7 @@ import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
+import Rating from '../components/Rating.tsx'
 
 interface QueryParams extends Pagination {
   price?: string
@@ -66,10 +67,8 @@ export default (): ReactNode => {
     setSearchParams(defaultSearchParams)
   }
 
-  useEffect(refresh, [ searchParams ])
-
   const tableFilters = [ 'all', 'free', 'subscription' ]
-  const tableColumns = [ '#', 'Title', 'Questions', '' ]
+  const tableColumns = [ '#', 'Title', 'Questions', 'Rating', '' ]
   const showClear = (): boolean => {
     const def = new URLSearchParams(defaultSearchParams)
     def.sort()
@@ -78,13 +77,19 @@ export default (): ReactNode => {
     return def.toString() !== searchParams.toString()
   }
 
+  useEffect(refresh, [ searchParams ])
+
+  useEffect((): void => {
+    document.title = 'Categories'
+  }, [])
+
   return <>
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
     </Breadcrumbs>
 
-    <Typography variant="h1" className="mt-1">Categories</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">Categories</Typography>
 
     <Typography variant="small" className="mt-1">Categories info</Typography>
 
@@ -192,6 +197,10 @@ export default (): ReactNode => {
             <Typography variant="small">
               { category.questionCount }
             </Typography>
+          </td>
+
+          <td className="py-2 px-4">
+            <Rating readonly/>
           </td>
 
           <td className="py-2 px-4">

@@ -2,18 +2,22 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
 import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
 import Route from '../enum/Route'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 
 export default (): ReactNode => {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
+
+  useEffect((): void => {
+    document.title = 'Unauthorized'
+  }, [])
 
   return <>
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
     </Breadcrumbs>
 
-    <Typography variant="h1" className="mt-1">Unauthorized</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">Unauthorized</Typography>
 
     <Typography variant="small" className="mt-1">You do not have access to the requested page</Typography>
 

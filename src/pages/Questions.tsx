@@ -29,6 +29,7 @@ import Pagination from '../types/pagination/Pagination'
 import queryQuestions from '../api/question/queryQuestions'
 import Category from '../schema/category/Category'
 import queryCategories from '../api/category/queryCategories'
+import Rating from '../components/Rating.tsx'
 
 interface QueryParams extends Pagination {
   category?: string
@@ -44,10 +45,6 @@ export default (): ReactNode => {
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
   const { auth, me, checkAuth } = useAuth()
-
-  useEffect((): void => {
-    queryCategories().then((categories: Paginated<Category>): void => setCategories(categories))
-  }, [])
 
   const refresh = (): void => {
     queryQuestions(searchParams).then((questions): void => setQuestions(questions))
@@ -76,10 +73,8 @@ export default (): ReactNode => {
     setSearchParams(defaultSearchParams)
   }
 
-  useEffect(refresh, [ searchParams ])
-
   const tableFilters = [ 'all', 'free', 'subscription' ]
-  const tableColumns = [ '#', 'Title', 'Category', 'Difficulty', 'Type', '' ]
+  const tableColumns = [ '#', 'Title', 'Category', 'Difficulty', 'Type', 'Rating', '' ]
   const showClear = (): boolean => {
     const def = new URLSearchParams(defaultSearchParams)
     def.sort()
@@ -89,13 +84,23 @@ export default (): ReactNode => {
   }
   const getCategory = (id: string): Category => (categories?.data || []).filter((category: Category): boolean => category.id === id)[0]
 
+  useEffect(refresh, [ searchParams ])
+
+  useEffect((): void => {
+    queryCategories().then((categories: Paginated<Category>): void => setCategories(categories))
+  }, [])
+
+  useEffect((): void => {
+    document.title = 'Questions'
+  }, [])
+
   return <>
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Questions</Link>
     </Breadcrumbs>
 
-    <Typography variant="h1" className="mt-1">Questions</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">Questions</Typography>
 
     <Typography variant="small" className="mt-1">Questions info</Typography>
 
@@ -229,8 +234,8 @@ export default (): ReactNode => {
           </td>
 
           <td className="py-2 px-4">
-            <Tooltip content={question.title}>
-              <Typography variant="small" className="capitalize truncate max-w-[350px]">
+            <Tooltip content={ question.title }>
+              <Typography variant="small" className="capitalize truncate max-w-[250px]">
                 <Link
                   key={ question.id }
                   to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
@@ -260,6 +265,10 @@ export default (): ReactNode => {
             <Typography variant="small" className="capitalize">
               { question.type }
             </Typography>
+          </td>
+
+          <td className="py-2 px-4">
+            <Rating readonly/>
           </td>
 
           <td className="py-2 px-4">

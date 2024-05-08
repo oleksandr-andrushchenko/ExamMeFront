@@ -32,6 +32,7 @@ import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTra
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
 import AddExam from '../components/exam/AddExam'
+import Rating from '../components/Rating'
 
 interface QueryParams extends Pagination {
   price?: string
@@ -47,10 +48,6 @@ export default (): ReactNode => {
   const [ category, setCategory ] = useState<Category>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
   const { auth, me, checkAuth } = useAuth()
-
-  useEffect((): void => {
-    getCategory(categoryId).then((category): void => setCategory(category))
-  }, [ categoryId ])
 
   const refresh = (): void => {
     queryCategoryQuestions(categoryId, searchParams).then((questions): void => setQuestions(questions))
@@ -79,10 +76,8 @@ export default (): ReactNode => {
     setSearchParams(defaultSearchParams)
   }
 
-  useEffect(refresh, [ searchParams ])
-
   const tableFilters = [ 'all', 'free', 'subscription' ]
-  const tableColumns = [ '#', 'Title', 'Difficulty', 'Type', '' ]
+  const tableColumns = [ '#', 'Title', 'Difficulty', 'Type', 'Rating', '' ]
   const showClear = (): boolean => {
     const def = new URLSearchParams(defaultSearchParams)
     def.sort()
@@ -90,6 +85,16 @@ export default (): ReactNode => {
 
     return def.toString() !== searchParams.toString()
   }
+
+  useEffect((): void => {
+    getCategory(categoryId).then((category): void => setCategory(category))
+  }, [ categoryId ])
+
+  useEffect(refresh, [ searchParams ])
+
+  useEffect((): void => {
+    document.title = category?.name || 'ExamMe'
+  }, [ category ])
 
   return <>
     <Breadcrumbs>
@@ -99,7 +104,9 @@ export default (): ReactNode => {
         <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>{ category.name }</Link> }
     </Breadcrumbs>
 
-    <Typography variant="h1" className="mt-1">{ category === undefined ? <Spinner/> : category.name }</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ? <Spinner/> : category.name }</Typography>
+
+    <Rating/>
 
     <Typography variant="small" className="mt-1">Category info</Typography>
 
@@ -115,7 +122,7 @@ export default (): ReactNode => {
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
         (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
 
-      { category === undefined ? <Spinner/> : <AddExam category={ category }/> }
+      { category === undefined ? <Spinner/> : (category.questionCount > 0) && <AddExam category={ category }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -250,6 +257,10 @@ export default (): ReactNode => {
             <Typography variant="small" className="capitalize">
               { question.type }
             </Typography>
+          </td>
+
+          <td className="py-2 px-4">
+            <Rating readonly/>
           </td>
 
           <td className="py-2 px-4">

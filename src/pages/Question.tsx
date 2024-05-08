@@ -13,6 +13,7 @@ import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
+import Rating from '../components/Rating.tsx'
 
 interface Data {
   category: Category | undefined
@@ -29,6 +30,10 @@ export default (): ReactNode => {
       .then(([ category, question ]): void => setData({ category, question }))
   }, [])
 
+  useEffect((): void => {
+    document.title = question?.title || 'ExamMe'
+  }, [])
+
   return <>
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
@@ -39,7 +44,9 @@ export default (): ReactNode => {
         <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
     </Breadcrumbs>
 
-    <Typography variant="h1" className="mt-1">{ question === undefined ? <Spinner/> : question.title }</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">{ question === undefined ? <Spinner/> : question.title }</Typography>
+
+    <Rating/>
 
     <Typography variant="small" className="mt-1">Question info</Typography>
 
