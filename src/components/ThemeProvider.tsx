@@ -20,6 +20,11 @@ const theme = {
       },
     },
   },
+  radio: {
+    defaultProps: {
+      ripple: false,
+    },
+  },
   input: {
     styles: {
       variants: {
