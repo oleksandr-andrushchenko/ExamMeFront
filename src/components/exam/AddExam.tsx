@@ -9,7 +9,7 @@ import Exam from '../../schema/exam/Exam'
 import ExamTransfer from '../../schema/exam/ExamTransfer'
 import createExam from '../../api/exam/createExam'
 import useAuth from '../../hooks/useAuth'
-import queryCategoryExams from '../../api/exam/queryCategoryExams'
+import queryExams from '../../api/exam/queryExams.ts'
 import Paginated from '../../types/pagination/Paginated'
 import Spinner from '../Spinner'
 import Auth from '../Auth'
@@ -51,7 +51,12 @@ export default ({ category, iconButton }: Props): ReactNode => {
 
   useEffect(() => {
     if (auth) {
-      queryCategoryExams(category.id, { size: 1 }).then((exams: Paginated<Exam>): void => setExam(exams.data[0] || null))
+      const query = {
+        category: category.id,
+        completion: false,
+        size: 1,
+      }
+      queryExams(query).then((exams: Paginated<Exam>): void => setExam(exams.data[0] || null))
     }
   }, [ auth ])
 
