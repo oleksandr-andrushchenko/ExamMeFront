@@ -13,7 +13,7 @@ export interface AuthProviderContextValue {
   auth: Auth | undefined
   setAuth: (auth: Auth | undefined) => void
   me: Me | undefined
-  checkAuth: (permission: Permission) => boolean
+  checkAuth: (permission: string, resource?: { owner: string }, permissions?: string[]) => boolean
 }
 
 interface Data {
@@ -27,24 +27,28 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
 
-  const checkAuth = function (permission: Permission, userPermissions: Permission[] | undefined = undefined): boolean {
+  const checkAuth = (permission: string, resource: { owner: string }, permissions: string[] = undefined): boolean => {
     if (!auth || !me || !permissionHierarchy) {
       return false
     }
 
-    userPermissions = userPermissions ? userPermissions : me.permissions
-
-    if (userPermissions.indexOf(Permission.ALL) !== -1) {
+    if (resource && resource.owner === me.id) {
       return true
     }
 
-    if (userPermissions.indexOf(permission) !== -1) {
+    permissions = permissions ?? me.permissions
+
+    if (permissions.indexOf(Permission.ALL) !== -1) {
       return true
     }
 
-    for (const userPermission of userPermissions) {
-      if (permissionHierarchy.hasOwnProperty(userPermission)) {
-        if (checkAuth(permission, permissionHierarchy[userPermission])) {
+    if (permissions.indexOf(permission) !== -1) {
+      return true
+    }
+
+    for (const mePermission of permissions) {
+      if (permissionHierarchy.hasOwnProperty(mePermission)) {
+        if (checkAuth(permission, permissionHierarchy[mePermission])) {
           return true
         }
       }
