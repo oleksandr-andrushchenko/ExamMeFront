@@ -1,6 +1,9 @@
 export default interface ExamQuestion {
+  number: number
   question: string
-  answer?: number | string
-  nextQuestion?: string
-  prevQuestion?: string
+  type: string
+  difficulty: string
+  choices: string[]
+  choice: number
+  answer: string
 }
