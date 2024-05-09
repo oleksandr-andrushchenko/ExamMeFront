@@ -1,10 +1,10 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
-import Auth from '../schema/Auth'
+import Auth from '../schema/auth/Auth'
 import client from '../api/client'
-import Me from '../schema/Me'
+import Me from '../schema/me/Me'
 import getMe from '../api/me/getMe'
 import Permission from '../enum/Permission'
-import getPermissionHierarchy from '../api/getPermissionHierarchy'
+import getPermissionHierarchy from '../api/auth/getPermissionHierarchy'
 import PermissionHierarchy from '../types/PermissionHierarchy'
 
 export const AuthContext = createContext({})

@@ -29,7 +29,7 @@ import Pagination from '../types/pagination/Pagination'
 import queryQuestions from '../api/question/queryQuestions'
 import Category from '../schema/category/Category'
 import queryCategories from '../api/category/queryCategories'
-import Rating from '../components/Rating.tsx'
+import Rating from '../components/Rating'
 
 interface QueryParams extends Pagination {
   category?: string

@@ -4,11 +4,11 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
 import normalizeApiErrors from '../../utils/normalizeApiErrors'
-import Exam from '../../schema/exam/Exam.ts'
-import Category from '../../schema/category/Category.ts'
-import getCategory from '../../api/category/getCategory.ts'
-import Spinner from '../Spinner.tsx'
-import createExamCompletion from '../../api/exam/createExamCompletion.ts'
+import Exam from '../../schema/exam/Exam'
+import Category from '../../schema/category/Category'
+import getCategory from '../../api/category/getCategory'
+import Spinner from '../Spinner'
+import createExamCompletion from '../../api/exam/createExamCompletion'
 
 interface Props {
   exam: Exam

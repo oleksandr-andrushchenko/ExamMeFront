@@ -3,7 +3,7 @@ import useAuth from '../hooks/useAuth'
 import Spinner from './Spinner'
 import Unauthorized from '../pages/Unauthorized'
 import { ReactNode } from 'react'
-import Auth from './Auth.tsx'
+import Auth from './Auth'
 
 interface Props {
   permission: any

@@ -4,7 +4,7 @@ import React, { ReactNode, useState } from 'react'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
-import createAuth from '../api/createAuth'
+import createAuth from '../api/auth/createAuth'
 import normalizeApiErrors from '../utils/normalizeApiErrors'
 
 interface Props {

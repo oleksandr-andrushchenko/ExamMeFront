@@ -27,7 +27,7 @@ import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
-import Rating from '../components/Rating.tsx'
+import Rating from '../components/Rating'
 
 interface QueryParams extends Pagination {
   price?: string

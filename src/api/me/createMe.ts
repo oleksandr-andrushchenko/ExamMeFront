@@ -1,7 +1,5 @@
 import client from '../client'
-import Me from '../../schema/Me'
+import Me from '../../schema/me/Me'
+import CredentialsTransfer from '../../schema/auth/CredentialsTransfer'
 
-export default async ({ email, password }: {
-  email: string,
-  password: string
-}): Promise<Me> => (await client.post('/me', { email, password })).data
+export default async (transfer: CredentialsTransfer): Promise<Me> => (await client.post('/me', transfer)).data

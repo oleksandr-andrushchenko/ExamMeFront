@@ -13,7 +13,7 @@ import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
-import Rating from '../components/Rating.tsx'
+import Rating from '../components/Rating'
 
 interface Data {
   category: Category | undefined
