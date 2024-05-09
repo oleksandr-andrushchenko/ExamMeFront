@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
-import createAuth from '../api/auth/createAuth'
-import normalizeApiErrors from '../utils/normalizeApiErrors'
 import Route from '../enum/Route'
-import createMe from '../api/me/createMe'
+import apolloClient from '../api/apolloClient'
+import { registerMutation } from '../api/graphql/registerMutation'
+import Token from '../schema/auth/Token'
 
 interface Props {
   onSubmit: () => void
@@ -30,19 +30,10 @@ export default ({ buttons, onSubmit }: Props): ReactNode => {
     e.preventDefault()
     setProcessing(true)
 
-    try {
-      await createMe({ email, password })
-      setAuth(await createAuth({ email, password }))
-      onSubmit()
-    } catch (err) {
-      const errors = normalizeApiErrors(err)
-      console.log(errors)
-      setEmailError(errors?.email || '')
-      setPasswordError(errors?.password || '')
-      setError(errors?.unknown || '')
-    } finally {
-      setProcessing(false)
-    }
+    apolloClient.mutate(registerMutation({ email, password }))
+      .then(({ data }: { data: { addAuth: Token } }) => setAuth(data.addAuth) && onSubmit())
+      .catch((err) => setError(err.message))
+      .finally(() => setProcessing(false))
   }
 
   return <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
