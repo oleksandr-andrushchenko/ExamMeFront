@@ -1,17 +1,18 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
-import Auth from '../schema/auth/Auth'
+import Token from '../schema/auth/Token'
 import client from '../api/client'
 import Me from '../schema/me/Me'
 import getMe from '../api/me/getMe'
 import Permission from '../enum/Permission'
 import getPermissionHierarchy from '../api/auth/getPermissionHierarchy'
 import PermissionHierarchy from '../types/PermissionHierarchy'
+import apolloClient from '../api/apolloClient'
 
 export const AuthContext = createContext({})
 
 export interface AuthProviderContextValue {
-  auth: Auth | undefined
-  setAuth: (auth: Auth | undefined) => void
+  auth: Token | undefined
+  setAuth: (auth: Token | undefined) => void
   me: Me | undefined
   checkAuth: (permission: string, resource?: { owner: string }, permissions?: string[]) => boolean
 }
@@ -22,8 +23,8 @@ interface Data {
 }
 
 export default ({ children }: { children: React.ReactNode }): ReactNode => {
-  const cacheAuth = localStorage.getItem('auth')
-  const [ auth, setAuth ] = useState<Auth | undefined>(cacheAuth ? JSON.parse(cacheAuth) : undefined)
+  const authString = localStorage.getItem('auth')
+  const [ auth, setAuth ] = useState<Token | undefined>(authString ? JSON.parse(authString) : undefined)
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
 
@@ -67,6 +68,8 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
     } else {
       delete client.defaults.headers['Authorization']
       localStorage.removeItem('auth')
+      apolloClient.resetStore().then(() => {
+      })
       setData(defaultData)
     }
   }, [ auth ])
