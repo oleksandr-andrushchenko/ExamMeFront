@@ -11,8 +11,10 @@
     "test:dom": "jest --testEnvironment=jsdom --testPathPattern=__tests__/dom"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.3",
     "@material-tailwind/react": "^2.1.0",
     "axios": "^1.6.7",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-router-dom": "6.4"
   },

@@ -14,6 +14,8 @@ import Questions from '../pages/Questions'
 import Exam from '../pages/Exam'
 import RequireLoggedIn from './RequireLoggedIn'
 import ExamPermission from '../enum/exam/ExamPermission'
+import { ApolloProvider } from '@apollo/client'
+import apolloClient from '../api/apolloClient'
 
 const routes = <Routes>
   <Route element={ <Layout/> }>
@@ -32,8 +34,10 @@ const routes = <Routes>
 
 export default (): ReactNode => <AuthProvider>
   <ThemeProvider>
-    <BrowserRouter>
-      { routes }
-    </BrowserRouter>
+    <ApolloProvider client={ apolloClient }>
+      <BrowserRouter>
+        { routes }
+      </BrowserRouter>
+    </ApolloProvider>
   </ThemeProvider>
 </AuthProvider>
