@@ -48,7 +48,7 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
 
     for (const mePermission of permissions) {
       if (permissionHierarchy.hasOwnProperty(mePermission)) {
-        if (checkAuth(permission, permissionHierarchy[mePermission])) {
+        if (checkAuth(permission, resource, permissionHierarchy[mePermission])) {
           return true
         }
       }
