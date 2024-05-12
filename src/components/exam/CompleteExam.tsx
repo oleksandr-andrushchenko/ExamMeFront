@@ -26,7 +26,7 @@ export default ({ exam, onSubmit, iconButton }: Props): ReactNode => {
 
   useEffect((): void => {
     if (open && category === undefined) {
-      getCategory(exam.category).then((category: Category): void => setCategory(category))
+      getCategory(exam.categoryId).then((category: Category): void => setCategory(category))
     }
   }, [ open ])
 
@@ -34,7 +34,7 @@ export default ({ exam, onSubmit, iconButton }: Props): ReactNode => {
     if (processing) {
       createExamCompletion(exam.id)
         .then((): void => {
-          navigate(Route.CATEGORY.replace(':categoryId', exam.category), { replace: true })
+          navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId), { replace: true })
           onSubmit && onSubmit()
         })
         .catch((error): void => {

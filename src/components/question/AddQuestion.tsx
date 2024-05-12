@@ -393,7 +393,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
       setProcessing(true)
 
       const transfer: QuestionTransfer = {
-        category: category?.id || question?.category || '',
+        categoryId: category?.id || question?.categoryId || '',
         title: title.value,
         type: type.value,
         difficulty: difficulty.value,
@@ -431,7 +431,7 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
 
       const questionResp = question ? (await replaceQuestion(question.id, transfer)) : (await createQuestion(transfer))
       setOpen(false)
-      const catId = question ? question.category : questionResp.category
+      const catId = question ? question.categoryId : questionResp.categoryId
       const questionId = question ? question.id : questionResp.id
       navigate(Route.QUESTION.replace(':categoryId', catId).replace(':questionId', questionId))
 

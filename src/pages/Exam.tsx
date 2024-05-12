@@ -27,7 +27,7 @@ export default (): ReactNode => {
   const { checkAuth } = useAuth()
   const navigate = useNavigate()
 
-  const onDelete = (): void => exam && navigate(Route.CATEGORY.replace(':categoryId', exam.category), { replace: true })
+  const onDelete = (): void => exam && navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId), { replace: true })
   const hasPrevQuestion = (): boolean | undefined => {
     if (exam === undefined || question === undefined) {
       return undefined
@@ -61,7 +61,7 @@ export default (): ReactNode => {
   useEffect((): void => {
     getExam(examId).then((exam: Exam): void => {
       setExam(exam)
-      getCategory(exam.category).then((category: Category): void => {
+      getCategory(exam.categoryId).then((category: Category): void => {
         setCategory(category)
         document.title = `Exam: ${ category.name || 'ExamMe' }`
       })

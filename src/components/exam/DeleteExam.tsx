@@ -25,14 +25,14 @@ export default ({ exam, onSubmit, iconButton }: Props): ReactNode => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getCategory(exam.category).then((category: Category): void => setCategory(category))
+    getCategory(exam.categoryId).then((category: Category): void => setCategory(category))
   }, [])
 
   useEffect((): void => {
     if (processing) {
       deleteExam(exam.id)
         .then((): void => {
-          navigate(Route.CATEGORY.replace(':categoryId', exam.category), { replace: true })
+          navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId), { replace: true })
           onSubmit && onSubmit()
         })
         .catch((error): void => {

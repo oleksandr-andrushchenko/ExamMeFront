@@ -36,10 +36,10 @@ export default ({ category, iconButton }: Props): ReactNode => {
       setProcessing(true)
 
       const transfer: ExamTransfer = {
-        category: category.id,
+        categoryId: category.id,
       }
       const exam = await createExam(transfer)
-      navigate(Route.EXAM.replace(':categoryId', exam.category).replace(':examId', exam.id))
+      navigate(Route.EXAM.replace(':categoryId', exam.categoryId).replace(':examId', exam.id))
     } catch (err) {
       const errors = normalizeApiErrors(err)
       console.log(errors)
@@ -52,7 +52,7 @@ export default ({ category, iconButton }: Props): ReactNode => {
   useEffect(() => {
     if (auth) {
       const query = {
-        category: category.id,
+        categoryId: category.id,
         completion: false,
         size: 1,
       }
@@ -65,7 +65,7 @@ export default ({ category, iconButton }: Props): ReactNode => {
   }
 
   if (auth && exam) {
-    const url = Route.EXAM.replace(':categoryId', exam.category).replace(':examId', exam.id)
+    const url = Route.EXAM.replace(':categoryId', exam.categoryId).replace(':examId', exam.id)
     const label = 'Continue exam'
 
     if (iconButton) {

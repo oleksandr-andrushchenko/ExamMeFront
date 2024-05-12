@@ -1,3 +1,3 @@
 export default interface ExamTransfer {
-  category: string
+  categoryId: string
 }

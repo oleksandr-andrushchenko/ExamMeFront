@@ -24,7 +24,7 @@ export enum QuestionDifficulty {
 }
 
 export default interface QuestionTransfer {
-  category: string
+  categoryId: string
   title: string
   type: QuestionType
   answers?: QuestionAnswer[]

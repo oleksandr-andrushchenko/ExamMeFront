@@ -14,7 +14,7 @@ export interface AuthProviderContextValue {
   auth: Token | undefined
   setAuth: (auth: Token | undefined) => void
   me: Me | undefined
-  checkAuth: (permission: string, resource?: { owner: string }, permissions?: string[]) => boolean
+  checkAuth: (permission: string, resource?: { ownerId: string }, permissions?: string[]) => boolean
 }
 
 interface Data {
@@ -28,12 +28,12 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
 
-  const checkAuth = (permission: string, resource: { owner: string }, permissions: string[] = undefined): boolean => {
+  const checkAuth = (permission: string, resource: { ownerId: string }, permissions: string[] = undefined): boolean => {
     if (!auth || !me || !permissionHierarchy) {
       return false
     }
 
-    if (resource && resource.owner === me.id) {
+    if (resource && resource.ownerId === me.id) {
       return true
     }
 

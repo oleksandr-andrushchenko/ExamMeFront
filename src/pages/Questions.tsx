@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -25,31 +25,25 @@ import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
 import Paginated from '../types/pagination/Paginated'
-import Pagination from '../types/pagination/Pagination'
-import queryQuestions from '../api/question/queryQuestions'
 import Category from '../schema/category/Category'
 import queryCategories from '../api/category/queryCategories'
 import Rating from '../components/Rating'
-
-interface QueryParams extends Pagination {
-  category?: string
-  price?: string
-  search?: string
-  difficulty?: string
-  type?: string
-}
+import queryQuestions from '../api/question/queryQuestions'
+import QuestionQuery from '../schema/question/QuestionQuery'
 
 export default (): ReactNode => {
+  const [ loading, setLoading ] = useState<boolean>(true)
   const defaultSearchParams = { size: '10' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
+  const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
     queryQuestions(searchParams).then((questions): void => setQuestions(questions))
   }
-  const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
+  const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
     setQuestions(undefined)
 
     searchParams.delete('prevCursor')
@@ -104,6 +98,14 @@ export default (): ReactNode => {
 
     <Typography variant="small" className="mt-1">Questions info</Typography>
 
+    { error && <Typography
+      variant="small"
+      color="red"
+      className="flex items-center gap-1 font-normal">
+      <ExclamationCircleIcon className="w-1/12"/>
+      <span className="w-11/12">{ error }</span>
+    </Typography> }
+
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && <AddQuestion/> }
     </div>
@@ -123,13 +125,13 @@ export default (): ReactNode => {
       { categories === undefined ? <Spinner/> : (
         <Select
           label="Category"
-          onChange={ (category: string): void => applySearchParams({ category }) }
+          onChange={ (categoryId: string): void => applySearchParams({ categoryId }) }
           value={ searchParams.get('category') || '' }
           className="capitalize">
           { categories.data.map((category: Category): ReactNode => (
             <Option key={ category.id }
                     value={ category.id }
-                    disabled={ category.id === searchParams.get('category') }
+                    disabled={ category.id === searchParams.get('categoryId') }
                     className="capitalize truncate max-w-[170px]">{ category.name }</Option>
           )) }
         </Select>
@@ -238,7 +240,7 @@ export default (): ReactNode => {
               <Typography variant="small" className="capitalize truncate max-w-[250px]">
                 <Link
                   key={ question.id }
-                  to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+                  to={ Route.QUESTION.replace(':categoryId', question.categoryId).replace(':questionId', question.id) }>
                   { question.title }
                 </Link>
               </Typography>
@@ -247,9 +249,9 @@ export default (): ReactNode => {
 
           <td className="py-2 px-4">
             { categories === undefined ? <Spinner/> : (
-              <Tooltip content={ getCategory(question.category).name }>
+              <Tooltip content={ getCategory(question.categoryId).name }>
                 <Typography variant="small" className="capitalize truncate max-w-[100px]">
-                  { getCategory(question.category).name }
+                  { getCategory(question.categoryId).name }
                 </Typography>
               </Tooltip>
             ) }

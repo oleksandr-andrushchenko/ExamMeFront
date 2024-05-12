@@ -5,6 +5,6 @@ export default interface Me {
   name?: string
   email: string
   permissions: Permission[]
-  created: number
-  updated?: number
+  createdAt: number
+  updatedAt?: number
 }

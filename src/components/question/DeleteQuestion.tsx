@@ -24,7 +24,7 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
     if (processing) {
       deleteQuestion(question.id)
         .then((): void => {
-          navigate(Route.CATEGORY.replace(':categoryId', question.category), { replace: true })
+          navigate(Route.CATEGORY.replace(':categoryId', question.categoryId), { replace: true })
           onSubmit && onSubmit()
         })
         .catch((error): void => {

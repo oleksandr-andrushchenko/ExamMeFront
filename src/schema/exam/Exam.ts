@@ -5,8 +5,8 @@ export default interface Exam extends ExamTransfer {
   questionNumber: number
   questionsCount: number
   answeredCount: number
-  completed?: number
-  owner: string
-  created: number
-  updated?: number
+  completedAt?: number
+  ownerId: string
+  createdAt: number
+  updatedAt?: number
 }

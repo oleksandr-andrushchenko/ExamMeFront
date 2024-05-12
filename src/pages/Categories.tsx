@@ -25,17 +25,11 @@ import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../types/pagination/Paginated'
-import Pagination from '../types/pagination/Pagination'
 import Rating from '../components/Rating'
 import apolloClient from '../api/apolloClient'
 import { categoriesPageCategoriesQuery } from '../api/category/categoriesPageCategoriesQuery'
-import CategoryQuery from '../schema/category/CategoryQuery.ts'
-import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject.ts'
-
-interface QueryParams extends Pagination {
-  price?: string
-  search?: string
-}
+import CategoryQuery from '../schema/category/CategoryQuery'
+import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 
 export default (): ReactNode => {
   const [ loading, setLoading ] = useState<boolean>(true)
@@ -54,7 +48,7 @@ export default (): ReactNode => {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }
-  const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
+  const applySearchParams = (partialQueryParams: CategoryQuery = {}): void => {
     setCategories(undefined)
 
     searchParams.delete('prevCursor')

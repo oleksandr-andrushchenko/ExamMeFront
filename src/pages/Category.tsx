@@ -30,16 +30,9 @@ import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
 import Paginated from '../types/pagination/Paginated'
-import Pagination from '../types/pagination/Pagination'
 import AddExam from '../components/exam/AddExam'
 import Rating from '../components/Rating'
-
-interface QueryParams extends Pagination {
-  price?: string
-  search?: string
-  difficulty?: string
-  type?: string
-}
+import QuestionQuery from '../schema/question/QuestionQuery'
 
 export default (): ReactNode => {
   const defaultSearchParams = { size: '10' }
@@ -52,7 +45,7 @@ export default (): ReactNode => {
   const refresh = (): void => {
     queryCategoryQuestions(categoryId, searchParams).then((questions): void => setQuestions(questions))
   }
-  const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
+  const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
     setQuestions(undefined)
 
     searchParams.delete('prevCursor')
@@ -104,7 +97,8 @@ export default (): ReactNode => {
         <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>{ category.name }</Link> }
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ? <Spinner/> : category.name }</Typography>
+    <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ?
+      <Spinner/> : category.name }</Typography>
 
     <Rating/>
 
