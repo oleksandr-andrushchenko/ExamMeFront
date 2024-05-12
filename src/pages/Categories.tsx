@@ -16,11 +16,10 @@ import {
 import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
-import queryCategories from '../api/category/queryCategories'
 import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
@@ -28,6 +27,10 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../types/pagination/Paginated'
 import Pagination from '../types/pagination/Pagination'
 import Rating from '../components/Rating'
+import apolloClient from '../api/apolloClient'
+import { categoriesPageCategoriesQuery } from '../api/category/categoriesPageCategoriesQuery'
+import CategoryQuery from '../schema/category/CategoryQuery.ts'
+import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject.ts'
 
 interface QueryParams extends Pagination {
   price?: string
@@ -35,13 +38,21 @@ interface QueryParams extends Pagination {
 }
 
 export default (): ReactNode => {
+  const [ loading, setLoading ] = useState<boolean>(true)
   const defaultSearchParams = { size: '10' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
+  const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    queryCategories(searchParams).then((categories): void => setCategories(categories))
+    const filter: CategoryQuery = urlSearchParamsToPlainObject(searchParams)
+    apolloClient.query(categoriesPageCategoriesQuery(filter))
+      .then(({ data }: {
+        data: { paginatedCategories: Paginated<Category> }
+      }) => setCategories(data.paginatedCategories))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
   }
   const applySearchParams = (partialQueryParams: QueryParams = {}): void => {
     setCategories(undefined)
@@ -92,6 +103,14 @@ export default (): ReactNode => {
     <Typography as="h1" variant="h2" className="mt-1">Categories</Typography>
 
     <Typography variant="small" className="mt-1">Categories info</Typography>
+
+    { error && <Typography
+      variant="small"
+      color="red"
+      className="flex items-center gap-1 font-normal">
+      <ExclamationCircleIcon className="w-1/12"/>
+      <span className="w-11/12">{ error }</span>
+    </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
