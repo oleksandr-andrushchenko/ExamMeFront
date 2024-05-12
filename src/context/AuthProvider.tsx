@@ -6,7 +6,7 @@ import getMe from '../api/me/getMe'
 import Permission from '../enum/Permission'
 import getPermissionHierarchy from '../api/auth/getPermissionHierarchy'
 import PermissionHierarchy from '../types/PermissionHierarchy'
-import apolloClient from '../api/apolloClient'
+// import apolloClient from '../api/apolloClient'
 
 export const AuthContext = createContext({})
 
@@ -68,8 +68,8 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
     } else {
       delete client.defaults.headers['Authorization']
       localStorage.removeItem('auth')
-      apolloClient.resetStore().then(() => {
-      })
+      // apolloClient.resetStore().then(() => {
+      // })
       setData(defaultData)
     }
   }, [ auth ])
