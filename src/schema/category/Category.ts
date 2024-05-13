@@ -1,8 +1,11 @@
-import CategoryTransfer from './CategoryTransfer'
-
-export default interface Category extends CategoryTransfer {
-  id: string
-  questionCount: number
-  createdAt: number
+export default interface Category {
+  id?: string
+  name?: string
+  questionCount?: number
+  requiredScore?: number
+  voters?: number
+  rating?: number
+  ownerId?: string
+  createdAt?: number
   updatedAt?: number
 }

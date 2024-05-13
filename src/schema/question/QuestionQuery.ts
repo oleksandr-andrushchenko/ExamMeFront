@@ -1,4 +1,4 @@
-import Pagination from '../../types/pagination/Pagination'
+import Pagination from '../pagination/Pagination'
 
 export default interface QuestionQuery extends Pagination {
   categoryId?: string
