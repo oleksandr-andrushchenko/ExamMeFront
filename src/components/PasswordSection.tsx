@@ -1,7 +1,7 @@
 import { Input, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
-import InputState, { defaultInputState } from '../types/InputState'
+import InputState, { defaultInputState } from '../schema/InputState'
 import testsRunning from '../utils/testsRunning'
 
 interface Props {

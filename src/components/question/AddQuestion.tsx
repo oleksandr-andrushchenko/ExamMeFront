@@ -15,20 +15,21 @@ import {
 import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import InputState, { defaultInputState } from '../../types/InputState'
+import InputState, { defaultInputState } from '../../schema/InputState'
 import QuestionTransfer, {
   QuestionAnswer,
   QuestionChoice,
   QuestionDifficulty,
   QuestionType,
 } from '../../schema/question/QuestionTransfer'
-import createQuestion from '../../api/question/createQuestion'
-import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Route from '../../enum/Route'
 import Question from '../../schema/question/Question'
-import replaceQuestion from '../../api/question/replaceQuestion'
-import getQuestion from '../../api/question/getQuestion'
 import Category from '../../schema/category/Category'
+import apolloClient from '../../api/apolloClient'
+import updateQuestionMutation from '../../api/question/updateQuestionMutation'
+import addQuestionMutation from '../../api/question/addQuestionMutation'
+import categoriesSelectQuery from '../../api/category/categoriesSelectQuery'
+import Spinner from '../Spinner'
 
 interface Props {
   category?: Category
@@ -45,12 +46,24 @@ type ChoiceInputState = {
   [key in keyof QuestionChoice]: InputState
 }
 
-export default ({ category, question, onSubmit, iconButton }: Props): ReactNode => {
+export default function AddQuestion({ category, question, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
+  const [ categories, setCategories ] = useState<Category[]>()
   const handleOpen = () => setOpen(!open)
+  const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!category && !question) {
+      setLoading(true)
+      apolloClient.query(categoriesSelectQuery())
+        .then(({ data }: { data: { categories: Category[] } }) => setCategories(data.categories))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
+    }
+  }, [])
 
   const [ title, setTitle ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.title } })
   const getTitleError = (value: string | undefined = undefined): string => {
@@ -385,70 +398,66 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
 
-    try {
-      if (!validate()) {
-        return
-      }
+    if (!validate()) {
+      return
+    }
 
-      setProcessing(true)
+    setProcessing(true)
 
-      const transfer: QuestionTransfer = {
-        categoryId: category?.id || question?.categoryId || '',
-        title: title.value,
-        type: type.value,
-        difficulty: difficulty.value,
-      }
+    console.log(category?.id, question?.categoryId)
+    const transfer: QuestionTransfer = {
+      categoryId: category?.id || question?.categoryId || '',
+      title: title.value,
+      type: type.value,
+      difficulty: difficulty.value,
+    }
 
-      if (type.value === QuestionType.TYPE) {
-        transfer.answers = answers.map((answer: AnswerInputState): QuestionAnswer => {
-          const answerTransfer: QuestionAnswer = {
-            variants: answer.variants.value.split(',').map((variant: string): string => variant.trim()),
-            correct: answer.correct.value,
-          }
+    if (type.value === QuestionType.TYPE) {
+      transfer.answers = answers.map((answer: AnswerInputState): QuestionAnswer => {
+        const answerTransfer: QuestionAnswer = {
+          variants: answer.variants.value.split(',').map((variant: string): string => variant.trim()),
+          correct: answer.correct.value,
+        }
 
-          if (answer.explanation?.value) {
-            answerTransfer['explanation'] = answer.explanation.value
-          }
+        if (answer.explanation?.value) {
+          answerTransfer['explanation'] = answer.explanation.value
+        }
 
-          return answerTransfer
-        })
-      }
+        return answerTransfer
+      })
+    }
 
-      if (type.value === QuestionType.CHOICE) {
-        transfer.choices = choices.map((choice: ChoiceInputState): QuestionChoice => {
-          const choiceTransfer: QuestionChoice = {
-            title: choice.title.value,
-            correct: choice.correct.value,
-          }
+    if (type.value === QuestionType.CHOICE) {
+      transfer.choices = choices.map((choice: ChoiceInputState): QuestionChoice => {
+        const choiceTransfer: QuestionChoice = {
+          title: choice.title.value,
+          correct: choice.correct.value,
+        }
 
-          if (choice.explanation?.value) {
-            choiceTransfer['explanation'] = choice.explanation.value
-          }
+        if (choice.explanation?.value) {
+          choiceTransfer['explanation'] = choice.explanation.value
+        }
 
-          return choiceTransfer
-        })
-      }
+        return choiceTransfer
+      })
+    }
 
-      const questionResp = question ? (await replaceQuestion(question.id, transfer)) : (await createQuestion(transfer))
+    const callback = (question: Question) => {
       setOpen(false)
-      const catId = question ? question.categoryId : questionResp.categoryId
-      const questionId = question ? question.id : questionResp.id
-      navigate(Route.QUESTION.replace(':categoryId', catId).replace(':questionId', questionId))
+      navigate(Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!))
+      onSubmit && onSubmit(question)
+    }
 
-      if (onSubmit) {
-        getQuestion(questionId).then((question: Question): void => onSubmit(question))
-      }
-    } catch (err) {
-      const errors = normalizeApiErrors(err)
-      console.log(errors)
-      setTitleError(errors?.title || '')
-      setTypeError(errors?.type || '')
-      setAnswersError(errors?.answers || '')
-      setChoicesError(errors?.choices || '')
-      setDifficultyError(errors?.difficulty || '')
-      setError(errors?.unknown || '')
-    } finally {
-      setProcessing(false)
+    if (question) {
+      apolloClient.mutate(updateQuestionMutation(question.id!, transfer))
+        .then(({ data }: { data: { updateQuestion: Question } }) => callback(data.updateQuestion))
+        .catch((err) => setError(err.message))
+        .finally(() => setProcessing(false))
+    } else {
+      apolloClient.mutate(addQuestionMutation(transfer))
+        .then(({ data }: { data: { addQuestion: Question } }) => callback(data.addQuestion))
+        .catch((err) => setError(err.message))
+        .finally(() => setProcessing(false))
     }
   }
 
@@ -479,6 +488,19 @@ export default ({ category, question, onSubmit, iconButton }: Props): ReactNode 
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
                 method="post">
+
+            { !category && !question && (categories === undefined ? <Spinner/> : ((
+              <div className="flex flex-col gap-2">
+                <Typography variant="h6">
+                  Category
+                </Typography>
+                <Select name="category" label="Category">
+                  { categories.map((category: Category): ReactNode => (
+                    <Option key={ category.id } value={ category.id } className="capitalize">{ category.name }</Option>
+                  )) }
+                </Select>
+              </div>
+            ))) }
 
             <div className="flex flex-col gap-2">
               <Typography

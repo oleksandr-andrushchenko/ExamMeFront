@@ -2,28 +2,29 @@ import { Button, IconButton, Tooltip, Typography } from '@material-tailwind/reac
 import { ExclamationCircleIcon, PlayIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
 import Exam from '../../schema/exam/Exam'
 import ExamTransfer from '../../schema/exam/ExamTransfer'
-import createExam from '../../api/exam/createExam'
 import useAuth from '../../hooks/useAuth'
-import queryExams from '../../api/exam/queryExams'
-import Paginated from '../../types/pagination/Paginated'
 import Spinner from '../Spinner'
 import Auth from '../Auth'
+import Question from '../../schema/question/Question'
+import apolloClient from '../../api/apolloClient'
+import addExamMutation from '../../api/exam/addExamMutation'
+import addExamExamsQuery from '../../api/exam/addExamExamsQuery'
 
 interface Props {
   category: Category
   iconButton?: boolean
 }
 
-export default ({ category, iconButton }: Props): ReactNode => {
+export default function AddExam({ category, iconButton }: Props): ReactNode {
   const { auth } = useAuth()
-  const [ exam, setExam ] = useState<Exam | undefined>(undefined)
+  const [ exam, setExam ] = useState<Exam>()
   const [ showAuth, setShowAuth ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
+  const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
@@ -32,31 +33,28 @@ export default ({ category, iconButton }: Props): ReactNode => {
       return setShowAuth(true)
     }
 
-    try {
-      setProcessing(true)
+    setProcessing(true)
 
-      const transfer: ExamTransfer = {
-        categoryId: category.id,
-      }
-      const exam = await createExam(transfer)
-      navigate(Route.EXAM.replace(':categoryId', exam.categoryId).replace(':examId', exam.id))
-    } catch (err) {
-      const errors = normalizeApiErrors(err)
-      console.log(errors)
-      setError(errors?.unknown || '')
-    } finally {
-      setProcessing(false)
+    const transfer: ExamTransfer = {
+      categoryId: category.id!,
     }
+    const callback = (exam: Exam) => {
+      navigate(Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!))
+    }
+
+    apolloClient.mutate(addExamMutation(transfer))
+      .then(({ data }: { data: { addExam: Question } }) => callback(data.addExam))
+      .catch((err) => setError(err.message))
+      .finally(() => setProcessing(false))
   }
 
   useEffect(() => {
     if (auth) {
-      const query = {
-        categoryId: category.id,
-        completion: false,
-        size: 1,
-      }
-      queryExams(query).then((exams: Paginated<Exam>): void => setExam(exams.data[0] || null))
+      setLoading(true)
+      apolloClient.query(addExamExamsQuery(category.id!))
+        .then(({ data }: { data: { exams: Question } }) => setExam(data.exams[0] || null))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
     }
   }, [ auth ])
 
@@ -65,7 +63,7 @@ export default ({ category, iconButton }: Props): ReactNode => {
   }
 
   if (auth && exam) {
-    const url = Route.EXAM.replace(':categoryId', exam.categoryId).replace(':examId', exam.id)
+    const url = Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
 
     if (iconButton) {

@@ -7,7 +7,7 @@ import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import apolloClient from '../api/apolloClient'
-import { registerMutation } from '../api/graphql/registerMutation'
+import registerMutation from '../api/auth/registerMutation'
 import Token from '../schema/auth/Token'
 
 interface Props {

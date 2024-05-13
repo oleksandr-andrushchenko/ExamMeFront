@@ -24,24 +24,49 @@ import AddQuestion from '../components/question/AddQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
-import Paginated from '../types/pagination/Paginated'
+import Paginated from '../schema/pagination/Paginated'
 import Category from '../schema/category/Category'
-import queryCategories from '../api/category/queryCategories'
 import Rating from '../components/Rating'
-import queryQuestions from '../api/question/queryQuestions'
 import QuestionQuery from '../schema/question/QuestionQuery'
+import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
+import apolloClient from '../api/apolloClient'
+import questionsPageQuestionsQuery from '../api/question/questionsPageQuestionsQuery'
+import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsPageQuestionsAndCategoriesQuery'
 
-export default (): ReactNode => {
+export default function Questions(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
+  const [ withCategories, setWithCategories ] = useState<boolean>(true)
   const defaultSearchParams = { size: '10' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
-  const [ categories, setCategories ] = useState<Paginated<Category>>()
+  const [ categories, setCategories ] = useState<Category[]>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
   const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    queryQuestions(searchParams).then((questions): void => setQuestions(questions))
+    setLoading(true)
+    const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
+
+    if (withCategories) {
+      setWithCategories(false)
+
+      apolloClient.query(questionsPageQuestionsAndCategoriesQuery(filter))
+        .then(({ data }: {
+          data: { paginatedQuestions: Paginated<Question>, categories: Category[] }
+        }) => {
+          setCategories(data.categories)
+          setQuestions(data.paginatedQuestions)
+        })
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
+    } else {
+      apolloClient.query(questionsPageQuestionsQuery(filter))
+        .then(({ data }: {
+          data: { paginatedQuestions: Paginated<Question> }
+        }) => setQuestions(data.paginatedQuestions))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
+    }
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
     setQuestions(undefined)
@@ -76,13 +101,9 @@ export default (): ReactNode => {
 
     return def.toString() !== searchParams.toString()
   }
-  const getCategory = (id: string): Category => (categories?.data || []).filter((category: Category): boolean => category.id === id)[0]
+  const getCategory = (id: string): Category => (categories || []).filter((category: Category): boolean => category.id === id)[0]
 
   useEffect(refresh, [ searchParams ])
-
-  useEffect((): void => {
-    queryCategories().then((categories: Paginated<Category>): void => setCategories(categories))
-  }, [])
 
   useEffect((): void => {
     document.title = 'Questions'
@@ -128,7 +149,7 @@ export default (): ReactNode => {
           onChange={ (categoryId: string): void => applySearchParams({ categoryId }) }
           value={ searchParams.get('category') || '' }
           className="capitalize">
-          { categories.data.map((category: Category): ReactNode => (
+          { categories.map((category: Category): ReactNode => (
             <Option key={ category.id }
                     value={ category.id }
                     disabled={ category.id === searchParams.get('categoryId') }
@@ -227,7 +248,7 @@ export default (): ReactNode => {
           <Typography variant="small">No data</Typography>
         </td>
       </tr> }
-      { questions && questions.data && questions.data.map((question: Question, index: number): ReactNode => (
+      { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number): ReactNode => (
         <tr key={ index } className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
             <Typography variant="small">
@@ -240,7 +261,7 @@ export default (): ReactNode => {
               <Typography variant="small" className="capitalize truncate max-w-[250px]">
                 <Link
                   key={ question.id }
-                  to={ Route.QUESTION.replace(':categoryId', question.categoryId).replace(':questionId', question.id) }>
+                  to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
                   { question.title }
                 </Link>
               </Typography>
@@ -249,9 +270,9 @@ export default (): ReactNode => {
 
           <td className="py-2 px-4">
             { categories === undefined ? <Spinner/> : (
-              <Tooltip content={ getCategory(question.categoryId).name }>
+              <Tooltip content={ getCategory(question.categoryId!).name }>
                 <Typography variant="small" className="capitalize truncate max-w-[100px]">
-                  { getCategory(question.categoryId).name }
+                  { getCategory(question.categoryId!).name }
                 </Typography>
               </Tooltip>
             ) }

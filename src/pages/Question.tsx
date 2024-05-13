@@ -1,33 +1,32 @@
 import { Link, Params, useParams } from 'react-router-dom'
 import { Breadcrumbs, Chip, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { HomeIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
-import Category from '../schema/category/Category'
 import Question from '../schema/question/Question'
-import getCategory from '../api/category/getCategory'
-import getQuestion from '../api/question/getQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
 import Rating from '../components/Rating'
+import apolloClient from '../api/apolloClient'
+import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery'
 
-interface Data {
-  category: Category | undefined
-  question: Question | undefined
-}
-
-export default (): ReactNode => {
-  const { categoryId, questionId } = useParams<Params>() as { categoryId: string, questionId: string }
-  const [ { category, question }, setData ] = useState<Data>({ category: undefined, question: undefined })
+export default function Question(): ReactNode {
+  const { questionId } = useParams<Params>() as { questionId: string }
+  const [ question, setQuestion ] = useState<Question>()
+  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
 
   useEffect((): void => {
-    Promise.all<any>([ getCategory(categoryId), getQuestion(questionId) ])
-      .then(([ category, question ]): void => setData({ category, question }))
+    setLoading(true)
+    apolloClient.query(questionPageQuestionQuery(questionId))
+      .then(({ data }: { data: { question: Question } }) => setQuestion(data.question))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect((): void => {
@@ -38,10 +37,10 @@ export default (): ReactNode => {
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
-      { category === undefined ? <Spinner/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>{ category.name }</Link> }
       { question === undefined ? <Spinner/> :
-        <Link to={ Route.QUESTION.replace(':questionId', question.id) }>{ question.title }</Link> }
+        <Link to={ Route.CATEGORY.replace(':categoryId', question.category!.id!) }>{ question.category!.name }</Link> }
+      { question === undefined ? <Spinner/> :
+        <Link to={ Route.QUESTION.replace(':questionId', question.id!) }>{ question.title }</Link> }
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">{ question === undefined ?
@@ -51,24 +50,31 @@ export default (): ReactNode => {
 
     <Typography variant="small" className="mt-1">Question info</Typography>
 
+    { error && <Typography
+      variant="small"
+      color="red"
+      className="flex items-center gap-1 font-normal">
+      <ExclamationCircleIcon className="w-1/12"/>
+      <span className="w-11/12">{ error }</span>
+    </Typography> }
+
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
         (question === undefined ? <Spinner/> :
-          <AddQuestion question={ question }
-                       onSubmit={ (question: Question): void => setData({ category, question }) }/>) }
+          <AddQuestion question={ question } onSubmit={ (question: Question): void => setQuestion(question) }/>) }
 
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
         (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
     </div>
 
-    { category === undefined || question === undefined ? <Spinner/> : <div>
+    { question === undefined ? <Spinner/> : <div>
       <ListItem>
         <Chip variant="ghost" value="Title"/>
         <Typography variant="h6">{ question.title }</Typography>
       </ListItem>
       <ListItem>
         <Chip variant="ghost" value="Category"/>
-        <Typography variant="h6">{ category.name }</Typography>
+        <Typography variant="h6">{ question.category!.name }</Typography>
       </ListItem>
       <ListItem>
         <Chip variant="ghost" value="Type"/>

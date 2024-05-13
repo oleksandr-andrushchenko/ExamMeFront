@@ -24,14 +24,14 @@ import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import Paginated from '../types/pagination/Paginated'
+import Paginated from '../schema/pagination/Paginated'
 import Rating from '../components/Rating'
 import apolloClient from '../api/apolloClient'
-import { categoriesPageCategoriesQuery } from '../api/category/categoriesPageCategoriesQuery'
+import categoriesPageCategoriesQuery from '../api/category/categoriesPageCategoriesQuery'
 import CategoryQuery from '../schema/category/CategoryQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 
-export default (): ReactNode => {
+export default function Categories(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
   const defaultSearchParams = { size: '10' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
@@ -40,6 +40,7 @@ export default (): ReactNode => {
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
+    setLoading(true)
     const filter: CategoryQuery = urlSearchParamsToPlainObject(searchParams)
     apolloClient.query(categoriesPageCategoriesQuery(filter))
       .then(({ data }: {

@@ -1,12 +1,11 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
 import Token from '../schema/auth/Token'
-import client from '../api/client'
 import Me from '../schema/me/Me'
-import getMe from '../api/me/getMe'
 import Permission from '../enum/Permission'
-import getPermissionHierarchy from '../api/auth/getPermissionHierarchy'
-import PermissionHierarchy from '../types/PermissionHierarchy'
-// import apolloClient from '../api/apolloClient'
+import { default as PermissionQuery } from '../schema/auth/Permission'
+import apolloClient from '../api/apolloClient'
+import authProviderQuery from '../api/auth/authProviderQuery'
+import PermissionHierarchy from '../schema/auth/PermissionHierarchy'
 
 export const AuthContext = createContext({})
 
@@ -14,17 +13,17 @@ export interface AuthProviderContextValue {
   auth: Token | undefined
   setAuth: (auth: Token | undefined) => void
   me: Me | undefined
-  checkAuth: (permission: string, resource?: { ownerId: string }, permissions?: string[]) => boolean
+  checkAuth: (permission: string, resource?: { ownerId?: string }, permissions?: string[]) => boolean
 }
 
 interface Data {
-  me: Me | undefined
-  permissionHierarchy: PermissionHierarchy | undefined
+  me?: Me | undefined
+  permissionHierarchy?: PermissionHierarchy | undefined
 }
 
 export default ({ children }: { children: React.ReactNode }): ReactNode => {
   const authString = localStorage.getItem('auth')
-  const [ auth, setAuth ] = useState<Token | undefined>(authString ? JSON.parse(authString) : undefined)
+  const [ auth, setAuth ] = useState<Token>(authString ? JSON.parse(authString) : undefined)
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
 
@@ -33,7 +32,7 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
       return false
     }
 
-    if (resource && resource.ownerId === me.id) {
+    if (resource && resource.ownerId && resource.ownerId === me.id) {
       return true
     }
 
@@ -60,16 +59,15 @@ export default ({ children }: { children: React.ReactNode }): ReactNode => {
 
   useEffect((): void => {
     if (auth) {
-      client.defaults.headers['Authorization'] = `Bearer ${ auth.token }`
       localStorage.setItem('auth', JSON.stringify(auth))
-      Promise.all<any>([ getMe(), getPermissionHierarchy() ])
-        .then(([ me, permissionHierarchy ]): void => setData({ me, permissionHierarchy }))
-        .catch((): void => setAuth(undefined))
+      apolloClient.query(authProviderQuery())
+        .then(({ data }: { data: { me: Me, permission: PermissionQuery } }) => setData({
+          me: data.me,
+          permissionHierarchy: data.permission.hierarchy,
+        }))
+        .catch(_ => setAuth(undefined))
     } else {
-      delete client.defaults.headers['Authorization']
       localStorage.removeItem('auth')
-      // apolloClient.resetStore().then(() => {
-      // })
       setData(defaultData)
     }
   }, [ auth ])

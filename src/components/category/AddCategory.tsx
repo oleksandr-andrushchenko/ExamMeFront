@@ -3,12 +3,11 @@ import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24
 import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
-import normalizeApiErrors from '../../utils/normalizeApiErrors'
-import InputState, { defaultInputState } from '../../types/InputState'
-import createCategory from '../../api/category/createCategory'
+import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
-import replaceCategory from '../../api/category/replaceCategory'
-import getCategory from '../../api/category/getCategory'
+import apolloClient from '../../api/apolloClient'
+import updateCategoryMutation from '../../api/category/updateCategoryMutation'
+import addCategoryMutation from '../../api/category/addCategoryMutation'
 
 interface Props {
   category?: Category
@@ -16,7 +15,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
+export default function AddCategory({ category, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -59,23 +58,23 @@ export default ({ category, onSubmit, iconButton }: Props): ReactNode => {
     e.preventDefault()
     setProcessing(true)
 
-    try {
-      const transfer = { name: name.value }
-      const categoryResp = category ? (await replaceCategory(category.id, transfer)) : (await createCategory(transfer))
+    const transfer = { name: name.value }
+    const callback = (category: Category) => {
       setOpen(false)
-      const id = category ? category.id : categoryResp.id
-      navigate(Route.CATEGORY.replace(':categoryId', id))
+      navigate(Route.CATEGORY.replace(':categoryId', category.id!))
+      onSubmit && onSubmit(category)
+    }
 
-      if (onSubmit) {
-        getCategory(id).then((category: Category): void => onSubmit(category))
-      }
-    } catch (err) {
-      const errors = normalizeApiErrors(err)
-      console.log(errors)
-      setNameError(errors?.title || '')
-      setError(errors?.unknown || '')
-    } finally {
-      setProcessing(false)
+    if (category) {
+      apolloClient.mutate(updateCategoryMutation(category.id!, transfer))
+        .then(({ data }: { data: { updateCategory: Category } }) => callback(data.updateCategory))
+        .catch((err) => setError(err.message))
+        .finally(() => setProcessing(false))
+    } else {
+      apolloClient.mutate(addCategoryMutation(transfer))
+        .then(({ data }: { data: { addCategory: Category } }) => callback(data.addCategory))
+        .catch((err) => setError(err.message))
+        .finally(() => setProcessing(false))
     }
   }
 

@@ -1,11 +1,11 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
-import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Question from '../../schema/question/Question'
-import deleteQuestion from '../../api/question/deleteQuestion'
+import apolloClient from '../../api/apolloClient'
+import removeQuestionMutation from '../../api/question/removeQuestionMutation'
 
 interface Props {
   question: Question
@@ -13,28 +13,24 @@ interface Props {
   iconButton?: boolean
 }
 
-export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
+export default function DeleteQuestion({ question, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  useEffect((): void => {
-    if (processing) {
-      deleteQuestion(question.id)
-        .then((): void => {
-          navigate(Route.CATEGORY.replace(':categoryId', question.categoryId), { replace: true })
-          onSubmit && onSubmit()
-        })
-        .catch((error): void => {
-          const errors = normalizeApiErrors(error)
-          console.log(errors)
-          setError(errors?.unknown || '')
-        })
-        .finally((): void => setProcessing(false))
-    }
-  }, [ processing ])
+  const onClick = () => {
+    setProcessing(true)
+    apolloClient.mutate(removeQuestionMutation(question.id!))
+      .then(_ => {
+        setOpen(false)
+        navigate(Route.CATEGORY.replace(':categoryId', question.categoryId!), { replace: true })
+        onSubmit && onSubmit()
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setProcessing(false))
+  }
 
   return <>
     {
@@ -78,7 +74,7 @@ export default ({ question, onSubmit, iconButton }: Props): ReactNode => {
           <Button
             size="md"
             className="ml-1"
-            onClick={ () => setProcessing(true) }
+            onClick={ onClick }
             disabled={ processing }>
             <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting...' : 'Delete' }
           </Button>

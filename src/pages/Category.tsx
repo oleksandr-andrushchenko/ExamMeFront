@@ -14,36 +14,63 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Category from '../schema/category/Category'
 import Question from '../schema/question/Question'
-import getCategory from '../api/category/getCategory'
-import queryCategoryQuestions from '../api/question/queryCategoryQuestions'
 import DeleteCategory from '../components/category/DeleteCategory'
 import AddQuestion from '../components/question/AddQuestion'
 import AddCategory from '../components/category/AddCategory'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
-import Paginated from '../types/pagination/Paginated'
+import Paginated from '../schema/pagination/Paginated'
 import AddExam from '../components/exam/AddExam'
 import Rating from '../components/Rating'
 import QuestionQuery from '../schema/question/QuestionQuery'
+import apolloClient from '../api/apolloClient'
+import categoryPageQuestionsQuery from '../api/category/categoryPageQuestionsQuery'
+import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
+import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQuestionsAndCategoryQuery'
 
-export default (): ReactNode => {
+export default function Category(): ReactNode {
   const defaultSearchParams = { size: '10' }
+  const [ withCategory, setWithCategory ] = useState<boolean>(true)
   const { categoryId }: { categoryId: string } = useParams()
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ category, setCategory ] = useState<Category>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
+  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    queryCategoryQuestions(categoryId, searchParams).then((questions): void => setQuestions(questions))
+    setLoading(true)
+    const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
+
+    if (withCategory) {
+      setWithCategory(false)
+
+      apolloClient.query(categoryPageQuestionsAndCategoryQuery(categoryId, filter))
+        .then(({ data }: {
+          data: { paginatedQuestions: Paginated<Question>, category: Category }
+        }) => {
+          setCategory(data.category)
+          setQuestions(data.paginatedQuestions)
+        })
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
+    } else {
+      apolloClient.query(categoryPageQuestionsQuery(categoryId, filter))
+        .then(({ data }: {
+          data: { paginatedQuestions: Paginated<Question> }
+        }) => setQuestions(data.paginatedQuestions))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
+    }
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
     setQuestions(undefined)
@@ -79,10 +106,6 @@ export default (): ReactNode => {
     return def.toString() !== searchParams.toString()
   }
 
-  useEffect((): void => {
-    getCategory(categoryId).then((category): void => setCategory(category))
-  }, [ categoryId ])
-
   useEffect(refresh, [ searchParams ])
 
   useEffect((): void => {
@@ -94,7 +117,7 @@ export default (): ReactNode => {
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
       { category === undefined ? <Spinner/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', category.id) }>{ category.name }</Link> }
+        <Link to={ Route.CATEGORY.replace(':categoryId', category.id!) }>{ category.name }</Link> }
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ?
@@ -103,6 +126,14 @@ export default (): ReactNode => {
     <Rating/>
 
     <Typography variant="small" className="mt-1">Category info</Typography>
+
+    { error && <Typography
+      variant="small"
+      color="red"
+      className="flex items-center gap-1 font-normal">
+      <ExclamationCircleIcon className="w-1/12"/>
+      <span className="w-11/12">{ error }</span>
+    </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && (category === undefined ?
@@ -234,7 +265,7 @@ export default (): ReactNode => {
               <Typography variant="small" className="capitalize truncate max-w-[400px]">
                 <Link
                   key={ question.id }
-                  to={ Route.QUESTION.replace(':categoryId', question.category).replace(':questionId', question.id) }>
+                  to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
                   { question.title }
                 </Link>
               </Typography>

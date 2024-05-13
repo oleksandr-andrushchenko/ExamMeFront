@@ -1,14 +1,14 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { CheckIcon, ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Route from '../../enum/Route'
 import { useNavigate } from 'react-router-dom'
-import normalizeApiErrors from '../../utils/normalizeApiErrors'
 import Exam from '../../schema/exam/Exam'
 import Category from '../../schema/category/Category'
-import getCategory from '../../api/category/getCategory'
 import Spinner from '../Spinner'
-import createExamCompletion from '../../api/exam/createExamCompletion'
+import apolloClient from '../../api/apolloClient'
+import categoryNameQuery from '../../api/category/categoryNameQuery'
+import addExamCompletionMutation from '../../api/exam/addExamCompletionMutation'
 
 interface Props {
   exam: Exam
@@ -16,35 +16,35 @@ interface Props {
   iconButton?: boolean
 }
 
-export default ({ exam, onSubmit, iconButton }: Props): ReactNode => {
+export default function CompleteExam({ exam, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
-  const [ category, setCategory ] = useState<Category | undefined>(undefined)
+  const [ category, setCategory ] = useState<Category>()
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
+  const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  useEffect((): void => {
-    if (open && category === undefined) {
-      getCategory(exam.categoryId).then((category: Category): void => setCategory(category))
-    }
-  }, [ open ])
+  const onClick = () => {
+    setProcessing(true)
+    apolloClient.mutate(addExamCompletionMutation(exam.id!))
+      .then(({ data }: { data: { addExamCompletion: Exam } }) => {
+        navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId!), { replace: true })
+        onSubmit && onSubmit()
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setProcessing(false))
+  }
 
   useEffect((): void => {
-    if (processing) {
-      createExamCompletion(exam.id)
-        .then((): void => {
-          navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId), { replace: true })
-          onSubmit && onSubmit()
-        })
-        .catch((error): void => {
-          const errors = normalizeApiErrors(error)
-          console.log(errors)
-          setError(errors?.unknown || '')
-        })
-        .finally((): void => setProcessing(false))
+    if (open && category === undefined) {
+      setLoading(true)
+      apolloClient.query(categoryNameQuery(exam.categoryId!))
+        .then(({ data }: { data: { category: Category } }) => setCategory(data.category))
+        .catch((err) => setError(err.message))
+        .finally(() => setLoading(false))
     }
-  }, [ processing ])
+  }, [ open ])
 
   return <>
     { iconButton
@@ -86,7 +86,7 @@ export default ({ exam, onSubmit, iconButton }: Props): ReactNode => {
           <Button
             size="md"
             className="ml-1"
-            onClick={ () => setProcessing(true) }
+            onClick={ onClick }
             disabled={ processing }>
             <CheckIcon className="inline-block h-4 w-4"/> { processing ? 'Completing...' : 'Complete' }
           </Button>
