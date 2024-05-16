@@ -52,7 +52,7 @@ export default function Exam(): ReactNode {
       return undefined
     }
 
-    return questionNumber < exam.questionsCount - 1
+    return questionNumber < exam.questionCount - 1
   }
   const onNextQuestionClick = () => setQuestionNumber(questionNumber + 1)
   const onCompleteClick = () => {
@@ -117,13 +117,13 @@ export default function Exam(): ReactNode {
     </div>
 
     { exam === undefined ? <Spinner/> :
-      <Progress value={ Math.floor(100 * (questionNumber + 1) / exam.questionsCount) }
+      <Progress value={ Math.floor(100 * (questionNumber + 1) / exam.questionCount) }
                 label="Steps"
                 size="sm"
                 className="mt-4"/> }
 
     { exam === undefined ? <Spinner/> :
-      <Progress value={ Math.floor(100 * exam.answeredCount / exam.questionsCount) }
+      <Progress value={ Math.floor(100 * exam.answeredQuestionCount / exam.questionCount) }
                 label="Answered"
                 size="lg"
                 className="mt-4"/> }

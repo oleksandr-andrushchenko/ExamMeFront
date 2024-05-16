@@ -9,8 +9,8 @@ export default function examPageExamQuery(examId: string): any {
                 questionNumber
                 completedAt
                 ownerId
-                questionsCount
-                answeredCount
+                questionCount
+                answeredQuestionCount
                 category {id name}
             }
         }
