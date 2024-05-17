@@ -97,7 +97,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     setTitle({ ...title, ...{ error, displayError } })
   }
 
-  const [ type, setType ] = useState<InputState>({ ...defaultInputState, ...{ value: question?.type } })
+  const [ type, setType ] = useState<InputState>({ ...defaultInputState, ...{ value: QuestionType.CHOICE } })
   const getTypeError = (value: string | undefined = undefined): string => {
     value = value === undefined ? type.value : value
 
@@ -404,7 +404,6 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     setProcessing(true)
 
-    console.log(category?.id, question?.categoryId)
     const transfer: QuestionTransfer = {
       categoryId: category?.id || question?.categoryId || '',
       title: title.value,
@@ -528,7 +527,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
               </Typography> }
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 hidden">
               <Typography
                 variant="h6"
                 color={ type.error && type.displayError ? 'red' : 'blue-gray' }>
