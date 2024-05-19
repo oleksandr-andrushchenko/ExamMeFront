@@ -32,12 +32,16 @@ const routes = <Routes>
   </Route>
 </Routes>
 
-export default (): ReactNode => <AuthProvider>
-  <ThemeProvider>
-    <ApolloProvider client={ apolloClient }>
-      <BrowserRouter>
-        { routes }
-      </BrowserRouter>
-    </ApolloProvider>
-  </ThemeProvider>
-</AuthProvider>
+export default function App(): ReactNode {
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <ApolloProvider client={ apolloClient }>
+          <BrowserRouter>
+            { routes }
+          </BrowserRouter>
+        </ApolloProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  )
+}
