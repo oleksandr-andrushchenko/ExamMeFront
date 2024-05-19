@@ -49,6 +49,7 @@ export default function categoryPageQuestionsAndCategoryQuery(categoryId: string
         }
     `,
     variables: filter,
+    errorPolicy: 'all',
     fetchPolicy: 'network-only',
   }
 }
