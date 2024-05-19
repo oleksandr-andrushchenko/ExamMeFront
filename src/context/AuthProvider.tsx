@@ -21,12 +21,11 @@ interface Data {
   permissionHierarchy?: PermissionHierarchy | undefined
 }
 
-export default ({ children }: { children: React.ReactNode }): ReactNode => {
+export default function AuthProvider({ children }: { children: React.ReactNode }): ReactNode {
   const authString = localStorage.getItem('auth')
-  const [ auth, setAuth ] = useState<Token>(authString ? JSON.parse(authString) : undefined)
+  const [ auth, setAuth ] = useState<Token | undefined>(authString ? JSON.parse(authString) : undefined)
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
-
   const checkAuth = (permission: string, resource: { ownerId: string }, permissions: string[] = undefined): boolean => {
     if (!auth || !me || !permissionHierarchy) {
       return false
