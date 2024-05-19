@@ -48,5 +48,6 @@ export default function categoryPageQuestionsQuery(categoryId: string, filter: Q
         }
     `,
     variables: filter,
+    fetchPolicy: 'network-only',
   }
 }
