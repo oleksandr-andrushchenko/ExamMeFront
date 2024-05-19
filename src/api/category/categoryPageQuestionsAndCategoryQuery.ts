@@ -34,7 +34,15 @@ export default function categoryPageQuestionsAndCategoryQuery(categoryId: string
                 difficulty: $difficulty,
                 type: $type
             ) {
-                data {difficulty id title type categoryId}
+                data {
+                    difficulty
+                    id
+                    title
+                    type
+                    categoryId
+                    answers {variants correct explanation}
+                    choices {title correct explanation}
+                }
                 meta {nextCursor prevCursor}
             }
             category(categoryId: $categoryId) {id name questionCount ownerId}
