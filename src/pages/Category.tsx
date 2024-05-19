@@ -54,22 +54,25 @@ export default function Category(): ReactNode {
     if (withCategory) {
       setWithCategory(false)
 
-      apolloClient.query(categoryPageQuestionsAndCategoryQuery(categoryId, filter))
-        .then(({ data }: {
-          data: { paginatedQuestions: Paginated<Question>, category: Category }
-        }) => {
+      apolloClient.query<{
+        paginatedQuestions: Paginated<Question>,
+        category: Category
+      }>(categoryPageQuestionsAndCategoryQuery(categoryId, filter))
+        .then(({ data }): void => {
           setCategory(data.category)
           setQuestions(data.paginatedQuestions)
         })
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+        .catch((err): void => setError(err.message))
+        .finally((): void => setLoading(false))
     } else {
-      apolloClient.query(categoryPageQuestionsQuery(categoryId, filter))
-        .then(({ data }: {
-          data: { paginatedQuestions: Paginated<Question> }
-        }) => setQuestions(data.paginatedQuestions))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apolloClient.query <{
+        paginatedQuestions: Paginated<Question>,
+      }>(categoryPageQuestionsQuery(categoryId, filter))
+        .then(({ data }): void => {
+          setQuestions(data.paginatedQuestions)
+        })
+        .catch((err): void => setError(err.message))
+        .finally((): void => setLoading(false))
     }
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
