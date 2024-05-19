@@ -25,7 +25,7 @@ import QuestionTransfer, {
 import Route from '../../enum/Route'
 import Question from '../../schema/question/Question'
 import Category from '../../schema/category/Category'
-import apolloClient from '../../api/apolloClient'
+import apolloClient, { apiQuery } from '../../api/apolloClient'
 import updateQuestionMutation from '../../api/question/updateQuestionMutation'
 import addQuestionMutation from '../../api/question/addQuestionMutation'
 import categoriesSelectQuery from '../../api/category/categoriesSelectQuery'
@@ -57,11 +57,12 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
   useEffect(() => {
     if (!category && !question) {
-      setLoading(true)
-      apolloClient.query(categoriesSelectQuery())
-        .then(({ data }: { data: { categories: Category[] } }) => setCategories(data.categories))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apiQuery<{ categories: Category[] }>(
+        categoriesSelectQuery(),
+        (data): void => setCategories(data.categories),
+        setError,
+        setLoading,
+      )
     }
   }, [])
 

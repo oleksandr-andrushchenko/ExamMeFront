@@ -3,7 +3,7 @@ import Token from '../schema/auth/Token'
 import Me from '../schema/me/Me'
 import Permission from '../enum/Permission'
 import { default as PermissionQuery } from '../schema/auth/Permission'
-import apolloClient from '../api/apolloClient'
+import { apiQuery } from '../api/apolloClient'
 import authProviderQuery from '../api/auth/authProviderQuery'
 import PermissionHierarchy from '../schema/auth/PermissionHierarchy'
 
@@ -59,12 +59,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   useEffect((): void => {
     if (auth) {
       localStorage.setItem('auth', JSON.stringify(auth))
-      apolloClient.query(authProviderQuery())
-        .then(({ data }: { data: { me: Me, permission: PermissionQuery } }) => setData({
-          me: data.me,
-          permissionHierarchy: data.permission.hierarchy,
-        }))
-        .catch(_ => setAuth(undefined))
+      apiQuery<{ me: Me, permission: PermissionQuery }>(
+        authProviderQuery(),
+        (data): void => setData({ me: data.me, permissionHierarchy: data.permission.hierarchy }),
+        () => setAuth(undefined),
+        () => {},
+      )
     } else {
       localStorage.removeItem('auth')
       setData(defaultData)

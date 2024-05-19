@@ -11,7 +11,7 @@ import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
 import Rating from '../components/Rating'
-import apolloClient from '../api/apolloClient'
+import { apiQuery } from '../api/apolloClient'
 import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery'
 
 export default function Question(): ReactNode {
@@ -22,11 +22,12 @@ export default function Question(): ReactNode {
   const { auth, me, checkAuth } = useAuth()
 
   useEffect((): void => {
-    setLoading(true)
-    apolloClient.query(questionPageQuestionQuery(questionId))
-      .then(({ data }: { data: { question: Question } }) => setQuestion(data.question))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+    apiQuery<{ question: Question }>(
+      questionPageQuestionQuery(questionId),
+      (data): void => setQuestion(data.question),
+      setError,
+      setLoading,
+    )
   }, [])
 
   useEffect((): void => {

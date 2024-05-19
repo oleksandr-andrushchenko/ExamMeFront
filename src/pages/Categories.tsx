@@ -26,7 +26,7 @@ import DeleteCategory from '../components/category/DeleteCategory'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../schema/pagination/Paginated'
 import Rating from '../components/Rating'
-import apolloClient from '../api/apolloClient'
+import { apiQuery } from '../api/apolloClient'
 import categoriesPageCategoriesQuery from '../api/category/categoriesPageCategoriesQuery'
 import CategoryQuery from '../schema/category/CategoryQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
@@ -40,14 +40,13 @@ export default function Categories(): ReactNode {
   const { auth, me, checkAuth } = useAuth()
 
   const refresh = (): void => {
-    setLoading(true)
     const filter: CategoryQuery = urlSearchParamsToPlainObject(searchParams)
-    apolloClient.query(categoriesPageCategoriesQuery(filter))
-      .then(({ data }: {
-        data: { paginatedCategories: Paginated<Category> }
-      }) => setCategories(data.paginatedCategories))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+    apiQuery<{ paginatedCategories: Paginated<Category> }>(
+      categoriesPageCategoriesQuery(filter),
+      (data): void => setCategories(data.paginatedCategories),
+      setError,
+      setLoading,
+    )
   }
   const applySearchParams = (partialQueryParams: CategoryQuery = {}): void => {
     setCategories(undefined)

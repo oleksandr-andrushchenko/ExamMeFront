@@ -11,7 +11,7 @@ import DeleteExam from '../components/exam/DeleteExam'
 import ExamQuestion from '../schema/exam/ExamQuestion'
 import { QuestionType } from '../schema/question/QuestionTransfer'
 import CompleteExam from '../components/exam/CompleteExam'
-import apolloClient from '../api/apolloClient'
+import apolloClient, { apiQuery } from '../api/apolloClient'
 import addExamQuestionAnswerMutation from '../api/exam/addExamQuestionAnswerMutation'
 import examPageExamQuery from '../api/exam/examPageExamQuery'
 import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
@@ -40,7 +40,7 @@ export default function Exam(): ReactNode {
       setAnswering(true)
       const transfer = question.type === QuestionType.CHOICE ? { choice: answer as number } : { answer: answer as string }
 
-      apolloClient.query(addExamQuestionAnswerMutation(exam.id!, question.number, transfer))
+      apolloClient.mutate(addExamQuestionAnswerMutation(exam.id!, question.number, transfer))
         .then(({ data }: { data: { addExamQuestionAnswer: Exam } }) => setExam(data.addExamQuestionAnswer))
         .catch((err) => setError(err.message))
         .finally(() => setAnswering(false))
@@ -60,24 +60,26 @@ export default function Exam(): ReactNode {
   }
 
   useEffect((): void => {
-    setLoading(true)
-    apolloClient.query(examPageExamQuery(examId))
-      .then(({ data }: { data: { exam: Exam } }) => {
+    apiQuery<{ exam: Exam }>(
+      examPageExamQuery(examId),
+      (data): void => {
         setExam(data.exam)
         setQuestionNumber(data.exam.questionNumber)
         document.title = `Exam: ${ data.exam.category!.name || 'ExamMe' }`
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+      },
+      setError,
+      setLoading,
+    )
   }, [])
 
   useEffect(() => {
     if (exam && questionNumber !== undefined) {
-      setLoading(true)
-      apolloClient.query(examPageExamQuestionQuery(exam.id!, questionNumber))
-        .then(({ data }: { data: { examQuestion: ExamQuestion } }) => setQuestion(data.examQuestion))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apiQuery<{ examQuestion: ExamQuestion }>(
+        examPageExamQuestionQuery(exam.id!, questionNumber),
+        (data): void => setQuestion(data.examQuestion),
+        setError,
+        setLoading,
+      )
     }
   }, [ questionNumber ])
 

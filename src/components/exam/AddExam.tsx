@@ -10,7 +10,7 @@ import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import Auth from '../Auth'
 import Question from '../../schema/question/Question'
-import apolloClient from '../../api/apolloClient'
+import apolloClient, { apiQuery } from '../../api/apolloClient'
 import addExamMutation from '../../api/exam/addExamMutation'
 import addExamExamsQuery from '../../api/exam/addExamExamsQuery'
 
@@ -50,11 +50,12 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
 
   useEffect(() => {
     if (auth) {
-      setLoading(true)
-      apolloClient.query(addExamExamsQuery(category.id!))
-        .then(({ data }: { data: { exams: Question } }) => setExam(data.exams[0] || null))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apiQuery<{ exams: Exam[] }>(
+        addExamExamsQuery(category.id!),
+        (data): void => setExam(data.exams[0] || null),
+        setError,
+        setLoading,
+      )
     }
   }, [ auth ])
 

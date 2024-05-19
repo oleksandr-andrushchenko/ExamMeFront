@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Exam from '../../schema/exam/Exam'
 import Category from '../../schema/category/Category'
 import Spinner from '../Spinner'
-import apolloClient from '../../api/apolloClient'
+import apolloClient, { apiQuery } from '../../api/apolloClient'
 import categoryNameQuery from '../../api/category/categoryNameQuery'
 import addExamCompletionMutation from '../../api/exam/addExamCompletionMutation'
 
@@ -38,11 +38,12 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
 
   useEffect((): void => {
     if (open && category === undefined) {
-      setLoading(true)
-      apolloClient.query(categoryNameQuery(exam.categoryId!))
-        .then(({ data }: { data: { category: Category } }) => setCategory(data.category))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apiQuery<{ category: Category }>(
+        categoryNameQuery(exam.categoryId!),
+        (data): void => setCategory(data.category),
+        setError,
+        setLoading,
+      )
     }
   }, [ open ])
 

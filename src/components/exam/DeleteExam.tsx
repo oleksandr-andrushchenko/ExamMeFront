@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Exam from '../../schema/exam/Exam'
 import Category from '../../schema/category/Category'
 import Spinner from '../Spinner'
-import apolloClient from '../../api/apolloClient'
+import apolloClient, { apiQuery } from '../../api/apolloClient'
 import removeExamMutation from '../../api/exam/removeExamMutation'
 import categoryNameQuery from '../../api/category/categoryNameQuery'
 
@@ -37,11 +37,12 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
   }
 
   useEffect(() => {
-    setLoading(true)
-    apolloClient.query(categoryNameQuery(exam.categoryId!))
-      .then(({ data }: { data: { category: Category } }) => setCategory(data.category))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+    apiQuery<{ category: Category }>(
+      categoryNameQuery(exam.categoryId!),
+      (data): void => setCategory(data.category),
+      setError,
+      setLoading,
+    )
   }, [])
 
   return <>

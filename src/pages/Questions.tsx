@@ -29,7 +29,7 @@ import Category from '../schema/category/Category'
 import Rating from '../components/Rating'
 import QuestionQuery from '../schema/question/QuestionQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
-import apolloClient from '../api/apolloClient'
+import { apiQuery } from '../api/apolloClient'
 import questionsPageQuestionsQuery from '../api/question/questionsPageQuestionsQuery'
 import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsPageQuestionsAndCategoriesQuery'
 
@@ -50,22 +50,22 @@ export default function Questions(): ReactNode {
     if (withCategories) {
       setWithCategories(false)
 
-      apolloClient.query(questionsPageQuestionsAndCategoriesQuery(filter))
-        .then(({ data }: {
-          data: { paginatedQuestions: Paginated<Question>, categories: Category[] }
-        }) => {
+      apiQuery<{ paginatedQuestions: Paginated<Question>, categories: Category[] }>(
+        questionsPageQuestionsAndCategoriesQuery(filter),
+        (data): void => {
           setCategories(data.categories)
           setQuestions(data.paginatedQuestions)
-        })
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+        },
+        setError,
+        setLoading,
+      )
     } else {
-      apolloClient.query(questionsPageQuestionsQuery(filter))
-        .then(({ data }: {
-          data: { paginatedQuestions: Paginated<Question> }
-        }) => setQuestions(data.paginatedQuestions))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false))
+      apiQuery<{ paginatedQuestions: Paginated<Question> }>(
+        questionsPageQuestionsQuery(filter),
+        (data): void => setQuestions(data.paginatedQuestions),
+        setError,
+        setLoading,
+      )
     }
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
