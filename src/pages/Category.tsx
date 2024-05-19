@@ -106,7 +106,7 @@ export default function Category(): ReactNode {
     return def.toString() !== searchParams.toString()
   }
 
-  useEffect(refresh, [ searchParams ])
+  useEffect(refresh, [ auth, searchParams ])
 
   useEffect((): void => {
     document.title = category?.name || 'ExamMe'
