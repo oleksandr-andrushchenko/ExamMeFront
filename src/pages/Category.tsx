@@ -31,7 +31,7 @@ import Paginated from '../schema/pagination/Paginated'
 import AddExam from '../components/exam/AddExam'
 import Rating from '../components/Rating'
 import QuestionQuery from '../schema/question/QuestionQuery'
-import apolloClient from '../api/apolloClient'
+import { apiQuery } from '../api/apolloClient'
 import categoryPageQuestionsQuery from '../api/category/categoryPageQuestionsQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQuestionsAndCategoryQuery'
@@ -54,25 +54,22 @@ export default function Category(): ReactNode {
     if (withCategory) {
       setWithCategory(false)
 
-      apolloClient.query<{
-        paginatedQuestions: Paginated<Question>,
-        category: Category
-      }>(categoryPageQuestionsAndCategoryQuery(categoryId, filter))
-        .then(({ data }): void => {
+      apiQuery<{ paginatedQuestions: Paginated<Question>, category: Category }>(
+        categoryPageQuestionsAndCategoryQuery(categoryId, filter),
+        (data): void => {
           setCategory(data.category)
           setQuestions(data.paginatedQuestions)
-        })
-        .catch((err): void => setError(err.message))
-        .finally((): void => setLoading(false))
+        },
+        setError,
+        setLoading,
+      )
     } else {
-      apolloClient.query <{
-        paginatedQuestions: Paginated<Question>,
-      }>(categoryPageQuestionsQuery(categoryId, filter))
-        .then(({ data }): void => {
-          setQuestions(data.paginatedQuestions)
-        })
-        .catch((err): void => setError(err.message))
-        .finally((): void => setLoading(false))
+      apiQuery<{ paginatedQuestions: Paginated<Question> }>(
+        categoryPageQuestionsQuery(categoryId, filter),
+        (data): void => setQuestions(data.paginatedQuestions),
+        setError,
+        setLoading,
+      )
     }
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
