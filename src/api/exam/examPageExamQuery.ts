@@ -6,12 +6,12 @@ export default function examPageExamQuery(examId: string): any {
         query ExamPageExam($examId: ID!) {
             exam(examId: $examId) {
                 id
+                categoryId
                 questionNumber
-                completedAt
                 ownerId
                 questionCount
                 answeredQuestionCount
-                category {id name}
+                category {name}
             }
         }
     `,

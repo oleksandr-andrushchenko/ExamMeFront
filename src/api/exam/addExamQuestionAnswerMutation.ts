@@ -18,13 +18,12 @@ export default function addExamQuestionAnswerMutation(
                 examId: $examId,
                 question: $question
             ) {
-                number
-                question
-                difficulty
-                type
-                choices
-                choice
-                answer
+                id
+                categoryId
+                questionNumber
+                questionCount
+                answeredQuestionCount
+                category {name}
             }
         }
     `,

@@ -39,7 +39,7 @@ export default function Question(): ReactNode {
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
       { question === undefined ? <Spinner/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', question.category!.id!) }>{ question.category!.name }</Link> }
+        <Link to={ Route.CATEGORY.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
       { question === undefined ? <Spinner/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id!) }>{ question.title }</Link> }
     </Breadcrumbs>

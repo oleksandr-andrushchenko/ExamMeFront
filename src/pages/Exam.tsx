@@ -27,7 +27,7 @@ export default function Exam(): ReactNode {
   const { checkAuth } = useAuth()
   const navigate = useNavigate()
 
-  const onDelete = (): void => exam && navigate(Route.CATEGORY.replace(':categoryId', exam.category!.id!), { replace: true })
+  const onDelete = (): void => exam && navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId!), { replace: true })
   const hasPrevQuestion = (): boolean | undefined => {
     if (exam === undefined || question === undefined) {
       return undefined
@@ -88,7 +88,7 @@ export default function Exam(): ReactNode {
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
       { exam === undefined ? <Spinner/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', exam.category!.id!) }>{ exam.category!.name }</Link> }
+        <Link to={ Route.CATEGORY.replace(':categoryId', exam.categoryId!) }>{ exam.category!.name }</Link> }
       <Link to={ Route.EXAM.replace(':examId', examId) }>Exam</Link>
     </Breadcrumbs>
 

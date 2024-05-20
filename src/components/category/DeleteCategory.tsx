@@ -24,6 +24,7 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
     setProcessing(true)
     apolloClient.mutate(removeCategoryMutation(category.id!))
       .then(_ => {
+        setOpen(false)
         navigate(Route.CATEGORIES, { replace: true })
         onSubmit && onSubmit()
       })

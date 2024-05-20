@@ -6,8 +6,9 @@ export default function questionPageQuestionQuery(questionId: string): any {
         query QuestionPageQuestion($questionId: ID!) {
             question(questionId: $questionId) {
                 id
+                categoryId
                 title
-                category {id name}
+                category {name}
                 type
                 answers {variants correct explanation}
                 choices {title correct explanation}

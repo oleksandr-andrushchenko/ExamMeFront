@@ -29,6 +29,7 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
     setProcessing(true)
     apolloClient.mutate(removeExamMutation(exam.id!))
       .then(_ => {
+        setOpen(false)
         navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId!), { replace: true })
         onSubmit && onSubmit()
       })

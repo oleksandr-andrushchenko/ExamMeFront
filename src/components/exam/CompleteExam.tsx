@@ -29,7 +29,8 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
     setProcessing(true)
     apolloClient.mutate(addExamCompletionMutation(exam.id!))
       .then(({ data }: { data: { addExamCompletion: Exam } }) => {
-        navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId!), { replace: true })
+        setOpen(false)
+        navigate(Route.CATEGORY.replace(':categoryId', data.addExamCompletion.categoryId!), { replace: true })
         onSubmit && onSubmit()
       })
       .catch((err) => setError(err.message))
