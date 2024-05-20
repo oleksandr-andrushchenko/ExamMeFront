@@ -32,8 +32,17 @@ export default function questionsPageQuestionsQuery(filter: QuestionQuery = {}):
                 difficulty: $difficulty,
                 type: $type
             ) {
-                data {difficulty id title type categoryId}
-                meta {nextCursor prevCursor}
+                data {
+                    difficulty
+                    id
+                    title
+                    type
+                    categoryId
+                }
+                meta {
+                    nextCursor
+                    prevCursor
+                }
             }
         }
     `,

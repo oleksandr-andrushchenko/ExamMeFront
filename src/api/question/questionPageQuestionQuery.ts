@@ -3,15 +3,29 @@ import { gql } from '@apollo/client'
 export default function questionPageQuestionQuery(questionId: string): any {
   return {
     query: gql`
-        query QuestionPageQuestion($questionId: ID!) {
-            question(questionId: $questionId) {
+        query QuestionPageQuestion(
+            $questionId: ID!
+        ) {
+            question(
+                questionId: $questionId
+            ) {
                 id
                 categoryId
                 title
-                category {name}
+                category {
+                    name
+                }
                 type
-                answers {variants correct explanation}
-                choices {title correct explanation}
+                answers {
+                    variants
+                    correct
+                    explanation
+                }
+                choices {
+                    title
+                    correct
+                    explanation
+                }
                 difficulty
             }
         }

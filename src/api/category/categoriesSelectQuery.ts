@@ -4,7 +4,10 @@ export default function categoriesSelectQuery(): any {
   return {
     query: gql`
         query CategoriesSelect {
-            categories {id name}
+            categories {
+                id
+                name
+            }
         }
     `,
     variables: {},

@@ -20,7 +20,10 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
             $difficulty: String,
             $type: String
         ) {
-            categories {id name}
+            categories {
+                id
+                name
+            }
             paginatedQuestions(
                 prevCursor: $prevCursor,
                 nextCursor: $nextCursor,
@@ -33,8 +36,17 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
                 difficulty: $difficulty,
                 type: $type
             ) {
-                data {difficulty id title type categoryId}
-                meta {nextCursor prevCursor}
+                data {
+                    difficulty
+                    id
+                    title
+                    type
+                    categoryId
+                }
+                meta {
+                    nextCursor
+                    prevCursor
+                }
             }
         }
     `,

@@ -40,12 +40,30 @@ export default function categoryPageQuestionsAndCategoryQuery(categoryId: string
                     title
                     type
                     categoryId
-                    answers {variants correct explanation}
-                    choices {title correct explanation}
+                    answers {
+                        variants
+                        correct
+                        explanation
+                    }
+                    choices {
+                        title
+                        correct
+                        explanation
+                    }
                 }
-                meta {nextCursor prevCursor}
+                meta {
+                    nextCursor
+                    prevCursor
+                }
             }
-            category(categoryId: $categoryId) {id name questionCount ownerId}
+            category(
+                categoryId: $categoryId
+            ) {
+                id
+                name
+                questionCount
+                ownerId
+            }
         }
     `,
     variables: filter,

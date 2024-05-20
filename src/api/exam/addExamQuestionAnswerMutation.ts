@@ -23,7 +23,9 @@ export default function addExamQuestionAnswerMutation(
                 questionNumber
                 questionCount
                 answeredQuestionCount
-                category {name}
+                category {
+                    name
+                }
             }
         }
     `,

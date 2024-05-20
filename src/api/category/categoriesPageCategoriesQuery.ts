@@ -27,8 +27,16 @@ export default function categoriesPageCategoriesQuery(filter: CategoryQuery = {}
                 price: $price,
                 search: $search
             ) {
-                data {id name questionCount ownerId}
-                meta {nextCursor prevCursor}
+                data {
+                    id
+                    name
+                    questionCount
+                    ownerId
+                }
+                meta {
+                    nextCursor
+                    prevCursor
+                }
             }
         }
     `,
