@@ -27,6 +27,8 @@ export default function Exam(): ReactNode {
   const { checkAuth } = useAuth()
   const navigate = useNavigate()
 
+  const onPrevQuestionClick = () => setQuestionNumber(questionNumber - 1)
+  const onNextQuestionClick = () => setQuestionNumber(questionNumber + 1)
   const onExamCompleted = () => navigate(Route.CATEGORY.replace(':categoryId', exam!.categoryId!), { replace: true })
   const onExamDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', exam!.categoryId!), { replace: true })
 
@@ -36,6 +38,13 @@ export default function Exam(): ReactNode {
     }
 
     return questionNumber > 0
+  }
+  const hasNextQuestion = (): boolean | undefined => {
+    if (exam === undefined) {
+      return undefined
+    }
+
+    return questionNumber < exam.questionCount - 1
   }
   const createAnswer = (answer: number | string) => {
     if (exam && question) {
@@ -48,15 +57,6 @@ export default function Exam(): ReactNode {
         .finally(() => setAnswering(false))
     }
   }
-  const onPrevQuestionClick = () => setQuestionNumber(questionNumber - 1)
-  const hasNextQuestion = (): boolean | undefined => {
-    if (exam === undefined) {
-      return undefined
-    }
-
-    return questionNumber < exam.questionCount - 1
-  }
-  const onNextQuestionClick = () => setQuestionNumber(questionNumber + 1)
 
   useEffect((): void => {
     apiQuery<{ exam: Exam }>(
