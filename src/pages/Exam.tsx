@@ -13,11 +13,12 @@ import { QuestionType } from '../schema/question/QuestionTransfer'
 import CompleteExam from '../components/exam/CompleteExam'
 import apolloClient, { apiQuery } from '../api/apolloClient'
 import addExamQuestionAnswerMutation from '../api/exam/addExamQuestionAnswerMutation'
-import examPageExamQuery from '../api/exam/examPageExamQuery'
 import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
+import examPageCurrentExamQuestionAndExamQuery from '../api/exam/examPageCurrentExamQuestionAndExamQuery'
 
 export default function Exam(): ReactNode {
   const { examId } = useParams<Params>() as { examId: string }
+  const [ queryWithExam, setQueryWithExam ] = useState<boolean>(true)
   const [ exam, setExam ] = useState<Exam>()
   const [ questionNumber, setQuestionNumber ] = useState<number>()
   const [ question, setQuestion ] = useState<ExamQuestion>()
@@ -51,28 +52,29 @@ export default function Exam(): ReactNode {
       setAnswering(true)
       const transfer = question.type === QuestionType.CHOICE ? { choice: answer as number } : { answer: answer as string }
 
-      apolloClient.mutate(addExamQuestionAnswerMutation(exam.id!, question.number, transfer))
+      apolloClient.mutate(addExamQuestionAnswerMutation(exam.id!, question.number!, transfer))
         .then(({ data }: { data: { addExamQuestionAnswer: Exam } }) => setExam(data.addExamQuestionAnswer))
         .catch((err) => setError(err.message))
         .finally(() => setAnswering(false))
     }
   }
 
-  useEffect((): void => {
-    apiQuery<{ exam: Exam }>(
-      examPageExamQuery(examId),
-      (data): void => {
-        setExam(data.exam)
-        setQuestionNumber(data.exam.questionNumber)
-        document.title = `Exam: ${ data.exam.category!.name || 'ExamMe' }`
-      },
-      setError,
-      setLoading,
-    )
-  }, [])
-
   useEffect(() => {
-    if (exam && questionNumber !== undefined) {
+    if (queryWithExam) {
+      setQueryWithExam(false)
+
+      apiQuery<{ currentExamQuestion: ExamQuestion, exam: Exam }>(
+        examPageCurrentExamQuestionAndExamQuery(examId),
+        (data): void => {
+          setExam(data.exam)
+          setQuestion({ ...data.currentExamQuestion, ...{ number: data.exam.questionNumber } })
+          setQuestionNumber(data.exam.questionNumber)
+          document.title = `Exam: ${ data.exam.category!.name || 'ExamMe' }`
+        },
+        setError,
+        setLoading,
+      )
+    } else if (!queryWithExam && questionNumber !== undefined) {
       apiQuery<{ examQuestion: ExamQuestion }>(
         examPageExamQuestionQuery(exam.id!, questionNumber),
         (data): void => setQuestion(data.examQuestion),

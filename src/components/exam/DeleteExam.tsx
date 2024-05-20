@@ -1,12 +1,9 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
-import Category from '../../schema/category/Category'
-import Spinner from '../Spinner'
-import apolloClient, { apiQuery } from '../../api/apolloClient'
+import apolloClient from '../../api/apolloClient'
 import removeExamMutation from '../../api/exam/removeExamMutation'
-import categoryNameQuery from '../../api/category/categoryNameQuery'
 
 interface Props {
   exam: Exam
@@ -16,10 +13,8 @@ interface Props {
 
 export default function DeleteExam({ exam, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
-  const [ category, setCategory ] = useState<Category>()
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
-  const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
@@ -32,15 +27,6 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
       .catch((err) => setError(err.message))
       .finally(() => setProcessing(false))
   }
-
-  useEffect(() => {
-    apiQuery<{ category: Category }>(
-      categoryNameQuery(exam.categoryId!),
-      (data): void => setCategory(data.category),
-      setError,
-      setLoading,
-    )
-  }, [])
 
   return <>
     {
@@ -62,13 +48,13 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
       <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
-            { category === undefined ? <Spinner/> : `Are you sure you want to delete "${ category.name }" exam?` }
+            { `Are you sure you want to delete "${ exam.category!.name }" exam?` }
           </Typography>
           <Typography
             className="mb-3"
             variant="paragraph"
             color="gray">
-            { category === undefined ? <Spinner/> : `This will delete "${ category.name }" exam permanently.` }
+            { `This will delete "${ exam.category!.name }" exam permanently.` }
             <br/>
             You cannot undo this action.
           </Typography>

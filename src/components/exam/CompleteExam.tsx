@@ -1,11 +1,8 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
-import Category from '../../schema/category/Category'
-import Spinner from '../Spinner'
-import apolloClient, { apiQuery } from '../../api/apolloClient'
-import categoryNameQuery from '../../api/category/categoryNameQuery'
+import apolloClient from '../../api/apolloClient'
 import addExamCompletionMutation from '../../api/exam/addExamCompletionMutation'
 
 interface Props {
@@ -16,10 +13,8 @@ interface Props {
 
 export default function CompleteExam({ exam, onSubmit, iconButton }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
-  const [ category, setCategory ] = useState<Category>()
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
-  const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
@@ -32,17 +27,6 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
       .catch((err) => setError(err.message))
       .finally(() => setProcessing(false))
   }
-
-  useEffect((): void => {
-    if (open && category === undefined) {
-      apiQuery<{ category: Category }>(
-        categoryNameQuery(exam.categoryId!),
-        (data): void => setCategory(data.category),
-        setError,
-        setLoading,
-      )
-    }
-  }, [ open ])
 
   return <>
     { iconButton
@@ -62,13 +46,13 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
       <Card>
         <CardBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
-            { category === undefined ? <Spinner/> : `Are you sure you want to complete "${ category.name }" exam?` }
+            { `Are you sure you want to complete "${ exam.category!.name }" exam?` }
           </Typography>
           <Typography
             className="mb-3"
             variant="paragraph"
             color="gray">
-            { category === undefined ? <Spinner/> : `This will complete "${ category.name }" exam permanently.` }
+            { `This will complete "${ exam.category!.name }" exam permanently.` }
             <br/>
             You cannot undo this action.
           </Typography>
