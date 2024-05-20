@@ -4,7 +4,9 @@ export default function addExamCompletionMutation(examId: string): any {
   return {
     mutation: gql`
         mutation AddExamCompletion($examId: ID!) {
-            addExamCompletion(examId: $examId)
+            addExamCompletion(examId: $examId) {
+                categoryId
+            }
         }
     `,
     variables: {
