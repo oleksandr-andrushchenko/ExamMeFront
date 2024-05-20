@@ -197,7 +197,7 @@ export default function Categories(): ReactNode {
       </tr> }
       { categories && categories.data && categories.data.map((category: Category, index: number): ReactNode => (
         <tr
-          key={ index }
+          key={ category.id }
           className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
             <Typography variant="small">

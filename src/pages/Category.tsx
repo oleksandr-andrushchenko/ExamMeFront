@@ -38,7 +38,7 @@ import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQ
 
 export default function Category(): ReactNode {
   const defaultSearchParams = { size: '10' }
-  const [ withCategory, setWithCategory ] = useState<boolean>(true)
+  const [ queryWithCategory, setQueryWithCategory ] = useState<boolean>(true)
   const { categoryId }: { categoryId: string } = useParams()
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ category, setCategory ] = useState<Category>()
@@ -58,8 +58,8 @@ export default function Category(): ReactNode {
     setLoading(true)
     const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
 
-    if (withCategory) {
-      setWithCategory(false)
+    if (queryWithCategory) {
+      setQueryWithCategory(false)
 
       apiQuery<{ paginatedQuestions: Paginated<Question>, category: Category }>(
         categoryPageQuestionsAndCategoryQuery(categoryId, filter),
@@ -265,7 +265,7 @@ export default function Category(): ReactNode {
           </td>
         </tr> }
         { questions && questions.data && questions.data.map((question: Question, index: number): ReactNode => (
-          <tr key={ index } className={ index === 0 ? 'border-b' : '' }>
+          <tr key={ question.id } className={ index === 0 ? 'border-b' : '' }>
             <td className="py-2 px-4">
               <Typography variant="small">
                 { index + 1 }

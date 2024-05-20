@@ -258,7 +258,7 @@ export default function Questions(): ReactNode {
         </td>
       </tr> }
       { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number): ReactNode => (
-        <tr key={ index } className={ index === 0 ? 'border-b' : '' }>
+        <tr key={ question.id } className={ index === 0 ? 'border-b' : '' }>
           <td className="py-2 px-4">
             <Typography variant="small">
               { index + 1 }
