@@ -4,12 +4,20 @@ export default function examPageExamQuestionQuery(examId: string, question: numb
   return {
     query: gql`
         query ExamPageExamQuestion($examId: ID!, $question: Int!) {
-            examQuestion(examId: $examId, question: $question) {number question difficulty type choices choice answer}
+            examQuestion(examId: $examId, question: $question) {
+                number
+                question
+                type
+                choices
+                choice
+                answer
+            }
         }
     `,
     variables: {
       examId,
       question,
     },
+    fetchPolicy: 'network-only',
   }
 }
