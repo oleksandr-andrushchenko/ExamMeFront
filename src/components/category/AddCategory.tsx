@@ -1,8 +1,6 @@
 import { Button, Card, CardBody, Dialog, IconButton, Textarea, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
-import Route from '../../enum/Route'
-import { useNavigate } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
 import apolloClient from '../../api/apolloClient'
@@ -20,7 +18,6 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
-  const navigate = useNavigate()
 
   const [ name, setName ] = useState<InputState>({ ...defaultInputState, ...{ value: category?.name } })
   const getNameError = (value: string | undefined = undefined): string => {
@@ -61,7 +58,6 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
     const transfer = { name: name.value }
     const callback = (category: Category) => {
       setOpen(false)
-      navigate(Route.CATEGORY.replace(':categoryId', category.id!))
       onSubmit && onSubmit(category)
     }
 

@@ -1,4 +1,4 @@
-import { Link, Params, useParams } from 'react-router-dom'
+import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Chip, ListItem, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
@@ -20,6 +20,10 @@ export default function Question(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
+  const navigate = useNavigate()
+
+  const onQuestionUpdated = (question: Question) => setQuestion(question)
+  const onQuestionDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', question!.categoryId!), { replace: true })
 
   useEffect((): void => {
     apiQuery<{ question: Question }>(
@@ -62,10 +66,10 @@ export default function Question(): ReactNode {
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
         (question === undefined ? <Spinner/> :
-          <AddQuestion question={ question } onSubmit={ (question: Question): void => setQuestion(question) }/>) }
+          <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
       { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
-        (question === undefined ? <Spinner/> : <DeleteQuestion question={ question }/>) }
+        (question === undefined ? <Spinner/> : <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
 
     { question === undefined ? <Spinner/> : <div>

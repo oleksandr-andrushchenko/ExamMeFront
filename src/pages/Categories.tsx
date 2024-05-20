@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Breadcrumbs,
   Button,
@@ -38,8 +38,14 @@ export default function Categories(): ReactNode {
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
+  const navigate = useNavigate()
 
-  const refresh = (): void => {
+  const onCategoryCreated = (category: Category) => refresh() && navigate(Route.CATEGORY.replace(':categoryId', category.id!))
+  const onCategoryUpdated = () => refresh()
+  const onCategoryDeleted = () => refresh()
+  const onQuestionCreated = () => refresh()
+
+  const refresh = (): true => {
     const filter: CategoryQuery = urlSearchParamsToPlainObject(searchParams)
     apiQuery<{ paginatedCategories: Paginated<Category> }>(
       categoriesPageCategoriesQuery(filter),
@@ -47,6 +53,8 @@ export default function Categories(): ReactNode {
       setError,
       setLoading,
     )
+
+    return true
   }
   const applySearchParams = (partialQueryParams: CategoryQuery = {}): void => {
     setCategories(undefined)
@@ -82,7 +90,9 @@ export default function Categories(): ReactNode {
     return def.toString() !== searchParams.toString()
   }
 
-  useEffect(refresh, [ searchParams ])
+  useEffect((): void => {
+    refresh()
+  }, [ searchParams ])
 
   useEffect((): void => {
     document.title = 'Categories'
@@ -107,7 +117,8 @@ export default function Categories(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) && <AddCategory/> }
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) &&
+        <AddCategory onSubmit={ onCategoryCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -199,7 +210,7 @@ export default function Categories(): ReactNode {
               <Typography variant="small" className="capitalize truncate max-w-[500px]">
                 <Link
                   key={ category.id }
-                  to={ Route.CATEGORY.replace(':categoryId', category.id) }>
+                  to={ Route.CATEGORY.replace(':categoryId', category.id!) }>
                   { category.name }
                 </Link>
               </Typography>
@@ -219,13 +230,13 @@ export default function Categories(): ReactNode {
           <td className="py-2 px-4">
             <div className="flex justify-end gap-1">
               { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
-                <AddQuestion category={ category } onSubmit={ refresh } iconButton/> }
+                <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
               { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
-                <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
+                <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
               { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-                <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+                <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
             </div>
           </td>
         </tr>

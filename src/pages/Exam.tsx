@@ -27,7 +27,9 @@ export default function Exam(): ReactNode {
   const { checkAuth } = useAuth()
   const navigate = useNavigate()
 
-  const onDelete = (): void => exam && navigate(Route.CATEGORY.replace(':categoryId', exam.categoryId!), { replace: true })
+  const onExamCompleted = () => navigate(Route.CATEGORY.replace(':categoryId', exam!.categoryId!), { replace: true })
+  const onExamDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', exam!.categoryId!), { replace: true })
+
   const hasPrevQuestion = (): boolean | undefined => {
     if (exam === undefined || question === undefined) {
       return undefined
@@ -55,9 +57,6 @@ export default function Exam(): ReactNode {
     return questionNumber < exam.questionCount - 1
   }
   const onNextQuestionClick = () => setQuestionNumber(questionNumber + 1)
-  const onCompleteClick = () => {
-
-  }
 
   useEffect((): void => {
     apiQuery<{ exam: Exam }>(
@@ -112,10 +111,10 @@ export default function Exam(): ReactNode {
               disabled={ answering || !hasNextQuestion() }>Next</Button>
 
       { exam === undefined ? <Spinner/> : (checkAuth(ExamPermission.CREATE_COMPLETION, exam) &&
-        <CompleteExam exam={ exam } onSubmit={ onCompleteClick }/>) }
+        <CompleteExam exam={ exam } onSubmit={ onExamCompleted }/>) }
 
       { exam === undefined ? <Spinner/> : (checkAuth(ExamPermission.DELETE, exam) &&
-        <DeleteExam exam={ exam } onSubmit={ onDelete }/>) }
+        <DeleteExam exam={ exam } onSubmit={ onExamDeleted }/>) }
     </div>
 
     { exam === undefined ? <Spinner/> :

@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
   Breadcrumbs,
   Button,
@@ -46,8 +46,15 @@ export default function Category(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const { auth, me, checkAuth } = useAuth()
+  const navigate = useNavigate()
 
-  const refresh = (): void => {
+  const onCategoryUpdated = (category: Category) => setCategory(category)
+  const onCategoryDeleted = () => navigate(Route.CATEGORIES, { replace: true })
+  const onQuestionCreated = () => refresh()
+  const onQuestionUpdated = () => refresh()
+  const onQuestionDeleted = () => refresh()
+
+  const refresh = (): true => {
     setLoading(true)
     const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
 
@@ -71,6 +78,8 @@ export default function Category(): ReactNode {
         setLoading,
       )
     }
+
+    return true
   }
   const applySearchParams = (partialQueryParams: QuestionQuery = {}): void => {
     setQuestions(undefined)
@@ -106,7 +115,9 @@ export default function Category(): ReactNode {
     return def.toString() !== searchParams.toString()
   }
 
-  useEffect(refresh, [ auth, searchParams ])
+  useEffect((): void => {
+    refresh()
+  }, [ auth, searchParams ])
 
   useEffect((): void => {
     document.title = category?.name || 'ExamMe'
@@ -138,15 +149,15 @@ export default function Category(): ReactNode {
 
       <div className="flex gap-1 items-center mt-4">
         { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && (category === undefined ?
-          <Spinner/> : <AddQuestion category={ category }/>) }
+          <Spinner/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
         { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
           (category === undefined ? <Spinner/> :
-            <AddCategory category={ category }
-                         onSubmit={ (category: Category): void => setCategory(category) }/>) }
+            <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
         { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
-          (category === undefined ? <Spinner/> : <DeleteCategory category={ category }/>) }
+          (category === undefined ? <Spinner/> :
+            <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
         { category === undefined ? <Spinner/> : (category.questionCount > 0) && <AddExam category={ category }/> }
       </div>
@@ -292,10 +303,10 @@ export default function Category(): ReactNode {
             <td className="py-2 px-4">
               <div className="flex justify-end gap-1">
                 { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
-                  <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
+                  <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
                 { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
-                  <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
+                  <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
               </div>
             </td>
           </tr>

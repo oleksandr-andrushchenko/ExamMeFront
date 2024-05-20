@@ -1,8 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
-import Route from '../../enum/Route'
-import { useNavigate } from 'react-router-dom'
 import Category from '../../schema/category/Category'
 import apolloClient from '../../api/apolloClient'
 import removeCategoryMutation from '../../api/category/removeCategoryMutation'
@@ -18,14 +16,12 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
-  const navigate = useNavigate()
 
   const onClick = () => {
     setProcessing(true)
     apolloClient.mutate(removeCategoryMutation(category.id!))
       .then(_ => {
         setOpen(false)
-        navigate(Route.CATEGORIES, { replace: true })
         onSubmit && onSubmit()
       })
       .catch((err) => setError(err.message))

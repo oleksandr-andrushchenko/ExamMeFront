@@ -444,7 +444,6 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     const callback = (question: Question) => {
       setOpen(false)
-      navigate(Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!))
       onSubmit && onSubmit(question)
     }
 

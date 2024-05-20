@@ -1,8 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
-import Route from '../../enum/Route'
-import { useNavigate } from 'react-router-dom'
 import Question from '../../schema/question/Question'
 import apolloClient from '../../api/apolloClient'
 import removeQuestionMutation from '../../api/question/removeQuestionMutation'
@@ -18,14 +16,12 @@ export default function DeleteQuestion({ question, onSubmit, iconButton }: Props
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
-  const navigate = useNavigate()
 
   const onClick = () => {
     setProcessing(true)
     apolloClient.mutate(removeQuestionMutation(question.id!))
       .then(_ => {
         setOpen(false)
-        navigate(Route.CATEGORY.replace(':categoryId', question.categoryId!), { replace: true })
         onSubmit && onSubmit()
       })
       .catch((err) => setError(err.message))

@@ -1,8 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
-import Route from '../../enum/Route'
-import { useNavigate } from 'react-router-dom'
 import Exam from '../../schema/exam/Exam'
 import Category from '../../schema/category/Category'
 import Spinner from '../Spinner'
@@ -23,14 +21,12 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
   const handleOpen = () => setOpen(!open)
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const navigate = useNavigate()
 
   const onClick = () => {
     setProcessing(true)
     apolloClient.mutate(addExamCompletionMutation(exam.id!))
-      .then(({ data }: { data: { addExamCompletion: Exam } }) => {
+      .then(_ => {
         setOpen(false)
-        navigate(Route.CATEGORY.replace(':categoryId', data.addExamCompletion.categoryId!), { replace: true })
         onSubmit && onSubmit()
       })
       .catch((err) => setError(err.message))
