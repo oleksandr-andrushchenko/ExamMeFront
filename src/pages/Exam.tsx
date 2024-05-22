@@ -1,5 +1,5 @@
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Button, Input, Progress, Radio, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Button, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -14,12 +14,14 @@ import { apiMutate, apiQuery } from '../api/apolloClient'
 import addExamQuestionAnswerMutation from '../api/exam/addExamQuestionAnswerMutation'
 import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
 import examPageCurrentExamQuestionQuery from '../api/exam/examPageCurrentExamQuestionQuery'
+import clearExamQuestionAnswerMutation from '../api/exam/clearExamQuestionAnswerMutation'
 
 export default function Exam(): ReactNode {
   const { examId } = useParams<Params>() as { examId: string }
   const [ questionNumber, setQuestionNumber ] = useState<number>()
   const [ examQuestion, setExamQuestion ] = useState<ExamQuestion>()
   const [ answering, setAnswering ] = useState<boolean>(false)
+  const [ clearing, setClearing ] = useState<boolean>(false)
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const { checkAuth } = useAuth()
@@ -42,7 +44,7 @@ export default function Exam(): ReactNode {
     return examQuestion?.number
   }
   const showPrev = (): boolean | undefined => {
-    if (answering) {
+    if (answering || clearing) {
       return false
     }
 
@@ -55,7 +57,7 @@ export default function Exam(): ReactNode {
     return questionNumber > 0
   }
   const showNext = (): boolean | undefined => {
-    if (answering) {
+    if (answering || clearing) {
       return false
     }
 
@@ -78,6 +80,15 @@ export default function Exam(): ReactNode {
       (data): void => setExamQuestion(data.addExamQuestionAnswer),
       setError,
       setAnswering,
+    )
+  }
+
+  const clearAnswer = (): void => {
+    apiMutate<{ clearExamQuestionAnswer: ExamQuestion }>(
+      clearExamQuestionAnswerMutation(examId, getQuestionNumber()!),
+      (data): void => setExamQuestion(data.clearExamQuestionAnswer),
+      setError,
+      setClearing,
     )
   }
 
@@ -162,10 +173,10 @@ export default function Exam(): ReactNode {
       { examQuestion === undefined ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
           ? examQuestion.question!.choices!.map((choice: QuestionChoice, index: number): ReactNode => (
-            <Radio key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
+            <Checkbox key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
                    name="choice"
                    defaultChecked={ index === examQuestion.choice }
-                   onChange={ (): void => createAnswer(index) }
+                   onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => e.target.checked ? createAnswer(index) : clearAnswer() }
                    label={ choice.title }
                    disabled={ answering }/>
           ))
