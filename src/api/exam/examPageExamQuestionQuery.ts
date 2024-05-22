@@ -11,10 +11,25 @@ export default function examPageExamQuestionQuery(examId: string, question: numb
                 examId: $examId,
                 question: $question
             ) {
+                exam {
+                    id
+                    questionNumber
+                    questionCount
+                    answeredQuestionCount
+                    categoryId
+                    category {
+                        name
+                    }
+                }
+                question {
+                    id
+                    title
+                    type
+                    choices {
+                        title
+                    }
+                }
                 number
-                question
-                type
-                choices
                 choice
                 answer
             }
@@ -24,6 +39,7 @@ export default function examPageExamQuestionQuery(examId: string, question: numb
       examId,
       question,
     },
+    errorPolicy: 'all',
     fetchPolicy: 'network-only',
   }
 }

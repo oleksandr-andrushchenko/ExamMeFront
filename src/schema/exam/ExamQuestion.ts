@@ -1,9 +1,10 @@
+import Exam from './Exam'
+import Question from '../question/Question'
+
 export default interface ExamQuestion {
+  exam?: Exam
+  question?: Question
   number?: number
-  question?: string
-  type?: string
-  difficulty?: string
-  choices?: string[]
   choice?: number
   answer?: string
 }

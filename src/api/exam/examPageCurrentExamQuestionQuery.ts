@@ -1,22 +1,13 @@
 import { gql } from '@apollo/client'
-import ExamQuestionAnswerTransfer from '../../schema/exam/ExamQuestionAnswerTransfer'
 
-export default function addExamQuestionAnswerMutation(
-  examId: string,
-  question: number,
-  examQuestionAnswer: ExamQuestionAnswerTransfer,
-): any {
+export default function examPageCurrentExamQuestionQuery(examId: string): any {
   return {
-    mutation: gql`
-        mutation AddExamQuestionAnswer(
-            $examQuestionAnswer: CreateExamQuestionAnswerSchema!,
-            $examId: ID!,
-            $question: Int!
+    query: gql`
+        query ExamPageCurrentExamQuestion(
+            $examId: ID!
         ) {
-            addExamQuestionAnswer(
-                examQuestionAnswer: $examQuestionAnswer,
-                examId: $examId,
-                question: $question
+            currentExamQuestion(
+                examId: $examId
             ) {
                 exam {
                     id
@@ -44,8 +35,6 @@ export default function addExamQuestionAnswerMutation(
     `,
     variables: {
       examId,
-      question,
-      examQuestionAnswer,
     },
     errorPolicy: 'all',
     fetchPolicy: 'network-only',
