@@ -39,7 +39,7 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
       categoryId: category.id!,
     }
     const callback = (exam: Exam) => {
-      navigate(Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!))
+      navigate(Route.EXAM.replace(':categoryId', category.id!).replace(':examId', exam.id!))
     }
 
     apolloClient.mutate(addExamMutation(transfer))

@@ -11,7 +11,6 @@ export default function addExamMutation(exam: ExamTransfer): any {
                 exam: $exam
             ) {
                 id
-                categoryId
             }
         }
     `,
