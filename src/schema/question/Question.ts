@@ -10,6 +10,7 @@ export default interface Question {
   answers?: QuestionAnswer[]
   choices?: QuestionChoice[]
   difficulty?: QuestionDifficulty
+  ownerId?: string
   createdAt?: number
   updatedAt?: number
 }

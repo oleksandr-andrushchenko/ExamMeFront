@@ -4,14 +4,8 @@ import CategoryUpdateTransfer from '../../schema/category/CategoryUpdateTransfer
 export default function updateCategoryMutation(categoryId: string, categoryUpdate: CategoryUpdateTransfer): any {
   return {
     mutation: gql`
-        mutation UpdateCategory(
-            $categoryUpdate: CategoryUpdateSchema!,
-            $categoryId: ID!
-        ) {
-            updateCategory(
-                categoryUpdate: $categoryUpdate,
-                categoryId: $categoryId
-            ) {
+        mutation UpdateCategory($categoryId: ID!, $categoryUpdate: CategoryUpdateSchema!) {
+            updateCategory(categoryId: $categoryId, categoryUpdate: $categoryUpdate) {
                 id
                 name
                 ownerId

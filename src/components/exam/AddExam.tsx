@@ -9,10 +9,9 @@ import ExamTransfer from '../../schema/exam/ExamTransfer'
 import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import Auth from '../Auth'
-import Question from '../../schema/question/Question'
-import apolloClient, { apiQuery } from '../../api/apolloClient'
-import addExamMutation from '../../api/exam/addExamMutation'
-import addExamExamsQuery from '../../api/exam/addExamExamsQuery'
+import { apiMutate, apiQuery } from '../../api/apolloClient'
+import createExamMutation from '../../api/exam/createExamMutation'
+import oneNonCompletedCategoryExamsQuery from '../../api/exam/oneNonCompletedCategoryExamsQuery'
 
 interface Props {
   category: Category
@@ -42,16 +41,18 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
       navigate(Route.EXAM.replace(':categoryId', category.id!).replace(':examId', exam.id!))
     }
 
-    apolloClient.mutate(addExamMutation(transfer))
-      .then(({ data }: { data: { addExam: Question } }) => callback(data.addExam))
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+    apiMutate<{ createExam: Exam }>(
+      createExamMutation(transfer),
+      (data): void => callback(data.createExam),
+      setError,
+      setProcessing,
+    )
   }
 
   useEffect(() => {
     if (auth) {
       apiQuery<{ exams: Exam[] }>(
-        addExamExamsQuery(category.id!),
+        oneNonCompletedCategoryExamsQuery(category.id!),
         (data): void => setExam(data.exams[0] || null),
         setError,
         setLoading,

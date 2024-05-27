@@ -2,8 +2,8 @@ import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typogr
 import { CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
-import apolloClient from '../../api/apolloClient'
-import addExamCompletionMutation from '../../api/exam/addExamCompletionMutation'
+import { apiMutate } from '../../api/apolloClient'
+import completeExamMutation from '../../api/exam/completeExamMutation'
 
 interface Props {
   exam: Exam
@@ -18,14 +18,15 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    setProcessing(true)
-    apolloClient.mutate(addExamCompletionMutation(exam.id!))
-      .then(_ => {
+    apiMutate<{ completeExam: Exam }>(
+      completeExamMutation(exam.id!),
+      (_): void => {
         setOpen(false)
         onSubmit && onSubmit()
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+      },
+      setError,
+      setProcessing,
+    )
   }
 
   return <>

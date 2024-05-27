@@ -64,11 +64,11 @@ export default function Question(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
         (question === undefined ? <Spinner/> :
           <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION, question) &&
         (question === undefined ? <Spinner/> : <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
 

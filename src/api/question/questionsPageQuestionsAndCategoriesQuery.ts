@@ -42,6 +42,7 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
                     title
                     type
                     categoryId
+                    ownerId
                 }
                 meta {
                     nextCursor

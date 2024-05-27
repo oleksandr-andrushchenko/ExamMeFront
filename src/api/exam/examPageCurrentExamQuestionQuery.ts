@@ -3,12 +3,8 @@ import { gql } from '@apollo/client'
 export default function examPageCurrentExamQuestionQuery(examId: string): any {
   return {
     query: gql`
-        query ExamPageCurrentExamQuestion(
-            $examId: ID!
-        ) {
-            currentExamQuestion(
-                examId: $examId
-            ) {
+        query ExamPageCurrentExamQuestion($examId: ID!) {
+            currentExamQuestion(examId: $examId) {
                 exam {
                     id
                     questionNumber
@@ -18,6 +14,7 @@ export default function examPageCurrentExamQuestionQuery(examId: string): any {
                     category {
                         name
                     }
+                    ownerId
                 }
                 question {
                     id

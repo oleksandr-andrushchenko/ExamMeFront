@@ -11,7 +11,7 @@ import ExamQuestion from '../schema/exam/ExamQuestion'
 import { QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import CompleteExam from '../components/exam/CompleteExam'
 import { apiMutate, apiQuery } from '../api/apolloClient'
-import addExamQuestionAnswerMutation from '../api/exam/addExamQuestionAnswerMutation'
+import answerExamQuestionMutation from '../api/exam/answerExamQuestionMutation'
 import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
 import examPageCurrentExamQuestionQuery from '../api/exam/examPageCurrentExamQuestionQuery'
 import clearExamQuestionAnswerMutation from '../api/exam/clearExamQuestionAnswerMutation'
@@ -75,9 +75,9 @@ export default function Exam(): ReactNode {
       ? { choice: answer as number }
       : { answer: answer as string }
 
-    apiMutate<{ addExamQuestionAnswer: ExamQuestion }>(
-      addExamQuestionAnswerMutation(examId, getQuestionNumber()!, transfer),
-      (data): void => setExamQuestion(data.addExamQuestionAnswer),
+    apiMutate<{ answerExamQuestion: ExamQuestion }>(
+      answerExamQuestionMutation(examId, getQuestionNumber()!, transfer),
+      (data): void => setExamQuestion(data.answerExamQuestion),
       setError,
       setAnswering,
     )

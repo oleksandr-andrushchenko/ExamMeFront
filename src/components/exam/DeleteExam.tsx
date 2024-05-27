@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typogr
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
-import apolloClient from '../../api/apolloClient'
+import { apiMutate } from '../../api/apolloClient'
 import removeExamMutation from '../../api/exam/removeExamMutation'
 
 interface Props {
@@ -18,14 +18,15 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    setProcessing(true)
-    apolloClient.mutate(removeExamMutation(exam.id!))
-      .then(_ => {
+    apiMutate<{ removeExam: boolean }>(
+      removeExamMutation(exam.id!),
+      (_): void => {
         setOpen(false)
         onSubmit && onSubmit()
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+      },
+      setError,
+      setProcessing,
+    )
   }
 
   return <>

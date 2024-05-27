@@ -22,12 +22,11 @@ import QuestionTransfer, {
   QuestionDifficulty,
   QuestionType,
 } from '../../schema/question/QuestionTransfer'
-import Route from '../../enum/Route'
 import Question from '../../schema/question/Question'
 import Category from '../../schema/category/Category'
-import apolloClient, { apiQuery } from '../../api/apolloClient'
+import { apiMutate, apiQuery } from '../../api/apolloClient'
 import updateQuestionMutation from '../../api/question/updateQuestionMutation'
-import addQuestionMutation from '../../api/question/addQuestionMutation'
+import createQuestionMutation from '../../api/question/createQuestionMutation'
 import categoriesSelectQuery from '../../api/category/categoriesSelectQuery'
 import Spinner from '../Spinner'
 
@@ -448,15 +447,19 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     }
 
     if (question) {
-      apolloClient.mutate(updateQuestionMutation(question.id!, transfer))
-        .then(({ data }: { data: { updateQuestion: Question } }) => callback(data.updateQuestion))
-        .catch((err) => setError(err.message))
-        .finally(() => setProcessing(false))
+      apiMutate<{ updateQuestion: Question }>(
+        updateQuestionMutation(question.id!, transfer),
+        (data): void => callback(data.updateQuestion),
+        setError,
+        setProcessing,
+      )
     } else {
-      apolloClient.mutate(addQuestionMutation(transfer))
-        .then(({ data }: { data: { addQuestion: Question } }) => callback(data.addQuestion))
-        .catch((err) => setError(err.message))
-        .finally(() => setProcessing(false))
+      apiMutate<{ createQuestion: Question }>(
+        createQuestionMutation(transfer),
+        (data): void => callback(data.createQuestion),
+        setError,
+        setProcessing,
+      )
     }
   }
 

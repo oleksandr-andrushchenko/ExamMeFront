@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typogr
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Category from '../../schema/category/Category'
-import apolloClient from '../../api/apolloClient'
+import { apiMutate } from '../../api/apolloClient'
 import removeCategoryMutation from '../../api/category/removeCategoryMutation'
 
 interface Props {
@@ -18,14 +18,15 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    setProcessing(true)
-    apolloClient.mutate(removeCategoryMutation(category.id!))
-      .then(_ => {
+    apiMutate<{ removeCategory: boolean }>(
+      removeCategoryMutation(category.id!),
+      (_): void => {
         setOpen(false)
         onSubmit && onSubmit()
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+      },
+      setError,
+      setProcessing,
+    )
   }
 
   return <>

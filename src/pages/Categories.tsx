@@ -232,10 +232,10 @@ export default function Categories(): ReactNode {
               { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
                 <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
                 <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
+              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
                 <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
             </div>
           </td>

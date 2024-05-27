@@ -3,9 +3,9 @@ import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24
 import React, { ReactNode, useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
-import apolloClient from '../../api/apolloClient'
+import { apiMutate } from '../../api/apolloClient'
 import updateCategoryMutation from '../../api/category/updateCategoryMutation'
-import addCategoryMutation from '../../api/category/addCategoryMutation'
+import createCategoryMutation from '../../api/category/createCategoryMutation'
 
 interface Props {
   category?: Category
@@ -62,15 +62,19 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
     }
 
     if (category) {
-      apolloClient.mutate(updateCategoryMutation(category.id!, transfer))
-        .then(({ data }: { data: { updateCategory: Category } }) => callback(data.updateCategory))
-        .catch((err) => setError(err.message))
-        .finally(() => setProcessing(false))
+      apiMutate<{ updateCategory: Category }>(
+        updateCategoryMutation(category.id!, transfer),
+        (data): void => callback(data.updateCategory),
+        setError,
+        setProcessing,
+      )
     } else {
-      apolloClient.mutate(addCategoryMutation(transfer))
-        .then(({ data }: { data: { addCategory: Category } }) => callback(data.addCategory))
-        .catch((err) => setError(err.message))
-        .finally(() => setProcessing(false))
+      apiMutate<{ createCategory: Category }>(
+        createCategoryMutation(transfer),
+        (data): void => callback(data.createCategory),
+        setError,
+        setProcessing,
+      )
     }
   }
 

@@ -50,6 +50,7 @@ export default function categoryPageQuestionsQuery(categoryId: string, filter: Q
                         correct
                         explanation
                     }
+                    ownerId
                 }
                 meta {
                     nextCursor

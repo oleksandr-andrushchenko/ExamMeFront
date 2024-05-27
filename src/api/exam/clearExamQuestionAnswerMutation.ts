@@ -1,19 +1,10 @@
 import { gql } from '@apollo/client'
 
-export default function clearExamQuestionAnswerMutation(
-  examId: string,
-  question: number,
-): any {
+export default function clearExamQuestionAnswerMutation(examId: string, question: number): any {
   return {
     mutation: gql`
-        mutation ClearExamQuestionAnswer(
-            $examId: ID!,
-            $question: Int!
-        ) {
-            clearExamQuestionAnswer(
-                examId: $examId,
-                question: $question
-            ) {
+        mutation ClearExamQuestionAnswer($examId: ID!, $question: Int!) {
+            clearExamQuestionAnswer(examId: $examId, question: $question) {
                 exam {
                     id
                     questionNumber
@@ -23,6 +14,7 @@ export default function clearExamQuestionAnswerMutation(
                     category {
                         name
                     }
+                    ownerId
                 }
                 question {
                     id

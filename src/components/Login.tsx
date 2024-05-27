@@ -4,9 +4,9 @@ import React, { ReactNode, useState } from 'react'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
-import apolloClient from '../api/apolloClient'
+import { apiMutate } from '../api/apolloClient'
 import Token from '../schema/auth/Token'
-import addAuthMutation from '../api/auth/addAuthMutation'
+import authenticateMutation from '../api/auth/authenticateMutation'
 
 interface Props {
   onSubmit: () => void
@@ -26,11 +26,12 @@ export default ({ onSubmit, buttons, onRegisterClick }: Props): ReactNode => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
 
-    setProcessing(true)
-    apolloClient.mutate(addAuthMutation({ email, password }))
-      .then(({ data }: { data: { addAuth: Token } }) => setAuth(data.addAuth) && onSubmit())
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+    apiMutate<{ authenticate: Token }>(
+      authenticateMutation({ email, password }),
+      (data): void => setAuth(data.authenticate) && onSubmit(),
+      setError,
+      setProcessing,
+    )
   }
 
   return <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">

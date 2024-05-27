@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typogr
 import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Question from '../../schema/question/Question'
-import apolloClient from '../../api/apolloClient'
+import { apiMutate } from '../../api/apolloClient'
 import removeQuestionMutation from '../../api/question/removeQuestionMutation'
 
 interface Props {
@@ -18,14 +18,15 @@ export default function DeleteQuestion({ question, onSubmit, iconButton }: Props
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    setProcessing(true)
-    apolloClient.mutate(removeQuestionMutation(question.id!))
-      .then(_ => {
+    apiMutate<{ removeQuestion: boolean }>(
+      removeQuestionMutation(question.id!),
+      (_): void => {
         setOpen(false)
         onSubmit && onSubmit()
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setProcessing(false))
+      },
+      setError,
+      setProcessing,
+    )
   }
 
   return <>

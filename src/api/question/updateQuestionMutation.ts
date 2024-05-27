@@ -4,16 +4,26 @@ import QuestionUpdateTransfer from '../../schema/question/QuestionUpdateTransfer
 export default function updateQuestionMutation(questionId: string, questionUpdate: QuestionUpdateTransfer): any {
   return {
     mutation: gql`
-        mutation UpdateQuestion(
-            $questionUpdate: QuestionUpdateSchema!,
-            $questionId: ID!
-        ) {
-            updateQuestion(
-                questionUpdate: $questionUpdate,
-                questionId: $questionId
-            ) {
+        mutation UpdateQuestion($questionId: ID!, $questionUpdate: QuestionUpdateSchema!) {
+            updateQuestion(questionId: $questionId, questionUpdate: $questionUpdate) {
                 id
+                categoryId
                 title
+                category {
+                    name
+                }
+                type
+                answers {
+                    variants
+                    correct
+                    explanation
+                }
+                choices {
+                    title
+                    correct
+                    explanation
+                }
+                difficulty
                 ownerId
             }
         }

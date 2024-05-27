@@ -148,14 +148,14 @@ export default function Category(): ReactNode {
       </Typography> }
 
       <div className="flex gap-1 items-center mt-4">
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) && (category === undefined ?
+        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION, category) && (category === undefined ?
           <Spinner/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY) &&
+        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
           (category === undefined ? <Spinner/> :
             <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY) &&
+        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
           (category === undefined ? <Spinner/> :
             <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
@@ -302,10 +302,10 @@ export default function Category(): ReactNode {
 
             <td className="py-2 px-4">
               <div className="flex justify-end gap-1">
-                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION) &&
+                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
                   <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION) &&
+                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION, question) &&
                   <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
               </div>
             </td>
