@@ -29,7 +29,7 @@ export default function Exam(): ReactNode {
 
   const onPrevQuestionClick = () => setQuestionNumber(getQuestionNumber() - 1)
   const onNextQuestionClick = () => setQuestionNumber(getQuestionNumber() + 1)
-  const onExamCompleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
+  const onExamCompleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!))
   const onExamDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
 
   const getQuestionNumber = (): number | undefined => {
