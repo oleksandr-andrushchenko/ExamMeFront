@@ -215,16 +215,14 @@ export default function Questions(): ReactNode {
 
       { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
         <ButtonGroup variant="outlined">
-          { questions.meta.prevCursor && (
-            <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }>
-              <ArrowLeftIcon className="w-4 h-4"/>
-            </IconButton>
-          ) }
-          { questions.meta.nextCursor && (
-            <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }>
-              <ArrowRightIcon className="w-4 h-4"/>
-            </IconButton>
-          ) }
+          <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
+                      disabled={ !questions.meta.prevCursor }>
+            <ArrowLeftIcon className="w-4 h-4"/>
+          </IconButton>
+          <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
+                      disabled={ !questions.meta.nextCursor }>
+            <ArrowRightIcon className="w-4 h-4"/>
+          </IconButton>
         </ButtonGroup>) }
 
       { showClear() && <div>

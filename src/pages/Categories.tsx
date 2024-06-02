@@ -153,16 +153,14 @@ export default function Categories(): ReactNode {
 
       { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
         <ButtonGroup variant="outlined">
-          { categories.meta.prevCursor && (
-            <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }>
-              <ArrowLeftIcon className="w-4 h-4"/>
-            </IconButton>
-          ) }
-          { categories.meta.nextCursor && (
-            <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }>
-              <ArrowRightIcon className="w-4 h-4"/>
-            </IconButton>
-          ) }
+          <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
+                      disabled={ !categories.meta.prevCursor }>
+            <ArrowLeftIcon className="w-4 h-4"/>
+          </IconButton>
+          <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
+                      disabled={ !categories.meta.nextCursor }>
+            <ArrowRightIcon className="w-4 h-4"/>
+          </IconButton>
         </ButtonGroup>) }
 
       { showClear() && <div>

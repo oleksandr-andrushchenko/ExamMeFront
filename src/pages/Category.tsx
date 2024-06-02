@@ -222,19 +222,18 @@ export default function Category(): ReactNode {
           )) }
         </Select>
 
-        { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
-          <ButtonGroup variant="outlined">
-            { questions.meta.prevCursor && (
-              <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }>
+        { questions === undefined ?
+          <Spinner type="button"/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
+            <ButtonGroup variant="outlined">
+              <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
+                          disabled={ !questions.meta.prevCursor }>
                 <ArrowLeftIcon className="w-4 h-4"/>
               </IconButton>
-            ) }
-            { questions.meta.nextCursor && (
-              <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }>
+              <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
+                          disabled={ !questions.meta.nextCursor }>
                 <ArrowRightIcon className="w-4 h-4"/>
               </IconButton>
-            ) }
-          </ButtonGroup>) }
+            </ButtonGroup>) }
 
         { showClear() && <div>
           <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
@@ -304,10 +303,12 @@ export default function Category(): ReactNode {
 
             <td className="py-2 px-4">
               <div className="flex justify-end gap-1">
-                { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
+                { auth && me === undefined ?
+                  <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
                   <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-                { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
+                { auth && me === undefined ?
+                  <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
                   <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
               </div>
             </td>

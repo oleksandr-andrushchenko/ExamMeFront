@@ -1,5 +1,5 @@
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Button, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Button, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -138,12 +138,15 @@ export default function Exam(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { showPrev() &&
-        <Button color="green" onClick={ onPrevQuestionClick }><ArrowLeftIcon
-          className="inline-block h-4 w-4"/> Prev</Button> }
-      { showNext() &&
-        <Button color="green" onClick={ onNextQuestionClick }>Next <ArrowRightIcon
-          className="inline-block h-4 w-4"/></Button> }
+      { examQuestion === undefined ? <Spinner type="button"/> : (
+        <ButtonGroup variant="outlined">
+          <Button onClick={ onPrevQuestionClick } disabled={ !showPrev() }>
+            <ArrowLeftIcon className="inline-block w-4 h-4"/> Prev
+          </Button>
+          <Button onClick={ onNextQuestionClick } disabled={ !showNext() }>
+            Next <ArrowRightIcon className="inline-block w-4 h-4"/>
+          </Button>
+        </ButtonGroup>) }
 
       { examQuestion === undefined ?
         <Spinner type="button"/> : (checkAuth(ExamPermission.CREATE_COMPLETION, examQuestion.exam) &&
