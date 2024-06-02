@@ -11,5 +11,6 @@ export default function categoriesSelectQuery(): any {
         }
     `,
     variables: {},
+    fetchPolicy: 'network-only',
   }
 }

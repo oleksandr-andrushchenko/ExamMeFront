@@ -48,5 +48,6 @@ export default function questionsPageQuestionsQuery(filter: QuestionQuery = {}):
         }
     `,
     variables: filter,
+    fetchPolicy: 'network-only',
   }
 }
