@@ -4,7 +4,7 @@ import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
 import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect } from 'react'
 
-export default (): ReactNode => {
+export default function NotFound(): ReactNode {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
 

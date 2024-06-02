@@ -242,6 +242,10 @@ const theme = {
   },
 }
 
-export default ({ children }: { children: any }): ReactNode => <TailwindThemeProvider value={ theme }>
-  { children }
-</TailwindThemeProvider>
+export default function ThemeProvider({ children }: { children: any }): ReactNode {
+  return (
+    <TailwindThemeProvider value={ theme }>
+      { children }
+    </TailwindThemeProvider>
+  )
+}

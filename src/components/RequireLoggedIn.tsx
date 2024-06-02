@@ -9,7 +9,7 @@ interface Props {
   permission: any
 }
 
-export default ({ permission }: Props): ReactNode => {
+export default function RequireLoggedIn({ permission }: Props): ReactNode {
   const { auth, me, checkAuth } = useAuth()
 
   return auth && me === undefined ? <Spinner/> : (checkAuth(permission) ? <Outlet/> : (me ? <Unauthorized/> : <Auth/>))

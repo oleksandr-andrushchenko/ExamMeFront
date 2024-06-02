@@ -14,7 +14,7 @@ interface Props {
   onRegisterClick?: () => void
 }
 
-export default ({ onSubmit, buttons, onRegisterClick }: Props): ReactNode => {
+export default function Login({ onSubmit, buttons, onRegisterClick }: Props): ReactNode {
   const [ processing, setProcessing ] = useState<boolean>(false)
   const [ email, setEmail ] = useState<string>('')
   const [ emailError, setEmailError ] = useState<string>('')

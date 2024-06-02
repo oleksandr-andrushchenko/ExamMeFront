@@ -1,5 +1,5 @@
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Chip, ListItem, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Checkbox, Input, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -8,7 +8,7 @@ import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
 import DeleteQuestion from '../components/question/DeleteQuestion'
-import { QuestionAnswer, QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
+import { QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
 import AddQuestion from '../components/question/AddQuestion'
 import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
@@ -69,46 +69,52 @@ export default function Question(): ReactNode {
           <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
       { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
-        (question === undefined ? <Spinner type="button"/> : <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
+        (question === undefined ? <Spinner type="button"/> :
+          <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
 
-    { question === undefined ? <Spinner/> : <div>
-      <ListItem>
-        <Chip variant="ghost" value="Title"/>
-        <Typography variant="h6">{ question.title }</Typography>
-      </ListItem>
-      <ListItem>
-        <Chip variant="ghost" value="Category"/>
-        <Typography variant="h6">{ question.category!.name }</Typography>
-      </ListItem>
-      <ListItem>
-        <Chip variant="ghost" value="Type"/>
-        <Typography variant="h6">{ question.type }</Typography>
-      </ListItem>
-      <ListItem>
-        { question.type === QuestionType.TYPE && <div>
-          <Chip variant="ghost" value="Answers"/>
-          { question.answers?.map((answer: QuestionAnswer, index: number): ReactNode => <div key={ index }>
-            <Chip variant="ghost" value={ `Answer #${ index + 1 }` }/>
-            <div><Chip variant="ghost" value="Variants"/> { answer.variants.join(', ') }</div>
-            { answer.explanation && <div><Chip variant="ghost" value="Explanation"/> { answer.explanation }</div> }
-            <div><Chip variant="ghost" value="Correct"/> { answer.correct ? 'Yes' : 'No' }</div>
-          </div>) }
-        </div> }
-        { question.type === QuestionType.CHOICE && <div>
-          <Chip variant="ghost" value="Choices"/>
-          { question.choices?.map((choice: QuestionChoice, index: number): ReactNode => <div key={ index }>
-            <Chip variant="ghost" value={ `Choice #${ index + 1 }` }/>
-            <div><Chip variant="ghost" value="Title"/> { choice.title }</div>
-            { choice.explanation && <div><Chip variant="ghost" value="Explanation"/> { choice.explanation }</div> }
-            <div><Chip variant="ghost" value="Correct"/> { choice.correct ? 'Yes' : 'No' }</div>
-          </div>) }
-        </div> }
-      </ListItem>
-      <ListItem>
-        <Chip variant="ghost" value="Difficulty"/>
-        <Typography variant="h6">{ question.difficulty }</Typography>
-      </ListItem>
-    </div> }
+    <table className="w-full table-auto text-left text-sm capitalize mt-4">
+      <tbody>
+      <tr>
+        <th>Title</th>
+        <td>{ question ? question.title : <Spinner type="text"/> }</td>
+      </tr>
+      <tr>
+        <th>Category</th>
+        <td>{ question ? question.category!.name : <Spinner type="text"/> }</td>
+      </tr>
+      <tr>
+        <th>Type</th>
+        <td>{ question ? question.type : <Spinner type="text"/> }</td>
+      </tr>
+      <tr>
+        <th>
+          { question === undefined ? <Spinner type="text"/> : (
+            question.type === QuestionType.CHOICE ? 'Choices' : 'Answers'
+          ) }
+        </th>
+        <td>
+          { question === undefined ? <Spinner type="text"/> : (
+            question.type === QuestionType.CHOICE
+              ? question.choices!.map((choice: QuestionChoice, index: number) => (
+                <Checkbox key={ `${ question.id }-${ index }` }
+                          name="choice"
+                          label={ choice.title }
+                          disabled={ true }/>
+              ))
+              : <Input type="text"
+                       name="answer"
+                       size="lg"
+                       label="Answer"
+                       disabled={ true }/>
+          ) }
+        </td>
+      </tr>
+      <tr>
+        <th>Difficulty</th>
+        <td>{ question ? question.difficulty : <Spinner type="text"/> }</td>
+      </tr>
+      </tbody>
+    </table>
   </>
 }

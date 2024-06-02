@@ -17,7 +17,7 @@ export default function Spinner({ type, height, width, children }: Props): React
           tabIndex={ -1 }
           className={ `${ height ?? 'h-8' } ${ width ?? 'w-24' } bg-gray-300 shadow-none hover:shadow-none` }
         >
-        { children }
+        { children ?? '' }
       </Button>
       </span>
     )
@@ -29,7 +29,7 @@ export default function Spinner({ type, height, width, children }: Props): React
         as="span"
         className={ `animate-pulse inline-block ${ height ?? 'h-2' } ${ width ?? 'w-24' } rounded-full bg-gray-300` }
       >
-        { children }
+        { children ?? '' }
       </Typography>
     )
   }

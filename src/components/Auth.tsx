@@ -11,7 +11,7 @@ interface Props {
   onClose?: () => void
 }
 
-export default ({ register, dialogOnly, onClose }: Props): ReactNode => {
+export default function Auth({ register, dialogOnly, onClose }: Props): ReactNode {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ listenClose, setListenClose ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -32,7 +32,8 @@ export default ({ register, dialogOnly, onClose }: Props): ReactNode => {
     {
       key: 'login',
       header: <div className="flex items-center gap-2"><ArrowRightEndOnRectangleIcon className="w-4 h-4"/> Login</div>,
-      content: <Login onSubmit={ onLogin } buttons={ cancelButton } onRegisterClick={ () => setActiveTab('register') }/>,
+      content: <Login onSubmit={ onLogin } buttons={ cancelButton }
+                      onRegisterClick={ () => setActiveTab('register') }/>,
     },
     {
       key: 'register',
@@ -67,10 +68,10 @@ export default ({ register, dialogOnly, onClose }: Props): ReactNode => {
             <TabsHeader
               className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
               indicatorProps={ { className: 'bg-transparent border-b-2 border-gray-900 shadow-none rounded-none' } }>
-              { tabs.map(({ key, header }): ReactNode => <Tab key={ key } value={ key }>{ header }</Tab>) }
+              { tabs.map(({ key, header }) => <Tab key={ key } value={ key }>{ header }</Tab>) }
             </TabsHeader>
             <TabsBody>
-              { tabs.map(({ key, content }): ReactNode => <TabPanel key={ key } value={ key }>{ content }</TabPanel>) }
+              { tabs.map(({ key, content }) => <TabPanel key={ key } value={ key }>{ content }</TabPanel>) }
             </TabsBody>
           </Tabs>
         </CardBody>

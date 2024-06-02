@@ -10,8 +10,7 @@ interface Props {
   focus?: boolean
 }
 
-export default ({ setValue, error, focus = false }: Props): ReactNode => {
-
+export default function EmailSection({ setValue, error, focus = false }: Props): ReactNode {
   const [ email, setEmail ] = useState<InputState>({ ...defaultInputState })
   const getEmailError = (value: string | undefined = undefined): string => {
     value = value === undefined ? email.value : value

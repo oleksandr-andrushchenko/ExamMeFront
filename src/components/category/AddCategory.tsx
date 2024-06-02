@@ -1,5 +1,9 @@
 import { Button, Card, CardBody, Dialog, IconButton, Textarea, Tooltip, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid'
+import {
+  ExclamationCircleIcon,
+  PencilSquareIcon as UpdateIcon,
+  PlusIcon as CreateIcon,
+} from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
@@ -85,13 +89,13 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
           <IconButton
             onClick={ handleOpen }
             disabled={ processing }>
-            { category ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
+            { category ? <UpdateIcon className="h-4 w-4"/> : <CreateIcon className="h-4 w-4"/> }
           </IconButton>
         </Tooltip>
         : <Button
           onClick={ handleOpen }
           disabled={ processing }>
-          { category ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+          { category ? <UpdateIcon className="inline-block h-4 w-4"/> : <CreateIcon
             className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating category...' : 'Update category') : (processing ? 'Adding category...' : 'Add category') }
         </Button>
     }

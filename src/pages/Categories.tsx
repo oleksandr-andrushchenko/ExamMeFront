@@ -124,7 +124,7 @@ export default function Categories(): ReactNode {
     <div className="flex gap-1 items-center mt-4">
       <Tabs value="all" className="min-w-[170px]">
         <TabsHeader>
-          { tableFilters.map((value): ReactNode => (
+          { tableFilters.map((value) => (
             <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
                  onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
               { value }
@@ -144,88 +144,79 @@ export default function Categories(): ReactNode {
         onChange={ (size: string): void => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
         className="capitalize">
-        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => (
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
           <Option key={ size }
                   value={ `${ size }` }
                   disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
         )) }
       </Select>
 
-      { categories === undefined ? <Spinner/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
-        <ButtonGroup variant="outlined">
-          <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
-                      disabled={ !categories.meta.prevCursor }>
-            <ArrowLeftIcon className="w-4 h-4"/>
-          </IconButton>
-          <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
-                      disabled={ !categories.meta.nextCursor }>
-            <ArrowRightIcon className="w-4 h-4"/>
-          </IconButton>
-        </ButtonGroup>) }
+      { categories === undefined ?
+        <Spinner type="button"/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
+          <ButtonGroup variant="outlined">
+            <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
+                        disabled={ !categories.meta.prevCursor }>
+              <ArrowLeftIcon className="w-4 h-4"/>
+            </IconButton>
+            <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
+                        disabled={ !categories.meta.nextCursor }>
+              <ArrowRightIcon className="w-4 h-4"/>
+            </IconButton>
+          </ButtonGroup>) }
 
       { showClear() && <div>
         <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
       </div> }
     </div>
 
-    <table className="w-full table-auto text-left text-xs mt-4">
+    <table className="w-full table-auto text-left text-sm capitalize mt-4">
       <thead>
       <tr>
-        { tableColumns.map((head): ReactNode => (
-          <th
-            key={ head }
-            className="bg-blue-gray-50/50 py-2 px-4">
-            <Typography
-              variant="small"
-              className="opacity-70">
-              { head }
-            </Typography>
+        { tableColumns.map((head) => (
+          <th key={ head }>
+            { head }
           </th>
         )) }
       </tr>
       </thead>
       <tbody>
       { categories === undefined && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center"><Spinner/></td>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+        </td>
       </tr> }
       { categories && categories.data.length === 0 && <tr>
         <td colSpan={ tableColumns.length } className="p-5 text-center">
-          <Typography variant="small">No data</Typography>
+          No data
         </td>
       </tr> }
-      { categories && categories.data && categories.data.map((category: Category, index: number): ReactNode => (
-        <tr
-          key={ category.id }
-          className={ index === 0 ? 'border-b' : '' }>
-          <td className="py-2 px-4">
-            <Typography variant="small">
-              { index + 1 }
-            </Typography>
+      { categories && categories.data && categories.data.map((category: Category, index: number) => (
+        <tr key={ category.id }>
+          <td>
+            { index + 1 }
           </td>
 
-          <td className="py-2 px-4">
+          <td className="truncate max-w-[500px]">
             <Tooltip content={ category.name }>
-              <Typography variant="small" className="capitalize truncate max-w-[500px]">
-                <Link
-                  key={ category.id }
-                  to={ Route.CATEGORY.replace(':categoryId', category.id!) }>
-                  { category.name }
-                </Link>
-              </Typography>
+              <Link
+                key={ category.id }
+                to={ Route.CATEGORY.replace(':categoryId', category.id!) }>
+                { category.name }
+              </Link>
             </Tooltip>
           </td>
 
-          <td className="py-2 px-4">
-            <Typography variant="small">
-              { category.questionCount }
-            </Typography>
+          <td>
+            { category.questionCount }
           </td>
 
-          <td className="py-2 px-4">
+          <td>
             <Rating readonly/>
           </td>
 
-          <td className="py-2 px-4">
+          <td>
             <div className="flex justify-end gap-1">
               { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_QUESTION) &&
                 <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }

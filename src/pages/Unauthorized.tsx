@@ -4,7 +4,7 @@ import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
 import Route from '../enum/Route'
 import React, { ReactNode, useEffect } from 'react'
 
-export default (): ReactNode => {
+export default function Unauthorized(): ReactNode {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
 

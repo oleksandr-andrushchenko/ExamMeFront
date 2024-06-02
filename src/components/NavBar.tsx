@@ -14,13 +14,11 @@ import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Auth from './Auth'
 
-export default (): ReactNode => {
-
+export default function NavBar(): ReactNode {
   const navigation = [
     { name: 'Categories', href: Route.CATEGORIES },
     { name: 'Questions', href: Route.QUESTIONS },
   ]
-
   const [ openNav, setOpenNav ] = useState<boolean>(false)
   const { auth, me, setAuth } = useAuth()
 

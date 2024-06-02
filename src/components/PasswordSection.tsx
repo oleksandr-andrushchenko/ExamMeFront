@@ -10,8 +10,7 @@ interface Props {
   confirm?: boolean
 }
 
-export default ({ setValue, error, confirm = false }: Props): ReactNode => {
-
+export default function PasswordSection({ setValue, error, confirm = false }: Props): ReactNode {
   const [ password, setPassword ] = useState<InputState>({ ...defaultInputState })
   const getPasswordError = (value: string | undefined = undefined): string => {
     value = value === undefined ? password.value : value

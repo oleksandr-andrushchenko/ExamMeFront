@@ -143,19 +143,19 @@ export default function Questions(): ReactNode {
     <div className="flex gap-1 items-center mt-4">
       <Tabs value="all" className="min-w-[170px]">
         <TabsHeader>
-          { tableFilters.map((value): ReactNode => (
+          { tableFilters.map((value) => (
             <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
-                 onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+                 onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }>
               { value }
             </Tab>
           )) }
         </TabsHeader>
       </Tabs>
 
-      { categories === undefined ? <Spinner/> : (
+      { categories === undefined ? <Spinner type="button"/> : (
         <Select
           label="Category"
-          onChange={ (categoryId: string): void => applySearchParams({ categoryId }) }
+          onChange={ (categoryId: string) => applySearchParams({ categoryId }) }
           value={ searchParams.get('category') || '' }
           className="capitalize">
           { categories.map((category: Category): ReactNode => (
@@ -173,7 +173,7 @@ export default function Questions(): ReactNode {
         value={ searchParams.get('difficulty') || '' }
         className="capitalize">
         { Object.values(QuestionDifficulty)
-          .map((difficulty: string): ReactNode => (
+          .map((difficulty: string) => (
             <Option key={ difficulty }
                     value={ difficulty }
                     disabled={ difficulty === searchParams.get('difficulty') }
@@ -187,7 +187,7 @@ export default function Questions(): ReactNode {
         value={ searchParams.get('type') || '' }
         className="capitalize">
         { Object.values(QuestionType)
-          .map((type: string): ReactNode => (
+          .map((type: string) => (
             <Option key={ type }
                     value={ type }
                     disabled={ type === searchParams.get('type') }
@@ -203,105 +203,94 @@ export default function Questions(): ReactNode {
 
       <Select
         label="Size"
-        onChange={ (size: string): void => applySearchParams({ size }) }
+        onChange={ (size: string) => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
         className="capitalize">
-        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number): ReactNode => (
+        { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
           <Option key={ size }
                   value={ `${ size }` }
                   disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
         )) }
       </Select>
 
-      { questions === undefined ? <Spinner/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
-        <ButtonGroup variant="outlined">
-          <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
-                      disabled={ !questions.meta.prevCursor }>
-            <ArrowLeftIcon className="w-4 h-4"/>
-          </IconButton>
-          <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
-                      disabled={ !questions.meta.nextCursor }>
-            <ArrowRightIcon className="w-4 h-4"/>
-          </IconButton>
-        </ButtonGroup>) }
+      { questions === undefined ?
+        <Spinner type="button"/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
+          <ButtonGroup variant="outlined">
+            <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
+                        disabled={ !questions.meta.prevCursor }>
+              <ArrowLeftIcon className="w-4 h-4"/>
+            </IconButton>
+            <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
+                        disabled={ !questions.meta.nextCursor }>
+              <ArrowRightIcon className="w-4 h-4"/>
+            </IconButton>
+          </ButtonGroup>) }
 
       { showClear() && <div>
         <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
       </div> }
     </div>
 
-    <table className="w-full table-auto text-left mt-4">
+    <table className="w-full table-auto text-left text-sm capitalize mt-4">
       <thead>
       <tr>
         { tableColumns.map((head) => (
-          <th
-            key={ head }
-            className="bg-blue-gray-50/50 py-2 px-4">
-            <Typography
-              variant="small"
-              className="opacity-70">
-              { head }
-            </Typography>
+          <th key={ head }>
+            { head }
           </th>
         )) }
       </tr>
       </thead>
       <tbody>
-      { questions === undefined && <tr key={ 0 }>
-        <td colSpan={ tableColumns.length } className="p-5 text-center"><Spinner/></td>
+      { questions === undefined && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+        </td>
       </tr> }
       { questions && questions.data.length === 0 && <tr key={ 0 }>
         <td colSpan={ tableColumns.length } className="p-5 text-center">
-          <Typography variant="small">No data</Typography>
+          No data
         </td>
       </tr> }
-      { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number): ReactNode => (
-        <tr key={ question.id } className={ index === 0 ? 'border-b' : '' }>
-          <td className="py-2 px-4">
-            <Typography variant="small">
-              { index + 1 }
-            </Typography>
+      { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number) => (
+        <tr>
+          <td>
+            { index + 1 }
           </td>
 
-          <td className="py-2 px-4">
+          <td className="truncate max-w-[250px]">
             <Tooltip content={ question.title }>
-              <Typography variant="small" className="capitalize truncate max-w-[250px]">
-                <Link
-                  key={ question.id }
-                  to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
-                  { question.title }
-                </Link>
-              </Typography>
+              <Link
+                key={ question.id }
+                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
+                { question.title }
+              </Link>
             </Tooltip>
           </td>
 
-          <td className="py-2 px-4">
+          <td className="truncate max-w-[100px]">
             { categories === undefined ? <Spinner/> : (
               <Tooltip content={ getCategory(question.categoryId!).name }>
-                <Typography variant="small" className="capitalize truncate max-w-[100px]">
-                  { getCategory(question.categoryId!).name }
-                </Typography>
+                { getCategory(question.categoryId!).name }
               </Tooltip>
             ) }
           </td>
 
-          <td className="py-2 px-4">
-            <Typography variant="small" className="capitalize">
-              { question.difficulty }
-            </Typography>
+          <td>
+            { question.difficulty }
           </td>
 
-          <td className="py-2 px-4">
-            <Typography variant="small" className="capitalize">
-              { question.type }
-            </Typography>
+          <td>
+            { question.type }
           </td>
 
-          <td className="py-2 px-4">
+          <td>
             <Rating readonly/>
           </td>
 
-          <td className="py-2 px-4">
+          <td>
             <div className="flex justify-end gap-1">
               { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
                 <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }

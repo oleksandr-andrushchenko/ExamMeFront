@@ -12,7 +12,12 @@ import {
   Tooltip,
   Typography,
 } from '@material-tailwind/react'
-import { ExclamationCircleIcon, PencilIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import {
+  ExclamationCircleIcon,
+  PencilSquareIcon as UpdateIcon,
+  PlusIcon as CreateIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../schema/InputState'
@@ -472,13 +477,13 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
           <IconButton
             onClick={ handleOpen }
             disabled={ processing }>
-            { question ? <PencilIcon className="h-4 w-4"/> : <PlusIcon className="h-4 w-4"/> }
+            { question ? <UpdateIcon className="h-4 w-4"/> : <CreateIcon className="h-4 w-4"/> }
           </IconButton>
         </Tooltip>
         : <Button
           onClick={ handleOpen }
           disabled={ processing }>
-          { question ? <PencilIcon className="inline-block h-4 w-4"/> : <PlusIcon
+          { question ? <UpdateIcon className="inline-block h-4 w-4"/> : <CreateIcon
             className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding question...' : 'Add question') }
         </Button>
     }
@@ -497,7 +502,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                   Category
                 </Typography>
                 <Select name="category" label="Category">
-                  { categories.map((category: Category): ReactNode => (
+                  { categories.map((category: Category) => (
                     <Option key={ category.id } value={ category.id } className="capitalize">{ category.name }</Option>
                   )) }
                 </Select>
@@ -548,8 +553,8 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 aria-invalid={ type.error ? 'true' : 'false' }
                 error={ !!type.error && type.displayError }>
                 { Object.values(QuestionType)
-                  .map((type): ReactNode => <Option key={ type } value={ type }
-                                                    className="capitalize">{ type }</Option>) }
+                  .map((type) => <Option key={ type } value={ type }
+                                         className="capitalize">{ type }</Option>) }
               </Select>
               { type.error && type.displayError && <Typography
                 variant="small"
@@ -563,8 +568,8 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
             { type.value === QuestionType.TYPE && <div className="flex flex-col gap-2">
               <Typography variant="h6">Answers</Typography>
               <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
-                { answers.map((answer: AnswerInputState, index: number): ReactNode => <div key={ `answer-${ index }` }
-                                                                                           className="flex flex-col gap-3">
+                { answers.map((answer: AnswerInputState, index: number) => <div key={ `answer-${ index }` }
+                                                                                className="flex flex-col gap-3">
                   <span className="flex flex-col gap-1">Question answer #{ index + 1 }</span>
                   <div className="flex flex-col gap-1">
                     <Typography
@@ -643,7 +648,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                   <Button
                     type="button"
                     onClick={ () => addAnswer() }>
-                    <PlusIcon className="inline-block h-4 w-4"/> Add
+                    <CreateIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
                 { answersError && <Typography
@@ -659,8 +664,8 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
             { type.value === QuestionType.CHOICE && <div className="flex flex-col gap-2">
               <Typography variant="h6">Choices</Typography>
               <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
-                { choices.map((choice: ChoiceInputState, index: number): ReactNode => <div key={ `choice-${ index }` }
-                                                                                           className="flex flex-col gap-3">
+                { choices.map((choice: ChoiceInputState, index: number) => <div key={ `choice-${ index }` }
+                                                                                className="flex flex-col gap-3">
                   <span className="flex flex-col gap-1">Question choice #{ index + 1 }</span>
                   <div className="flex flex-col gap-1">
                     <Typography
@@ -737,7 +742,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                   <Button
                     type="button"
                     onClick={ () => addChoice() }>
-                    <PlusIcon className="inline-block h-4 w-4"/> Add
+                    <CreateIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
                 { choicesError && <Typography
@@ -768,8 +773,8 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 aria-invalid={ difficulty.error ? 'true' : 'false' }
                 error={ !!difficulty.error && difficulty.displayError }>
                 { Object.values(QuestionDifficulty)
-                  .map((difficulty): ReactNode => <Option key={ difficulty } value={ difficulty }
-                                                          className="capitalize">{ difficulty }</Option>) }
+                  .map((difficulty) => <Option key={ difficulty } value={ difficulty }
+                                               className="capitalize">{ difficulty }</Option>) }
               </Select>
               { difficulty.error && difficulty.displayError && <Typography
                 variant="small"

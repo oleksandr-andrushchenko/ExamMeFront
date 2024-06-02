@@ -176,7 +176,7 @@ export default function Exam(): ReactNode {
     <div className="flex flex-col gap-8 mt-4">
       { examQuestion === undefined ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
-          ? examQuestion.question!.choices!.map((choice: QuestionChoice, index: number): ReactNode => (
+          ? examQuestion.question!.choices!.map((choice: QuestionChoice, index: number) => (
             <Checkbox key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
                       name="choice"
                       defaultChecked={ index === examQuestion.choice }

@@ -15,7 +15,7 @@ interface Props {
   buttons?: ReactNode
 }
 
-export default ({ buttons, onSubmit }: Props): ReactNode => {
+export default function Register({ buttons, onSubmit }: Props): ReactNode {
   const [ processing, setProcessing ] = useState<boolean>(false)
   const [ email, setEmail ] = useState<string>('')
   const [ emailError, setEmailError ] = useState<string>('')
@@ -23,7 +23,6 @@ export default ({ buttons, onSubmit }: Props): ReactNode => {
   const [ passwordError, setPasswordError ] = useState<string>('')
   const [ error, setError ] = useState<string>('')
   const { setAuth } = useAuth()
-
   const [ terms, setTerms ] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {

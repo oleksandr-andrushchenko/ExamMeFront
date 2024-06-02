@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom'
 import Route from '../enum/Route'
 import { ReactNode, useEffect } from 'react'
 
-export default (): ReactNode => {
-
+export default function TermsAndConditions(): ReactNode {
   useEffect((): void => {
     document.title = 'Terms and conditions'
   }, [])
