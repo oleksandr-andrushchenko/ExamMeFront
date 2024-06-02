@@ -117,7 +117,7 @@ export default function Categories(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_CATEGORY) &&
+      { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_CATEGORY) &&
         <AddCategory onSubmit={ onCategoryCreated }/> }
     </div>
 
@@ -229,13 +229,13 @@ export default function Categories(): ReactNode {
 
           <td className="py-2 px-4">
             <div className="flex justify-end gap-1">
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
+              { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_QUESTION) &&
                 <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
+              { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
                 <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
+              { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
                 <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
             </div>
           </td>

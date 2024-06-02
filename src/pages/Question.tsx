@@ -42,14 +42,14 @@ export default function Question(): ReactNode {
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
-      { question === undefined ? <Spinner/> :
+      { question === undefined ? <Spinner type="text"/> :
         <Link to={ Route.CATEGORY.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
-      { question === undefined ? <Spinner/> :
+      { question === undefined ? <Spinner type="text"/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id!) }>{ question.title }</Link> }
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">{ question === undefined ?
-      <Spinner/> : question.title }</Typography>
+      <Spinner type="text"/> : question.title }</Typography>
 
     <Rating/>
 
@@ -64,12 +64,12 @@ export default function Question(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
-        (question === undefined ? <Spinner/> :
+      { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
+        (question === undefined ? <Spinner type="button"/> :
           <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION, question) &&
-        (question === undefined ? <Spinner/> : <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
+      { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
+        (question === undefined ? <Spinner type="button"/> : <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
 
     { question === undefined ? <Spinner/> : <div>

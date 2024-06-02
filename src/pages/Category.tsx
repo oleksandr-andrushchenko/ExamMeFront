@@ -128,12 +128,12 @@ export default function Category(): ReactNode {
       <Breadcrumbs>
         <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
         <Link to={ Route.CATEGORIES }>Categories</Link>
-        { category === undefined ? <Spinner/> :
+        { category === undefined ? <Spinner type="text"/> :
           <Link to={ Route.CATEGORY.replace(':categoryId', category.id!) }>{ category.name }</Link> }
       </Breadcrumbs>
 
       <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ?
-        <Spinner/> : category.name }</Typography>
+        <Spinner type="text"/> : category.name }</Typography>
 
       <Rating/>
 
@@ -148,18 +148,20 @@ export default function Category(): ReactNode {
       </Typography> }
 
       <div className="flex gap-1 items-center mt-4">
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION, category) && (category === undefined ?
-          <Spinner/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
+        { auth && me === undefined ?
+          <Spinner type="button"/> : checkAuth(Permission.CREATE_QUESTION, category) && (category === undefined ?
+          <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
-          (category === undefined ? <Spinner/> :
+        { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_CATEGORY, category) &&
+          (category === undefined ? <Spinner type="button"/> :
             <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
-        { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
-          (category === undefined ? <Spinner/> :
+        { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_CATEGORY, category) &&
+          (category === undefined ? <Spinner type="button"/> :
             <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
-        { category === undefined ? <Spinner/> : (category.questionCount > 0) && <AddExam category={ category }/> }
+        { category === undefined ? <Spinner type="button"/> : (category.questionCount > 0) &&
+          <AddExam category={ category }/> }
       </div>
 
       <div className="flex gap-1 items-center mt-4">
@@ -302,10 +304,10 @@ export default function Category(): ReactNode {
 
             <td className="py-2 px-4">
               <div className="flex justify-end gap-1">
-                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
+                { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
                   <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-                { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION, question) &&
+                { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
                   <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
               </div>
             </td>

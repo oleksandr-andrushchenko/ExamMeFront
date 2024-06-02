@@ -136,7 +136,7 @@ export default function Questions(): ReactNode {
     </Typography> }
 
     <div className="flex gap-1 items-center mt-4">
-      { auth && me === undefined ? <Spinner/> : checkAuth(Permission.CREATE_QUESTION) &&
+      { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_QUESTION) &&
         <AddQuestion onSubmit={ onQuestionCreated }/> }
     </div>
 
@@ -305,10 +305,10 @@ export default function Questions(): ReactNode {
 
           <td className="py-2 px-4">
             <div className="flex justify-end gap-1">
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
+              { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
                 <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-              { auth && me === undefined ? <Spinner/> : checkAuth(Permission.DELETE_QUESTION, question) &&
+              { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.DELETE_QUESTION, question) &&
                 <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
             </div>
           </td>

@@ -61,7 +61,7 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
   }, [ auth ])
 
   if (auth && exam === undefined) {
-    return <Spinner/>
+    return <Spinner type="button"/>
   }
 
   if (auth && exam) {

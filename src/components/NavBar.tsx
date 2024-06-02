@@ -60,7 +60,7 @@ export default (): ReactNode => {
           as="li"
           variant="small"
           className="p-1 font-normal">
-          <Spinner/>
+          <Spinner type="text"/>
         </Typography>
         : (
           me
