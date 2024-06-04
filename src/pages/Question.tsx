@@ -1,7 +1,7 @@
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Checkbox, Input, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -13,6 +13,7 @@ import AddQuestion from '../components/question/AddQuestion'
 import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery'
+import Error from '../components/Error'
 
 export default function Question(): ReactNode {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -55,13 +56,7 @@ export default function Question(): ReactNode {
 
     <Typography variant="small" className="mt-1">Question info</Typography>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.UPDATE_QUESTION, question) &&
@@ -97,16 +92,18 @@ export default function Question(): ReactNode {
           { question === undefined ? <Spinner type="text"/> : (
             question.type === QuestionType.CHOICE
               ? question.choices!.map((choice: QuestionChoice, index: number) => (
-                <Checkbox key={ `${ question.id }-${ index }` }
-                          name="choice"
-                          label={ choice.title }
-                          disabled={ true }/>
+                <Checkbox
+                  key={ `${ question.id }-${ index }` }
+                  name="choice"
+                  label={ choice.title }
+                  disabled={ true }/>
               ))
-              : <Input type="text"
-                       name="answer"
-                       size="lg"
-                       label="Answer"
-                       disabled={ true }/>
+              : <Input
+                type="text"
+                name="answer"
+                size="lg"
+                label="Answer"
+                disabled={ true }/>
           ) }
         </td>
       </tr>

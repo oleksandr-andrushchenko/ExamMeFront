@@ -16,7 +16,7 @@ import {
 import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
@@ -30,6 +30,7 @@ import { apiQuery } from '../api/apolloClient'
 import categoriesPageCategoriesQuery from '../api/category/categoriesPageCategoriesQuery'
 import CategoryQuery from '../schema/category/CategoryQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
+import Error from '../components/Error'
 
 export default function Categories(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
@@ -108,13 +109,7 @@ export default function Categories(): ReactNode {
 
     <Typography variant="small" className="mt-1">Categories info</Typography>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_CATEGORY) &&
@@ -125,8 +120,11 @@ export default function Categories(): ReactNode {
       <Tabs value="all" className="min-w-[170px]">
         <TabsHeader>
           { tableFilters.map((value) => (
-            <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
-                 onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+            <Tab
+              key={ value }
+              value={ value }
+              className="text-xs small text-small capitalize"
+              onClick={ (): void => applySearchParams({ price: value === 'all' ? undefined : value }) }>
               { value }
             </Tab>
           )) }
@@ -145,28 +143,33 @@ export default function Categories(): ReactNode {
         value={ searchParams.get('size') || '' }
         className="capitalize">
         { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
-          <Option key={ size }
-                  value={ `${ size }` }
-                  disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
+          <Option
+            key={ size }
+            value={ `${ size }` }
+            disabled={ `${ size }` === searchParams.get('size') }>
+            { size }
+          </Option>
         )) }
       </Select>
 
-      { categories === undefined ?
-        <Spinner type="button"/> : ((categories.meta.prevCursor || categories.meta.nextCursor) &&
-          <ButtonGroup variant="outlined">
-            <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
-                        disabled={ !categories.meta.prevCursor }>
-              <ArrowLeftIcon className="w-4 h-4"/>
-            </IconButton>
-            <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
-                        disabled={ !categories.meta.nextCursor }>
-              <ArrowRightIcon className="w-4 h-4"/>
-            </IconButton>
-          </ButtonGroup>) }
+      { categories && ((categories.meta.prevCursor || categories.meta.nextCursor) && (
+        <ButtonGroup variant="outlined">
+          <IconButton onClick={ (): void => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
+                      disabled={ !categories.meta.prevCursor }>
+            <ArrowLeftIcon className="w-4 h-4"/>
+          </IconButton>
+          <IconButton onClick={ (): void => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
+                      disabled={ !categories.meta.nextCursor }>
+            <ArrowRightIcon className="w-4 h-4"/>
+          </IconButton>
+        </ButtonGroup>
+      )) }
 
-      { showClear() && <div>
-        <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
-      </div> }
+      { showClear() && (
+        <div>
+          <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
+        </div>
+      ) }
     </div>
 
     <table className="w-full table-auto text-left text-sm capitalize mt-4">
@@ -180,18 +183,22 @@ export default function Categories(): ReactNode {
       </tr>
       </thead>
       <tbody>
-      { categories === undefined && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">
-          <Spinner type="text" width="w-full"/>
-          <Spinner type="text" width="w-full"/>
-          <Spinner type="text" width="w-full"/>
-        </td>
-      </tr> }
-      { categories && categories.data.length === 0 && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">
-          No data
-        </td>
-      </tr> }
+      { categories === undefined && (
+        <tr>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">
+            <Spinner type="text" width="w-full"/>
+            <Spinner type="text" width="w-full"/>
+            <Spinner type="text" width="w-full"/>
+          </td>
+        </tr>
+      ) }
+      { categories && categories.data.length === 0 && (
+        <tr>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">
+            No data
+          </td>
+        </tr>
+      ) }
       { categories && categories.data && categories.data.map((category: Category, index: number) => (
         <tr key={ category.id }>
           <td>

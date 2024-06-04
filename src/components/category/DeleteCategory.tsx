@@ -1,9 +1,10 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import removeCategoryMutation from '../../api/category/removeCategoryMutation'
+import Error from '../Error'
 
 interface Props {
   category: Category
@@ -60,9 +61,8 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
             <br/>
             You cannot undo this action.
           </Typography>
-          { error && <Typography color="red">
-            <ExclamationCircleIcon className="inline-block h-5 w-5"/> { error }
-          </Typography> }
+
+          { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
           <Button

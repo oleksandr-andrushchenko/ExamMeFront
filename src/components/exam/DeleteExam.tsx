@@ -1,9 +1,10 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
 import { apiMutate } from '../../api/apolloClient'
 import removeExamMutation from '../../api/exam/removeExamMutation'
+import Error from '../Error'
 
 interface Props {
   exam: Exam
@@ -59,9 +60,8 @@ export default function DeleteExam({ exam, onSubmit, iconButton }: Props): React
             <br/>
             You cannot undo this action.
           </Typography>
-          { error && <Typography color="red">
-            <ExclamationCircleIcon className="inline-block h-5 w-5"/> { error }
-          </Typography> }
+
+          { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
           <Button

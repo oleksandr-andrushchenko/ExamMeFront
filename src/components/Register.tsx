@@ -1,5 +1,4 @@
 import { Button, Checkbox, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import EmailSection from './EmailSection'
@@ -9,6 +8,7 @@ import Route from '../enum/Route'
 import { apiMutate } from '../api/apolloClient'
 import registerMutation from '../api/auth/registerMutation'
 import Token from '../schema/auth/Token'
+import Error from './Error'
 
 interface Props {
   onSubmit: () => void
@@ -58,13 +58,7 @@ export default function Register({ buttons, onSubmit }: Props): ReactNode {
       />
     </div>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div>
       { buttons }

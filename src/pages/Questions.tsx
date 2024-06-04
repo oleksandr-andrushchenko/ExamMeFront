@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Permission from '../enum/Permission'
@@ -32,6 +32,7 @@ import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import { apiQuery } from '../api/apolloClient'
 import questionsPageQuestionsQuery from '../api/question/questionsPageQuestionsQuery'
 import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsPageQuestionsAndCategoriesQuery'
+import Error from '../components/Error'
 
 export default function Questions(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
@@ -127,13 +128,7 @@ export default function Questions(): ReactNode {
 
     <Typography variant="small" className="mt-1">Questions info</Typography>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
       { auth && me === undefined ? <Spinner type="button"/> : checkAuth(Permission.CREATE_QUESTION) &&
@@ -144,8 +139,11 @@ export default function Questions(): ReactNode {
       <Tabs value="all" className="min-w-[170px]">
         <TabsHeader>
           { tableFilters.map((value) => (
-            <Tab key={ value } value={ value } className="text-xs small text-small capitalize"
-                 onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+            <Tab
+              key={ value }
+              value={ value }
+              className="text-xs small text-small capitalize"
+              onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }>
               { value }
             </Tab>
           )) }
@@ -158,11 +156,14 @@ export default function Questions(): ReactNode {
           onChange={ (categoryId: string) => applySearchParams({ categoryId }) }
           value={ searchParams.get('categoryId') || '' }
           className="capitalize">
-          { categories.map((category: Category): ReactNode => (
-            <Option key={ category.id }
-                    value={ category.id }
-                    disabled={ category.id === searchParams.get('categoryId') }
-                    className="capitalize truncate max-w-[170px]">{ category.name }</Option>
+          { categories.map((category: Category) => (
+            <Option
+              key={ category.id }
+              value={ category.id }
+              disabled={ category.id === searchParams.get('categoryId') }
+              className="capitalize truncate max-w-[170px]">
+              { category.name }
+            </Option>
           )) }
         </Select>
       ) }
@@ -172,13 +173,15 @@ export default function Questions(): ReactNode {
         onChange={ (difficulty: string): void => applySearchParams({ difficulty }) }
         value={ searchParams.get('difficulty') || '' }
         className="capitalize">
-        { Object.values(QuestionDifficulty)
-          .map((difficulty: string) => (
-            <Option key={ difficulty }
-                    value={ difficulty }
-                    disabled={ difficulty === searchParams.get('difficulty') }
-                    className="capitalize">{ difficulty }</Option>
-          )) }
+        { Object.values(QuestionDifficulty).map((difficulty: string) => (
+          <Option
+            key={ difficulty }
+            value={ difficulty }
+            disabled={ difficulty === searchParams.get('difficulty') }
+            className="capitalize">
+            { difficulty }
+          </Option>
+        )) }
       </Select>
 
       <Select
@@ -186,13 +189,15 @@ export default function Questions(): ReactNode {
         onChange={ (type: string): void => applySearchParams({ type }) }
         value={ searchParams.get('type') || '' }
         className="capitalize">
-        { Object.values(QuestionType)
-          .map((type: string) => (
-            <Option key={ type }
-                    value={ type }
-                    disabled={ type === searchParams.get('type') }
-                    className="capitalize">{ type }</Option>
-          )) }
+        { Object.values(QuestionType).map((type: string) => (
+          <Option
+            key={ type }
+            value={ type }
+            disabled={ type === searchParams.get('type') }
+            className="capitalize">
+            { type }
+          </Option>
+        )) }
       </Select>
 
       <Input
@@ -207,28 +212,33 @@ export default function Questions(): ReactNode {
         value={ searchParams.get('size') || '' }
         className="capitalize">
         { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
-          <Option key={ size }
-                  value={ `${ size }` }
-                  disabled={ `${ size }` === searchParams.get('size') }>{ size }</Option>
+          <Option
+            key={ size }
+            value={ `${ size }` }
+            disabled={ `${ size }` === searchParams.get('size') }>
+            { size }
+          </Option>
         )) }
       </Select>
 
-      { questions === undefined ?
-        <Spinner type="button"/> : ((questions.meta.prevCursor || questions.meta.nextCursor) &&
-          <ButtonGroup variant="outlined">
-            <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
-                        disabled={ !questions.meta.prevCursor }>
-              <ArrowLeftIcon className="w-4 h-4"/>
-            </IconButton>
-            <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
-                        disabled={ !questions.meta.nextCursor }>
-              <ArrowRightIcon className="w-4 h-4"/>
-            </IconButton>
-          </ButtonGroup>) }
+      { questions && ((questions.meta.prevCursor || questions.meta.nextCursor) && (
+        <ButtonGroup variant="outlined">
+          <IconButton onClick={ (): void => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
+                      disabled={ !questions.meta.prevCursor }>
+            <ArrowLeftIcon className="w-4 h-4"/>
+          </IconButton>
+          <IconButton onClick={ (): void => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
+                      disabled={ !questions.meta.nextCursor }>
+            <ArrowRightIcon className="w-4 h-4"/>
+          </IconButton>
+        </ButtonGroup>
+      )) }
 
-      { showClear() && <div>
-        <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
-      </div> }
+      { showClear() && (
+        <div>
+          <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
+        </div>
+      ) }
     </div>
 
     <table className="w-full table-auto text-left text-sm capitalize mt-4">
@@ -242,18 +252,22 @@ export default function Questions(): ReactNode {
       </tr>
       </thead>
       <tbody>
-      { questions === undefined && <tr>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">
-          <Spinner type="text" width="w-full"/>
-          <Spinner type="text" width="w-full"/>
-          <Spinner type="text" width="w-full"/>
-        </td>
-      </tr> }
-      { questions && questions.data.length === 0 && <tr key={ 0 }>
-        <td colSpan={ tableColumns.length } className="p-5 text-center">
-          No data
-        </td>
-      </tr> }
+      { questions === undefined && (
+        <tr>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">
+            <Spinner type="text" width="w-full"/>
+            <Spinner type="text" width="w-full"/>
+            <Spinner type="text" width="w-full"/>
+          </td>
+        </tr>
+      ) }
+      { questions && questions.data.length === 0 && (
+        <tr key={ 0 }>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">
+            No data
+          </td>
+        </tr>
+      ) }
       { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number) => (
         <tr key={ question.id }>
           <td>

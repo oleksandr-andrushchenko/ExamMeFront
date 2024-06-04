@@ -1,7 +1,7 @@
 import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Button, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ArrowLeftIcon, ArrowRightIcon, ExclamationCircleIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
@@ -15,6 +15,7 @@ import answerExamQuestionMutation from '../api/exam/answerExamQuestionMutation'
 import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
 import examPageCurrentExamQuestionQuery from '../api/exam/examPageCurrentExamQuestionQuery'
 import clearExamQuestionAnswerMutation from '../api/exam/clearExamQuestionAnswerMutation'
+import Error from '../components/Error'
 
 export default function Exam(): ReactNode {
   const { examId } = useParams<Params>() as { examId: string }
@@ -129,16 +130,10 @@ export default function Exam(): ReactNode {
 
     <Typography variant="small" className="mt-1">Exam questions</Typography>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { examQuestion === undefined ? <Spinner type="button"/> : (
+      { examQuestion && ((showPrev() || showNext()) && (
         <ButtonGroup variant="outlined">
           <Button onClick={ onPrevQuestionClick } disabled={ !showPrev() }>
             <ArrowLeftIcon className="inline-block w-4 h-4"/> Prev
@@ -146,7 +141,7 @@ export default function Exam(): ReactNode {
           <Button onClick={ onNextQuestionClick } disabled={ !showNext() }>
             Next <ArrowRightIcon className="inline-block w-4 h-4"/>
           </Button>
-        </ButtonGroup>) }
+        </ButtonGroup>)) }
 
       { examQuestion === undefined ?
         <Spinner type="button"/> : (checkAuth(ExamPermission.CREATE_COMPLETION, examQuestion.exam) &&
@@ -177,19 +172,21 @@ export default function Exam(): ReactNode {
       { examQuestion === undefined ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
           ? examQuestion.question!.choices!.map((choice: QuestionChoice, index: number) => (
-            <Checkbox key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
-                      name="choice"
-                      defaultChecked={ index === examQuestion.choice }
-                      onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => e.target.checked ? createAnswer(index) : clearAnswer() }
-                      label={ choice.title }
-                      disabled={ answering }/>
+            <Checkbox
+              key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
+              name="choice"
+              defaultChecked={ index === examQuestion.choice }
+              onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => e.target.checked ? createAnswer(index) : clearAnswer() }
+              label={ choice.title }
+              disabled={ answering }/>
           ))
-          : <Input type="text"
-                   name="answer"
-                   size="lg"
-                   label="Answer"
-                   onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => createAnswer(e.target.value) }
-                   disabled={ answering }/>
+          : <Input
+            type="text"
+            name="answer"
+            size="lg"
+            label="Answer"
+            onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => createAnswer(e.target.value) }
+            disabled={ answering }/>
       ) }
     </div>
   </>

@@ -1,5 +1,4 @@
 import { Button, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import EmailSection from './EmailSection'
 import PasswordSection from './PasswordSection'
@@ -7,6 +6,7 @@ import useAuth from '../hooks/useAuth'
 import { apiMutate } from '../api/apolloClient'
 import Token from '../schema/auth/Token'
 import authenticateMutation from '../api/auth/authenticateMutation'
+import Error from './Error'
 
 interface Props {
   onSubmit: () => void
@@ -40,13 +40,7 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props): Re
     <EmailSection setValue={ setEmail as any } error={ emailError } focus/>
     <PasswordSection setValue={ setPassword as any } error={ passwordError }/>
 
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     <div>
       { buttons }
@@ -57,10 +51,18 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props): Re
         disabled={ !email || !password || processing }>
         { processing ? 'Logging in...' : 'Login' }
       </Button>
-      { onRegisterClick && <Typography variant="small" color="gray" className="mt-4 font-normal">
-        Don't have an account? <Button variant="text" onClick={ onRegisterClick }
-                                       className="font-medium text-gray-900">Register</Button>
-      </Typography> }
+
+      { onRegisterClick && (
+        <Typography variant="small" color="gray" className="mt-4 font-normal">
+          Don't have an account?
+          <Button
+            variant="text"
+            onClick={ onRegisterClick }
+            className="font-medium text-gray-900">
+            Register
+          </Button>
+        </Typography>
+      ) }
     </div>
   </form>
 }

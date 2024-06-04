@@ -1,5 +1,5 @@
-import { Button, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon, PlayIcon } from '@heroicons/react/24/solid'
+import { Button, IconButton, Tooltip } from '@material-tailwind/react'
+import { PlayIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
@@ -12,6 +12,7 @@ import Auth from '../Auth'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
 import createExamMutation from '../../api/exam/createExamMutation'
 import oneNonCompletedCategoryExamsQuery from '../../api/exam/oneNonCompletedCategoryExamsQuery'
+import Error from '../Error'
 
 interface Props {
   category: Category
@@ -90,13 +91,7 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
   const disabled = processing || showAuth
 
   return <>
-    { error && <Typography
-      variant="small"
-      color="red"
-      className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ error }</span>
-    </Typography> }
+    { error && <Error text={ error }/> }
 
     { showAuth && <Auth dialogOnly onClose={ () => setShowAuth(false) }/> }
 

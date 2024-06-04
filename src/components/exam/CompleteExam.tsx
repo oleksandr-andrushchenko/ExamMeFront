@@ -1,9 +1,10 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
+import { CheckIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
 import { apiMutate } from '../../api/apolloClient'
 import completeExamMutation from '../../api/exam/completeExamMutation'
+import Error from '../Error'
 
 interface Props {
   exam: Exam
@@ -57,9 +58,8 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
             <br/>
             You cannot undo this action.
           </Typography>
-          { error && <Typography color="red">
-            <ExclamationCircleIcon className="inline-block h-5 w-5"/> { error }
-          </Typography> }
+
+          { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
           <Button
