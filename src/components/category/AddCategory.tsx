@@ -1,15 +1,12 @@
 import { Button, Card, CardBody, Dialog, IconButton, Textarea, Tooltip, Typography } from '@material-tailwind/react'
-import {
-  ExclamationCircleIcon,
-  PencilSquareIcon as UpdateIcon,
-  PlusIcon as CreateIcon,
-} from '@heroicons/react/24/solid'
+import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import updateCategoryMutation from '../../api/category/updateCategoryMutation'
 import createCategoryMutation from '../../api/category/createCategoryMutation'
+import Error from '../Error'
 
 interface Props {
   category?: Category
@@ -60,9 +57,13 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
     setProcessing(true)
 
     const transfer = { name: name.value }
-    const callback = (category: Category) => {
+    const callback = (affectedCategory: Category) => {
+      if (!category) {
+        setName({ ...defaultInputState })
+      }
+
       setOpen(false)
-      onSubmit && onSubmit(category)
+      onSubmit && onSubmit(affectedCategory)
     }
 
     if (category) {
@@ -106,14 +107,10 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
             { category ? 'Update category' : 'Add category' }
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
-
             <div className="flex flex-col gap-2">
-              <Typography
-                variant="h6"
-                color={ name.error && name.displayError ? 'red' : 'blue-gray' }>
-                Name
-              </Typography>
               <Textarea
+                rows={ 1 }
+                resize
                 name="name"
                 type="text"
                 label="Name"
@@ -123,24 +120,11 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
                 value={ name.value }
                 aria-invalid={ name.error ? 'true' : 'false' }
                 error={ !!name.error && name.displayError }
-                required
-              />
-              { name.error && name.displayError && <Typography
-                variant="small"
-                color="red"
-                className="flex items-center gap-1">
-                <ExclamationCircleIcon className="w-1/12"/>
-                <span className="w-11/12">{ name.error }</span>
-              </Typography> }
+                required/>
+              { name.error && name.displayError && <Error text={ name.error }/> }
             </div>
 
-            { error && <Typography
-              variant="small"
-              color="red"
-              className="flex items-center gap-1">
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">{ error }</span>
-            </Typography> }
+            { error && <Error text={ error }/> }
 
             <div>
               <Button
