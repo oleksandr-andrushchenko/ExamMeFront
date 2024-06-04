@@ -55,6 +55,47 @@ const theme = {
       },
     },
   },
+
+  textarea: {
+    defaultProps: {
+      rows: 1,
+      resize: true,
+    },
+    styles: {
+      base: {
+        textarea: {
+          minHeight: '',
+        },
+      },
+      variants: {
+        outlined: {
+          base: {
+            label: {
+              before: {
+                borderRadius: 'before:rounded-tl',
+              },
+              after: {
+                borderRadius: 'after:rounded-tr',
+              },
+            },
+          },
+          sizes: {
+            md: {
+              input: {
+                borderRadius: 'rounded',
+              },
+            },
+            lg: {
+              input: {
+                borderRadius: 'rounded',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
   button: {
     defaultProps: {
       size: 'sm',
