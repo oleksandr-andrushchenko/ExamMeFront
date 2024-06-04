@@ -33,11 +33,21 @@ export default function questionsPageQuestionsQuery(filter: QuestionQuery = {}):
                 type: $type
             ) {
                 data {
-                    difficulty
                     id
+                    categoryId
                     title
                     type
-                    categoryId
+                    answers {
+                        variants
+                        correct
+                        explanation
+                    }
+                    choices {
+                        title
+                        correct
+                        explanation
+                    }
+                    difficulty
                     ownerId
                 }
                 meta {
@@ -48,6 +58,7 @@ export default function questionsPageQuestionsQuery(filter: QuestionQuery = {}):
         }
     `,
     variables: filter,
+    errorPolicy: 'all',
     fetchPolicy: 'network-only',
   }
 }

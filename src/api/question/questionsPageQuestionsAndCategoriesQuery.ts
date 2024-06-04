@@ -37,11 +37,21 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
                 type: $type
             ) {
                 data {
-                    difficulty
                     id
+                    categoryId
                     title
                     type
-                    categoryId
+                    answers {
+                        variants
+                        correct
+                        explanation
+                    }
+                    choices {
+                        title
+                        correct
+                        explanation
+                    }
+                    difficulty
                     ownerId
                 }
                 meta {
@@ -52,6 +62,7 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
         }
     `,
     variables: filter,
+    errorPolicy: 'all',
     fetchPolicy: 'network-only',
   }
 }
