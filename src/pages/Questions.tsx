@@ -156,7 +156,7 @@ export default function Questions(): ReactNode {
         <Select
           label="Category"
           onChange={ (categoryId: string) => applySearchParams({ categoryId }) }
-          value={ searchParams.get('category') || '' }
+          value={ searchParams.get('categoryId') || '' }
           className="capitalize">
           { categories.map((category: Category): ReactNode => (
             <Option key={ category.id }
@@ -255,7 +255,7 @@ export default function Questions(): ReactNode {
         </td>
       </tr> }
       { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index: number) => (
-        <tr>
+        <tr key={ question.id }>
           <td>
             { index + 1 }
           </td>
