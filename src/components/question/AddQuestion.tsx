@@ -12,14 +12,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-tailwind/react'
-import {
-  ExclamationCircleIcon,
-  PencilSquareIcon as UpdateIcon,
-  PlusIcon as CreateIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/solid'
+import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import QuestionTransfer, {
   QuestionAnswer,
@@ -34,6 +28,7 @@ import updateQuestionMutation from '../../api/question/updateQuestionMutation'
 import createQuestionMutation from '../../api/question/createQuestionMutation'
 import categoriesSelectQuery from '../../api/category/categoriesSelectQuery'
 import Spinner from '../Spinner'
+import Error from '../Error'
 
 interface Props {
   category?: Category
@@ -57,7 +52,6 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
   const handleOpen = () => setOpen(!open)
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!category && !question) {
@@ -100,6 +94,30 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
   const setTitleError = (error: string): void => {
     const displayError = !!error
     setTitle({ ...title, ...{ error, displayError } })
+  }
+
+  const [ categoryId, setCategoryId ] = useState<InputState>({ ...defaultInputState })
+  const getCategoryIdError = (value: string | undefined = undefined): string => {
+    value = value === undefined ? categoryId.value : value
+
+    if (!value) {
+      return 'Should not be empty'
+    }
+
+    return ''
+  }
+  const setCategoryIdValue = (value: string): void => {
+    const error = getCategoryIdError(value)
+    setCategoryId({ ...categoryId, ...{ value, error } })
+  }
+  const setCategoryIdFocused = (focused: boolean): void => {
+    const error = focused ? categoryId.error : getCategoryIdError()
+    const displayError = error && !focused ? true : categoryId.displayError
+    setCategoryId({ ...categoryId, ...{ focused, error, displayError } })
+  }
+  const setCategoryIdError = (error: string): void => {
+    const displayError = !!error
+    setCategoryId({ ...categoryId, ...{ error, displayError } })
   }
 
   const [ type, setType ] = useState<InputState>({ ...defaultInputState, ...{ value: QuestionType.CHOICE } })
@@ -343,7 +361,11 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
   const [ disabled, setDisabled ] = useState<boolean>(true)
 
   const isDisabled = (): boolean => {
-    const invalid = !title.value || title.error || !type.value || type.error || !difficulty.value || difficulty.error || processing
+    const invalid = !title.value || title.error
+      || !type.value || type.error
+      || !difficulty.value || difficulty.error
+      || (!category && !question && (!categoryId.value || categoryId.error))
+      || processing
 
     if (invalid) {
       return true
@@ -410,7 +432,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     setProcessing(true)
 
     const transfer: QuestionTransfer = {
-      categoryId: category?.id || question?.categoryId || '',
+      categoryId: category?.id || question?.categoryId || categoryId?.value || '',
       title: title.value,
       type: type.value,
       difficulty: difficulty.value,
@@ -446,9 +468,18 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
       })
     }
 
-    const callback = (question: Question) => {
+    const callback = (affectedQuestion: Question) => {
+      if (!question) {
+        setCategoryId({ ...defaultInputState })
+        setTitle({ ...defaultInputState })
+        setType({ ...defaultInputState, ...{ value: QuestionType.CHOICE } })
+        setAnswers([ { ...defaultAnswerInputState } ])
+        setChoices([ { ...defaultChoiceInputState } ])
+        setDifficulty({ ...defaultInputState })
+      }
+
       setOpen(false)
-      onSubmit && onSubmit(question)
+      onSubmit && onSubmit(affectedQuestion)
     }
 
     if (question) {
@@ -468,7 +499,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     }
   }
 
-  useEffect(() => setDisabled(isDisabled()), [ title, type, choices, answers, difficulty ])
+  useEffect(() => setDisabled(isDisabled()), [ title, categoryId, type, choices, answers, difficulty ])
 
   return <>
     {
@@ -493,32 +524,36 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
           <Typography variant="h4">
             { question ? 'Update question' : 'Add question' }
           </Typography>
-          <form className="flex flex-col gap-6" onSubmit={ handleSubmit }
-                method="post">
-
-            { !category && !question && (categories === undefined ? <Spinner/> : ((
+          <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
+            { !category && !question && (categories === undefined ? <Spinner type="button"/> : ((
               <div className="flex flex-col gap-2">
-                <Typography variant="h6">
-                  Category
-                </Typography>
-                <Select name="category" label="Category">
+                <Select
+                  name="category"
+                  label="Category"
+                  onChange={ (categoryId) => setCategoryIdValue(categoryId!) }
+                  onFocus={ () => setCategoryIdFocused(true) }
+                  containerProps={ {
+                    onBlur: (e) => !e.nativeEvent.relatedTarget && setCategoryIdFocused(false),
+                  } }
+                  value={ categoryId.value }
+                  aria-invalid={ categoryId.error ? 'true' : 'false' }
+                  error={ !!categoryId.error && categoryId.displayError }
+                  className="capitalize">
                   { categories.map((category: Category) => (
                     <Option key={ category.id } value={ category.id } className="capitalize">{ category.name }</Option>
                   )) }
                 </Select>
+                { categoryId.error && categoryId.displayError && <Error text={ categoryId.error }/> }
               </div>
             ))) }
 
             <div className="flex flex-col gap-2">
-              <Typography
-                variant="h6"
-                color={ title.error && title.displayError ? 'red' : 'blue-gray' }>
-                Title
-              </Typography>
               <Textarea
+                rows={ 1 }
+                resize
                 name="title"
                 type="text"
-                label="Question title"
+                label="Title"
                 onChange={ (e) => setTitleValue(e.target.value) }
                 onFocus={ () => setTitleFocused(true) }
                 onBlur={ () => setTitleFocused(false) }
@@ -526,24 +561,13 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 aria-invalid={ title.error ? 'true' : 'false' }
                 error={ !!title.error && title.displayError }
                 required/>
-              { title.error && title.displayError && <Typography
-                variant="small"
-                color="red"
-                className="flex items-center gap-1">
-                <ExclamationCircleIcon className="w-1/12"/>
-                <span className="w-11/12">{ title.error }</span>
-              </Typography> }
+              { title.error && title.displayError && <Error text={ title.error }/> }
             </div>
 
             <div className="flex flex-col gap-2 hidden">
-              <Typography
-                variant="h6"
-                color={ type.error && type.displayError ? 'red' : 'blue-gray' }>
-                Type
-              </Typography>
               <Select
                 name="type"
-                label="Question type"
+                label="Type"
                 onChange={ (type) => setTypeValue(type!) }
                 onFocus={ () => setTypeFocused(true) }
                 containerProps={ {
@@ -551,99 +575,68 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 } }
                 value={ type.value }
                 aria-invalid={ type.error ? 'true' : 'false' }
-                error={ !!type.error && type.displayError }>
-                { Object.values(QuestionType)
-                  .map((type) => <Option key={ type } value={ type }
-                                         className="capitalize">{ type }</Option>) }
+                error={ !!type.error && type.displayError }
+                className="capitalize">
+                { Object.values(QuestionType).map((type) => (
+                  <Option key={ type } value={ type } className="capitalize">{ type }</Option>
+                )) }
               </Select>
-              { type.error && type.displayError && <Typography
-                variant="small"
-                color="red"
-                className="flex items-center gap-1">
-                <ExclamationCircleIcon className="w-1/12"/>
-                <span className="w-11/12">{ type.error }</span>
-              </Typography> }
+              { type.error && type.displayError && <Error text={ type.error }/> }
             </div>
 
-            { type.value === QuestionType.TYPE && <div className="flex flex-col gap-2">
-              <Typography variant="h6">Answers</Typography>
-              <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
-                { answers.map((answer: AnswerInputState, index: number) => <div key={ `answer-${ index }` }
-                                                                                className="flex flex-col gap-3">
-                  <span className="flex flex-col gap-1">Question answer #{ index + 1 }</span>
-                  <div className="flex flex-col gap-1">
-                    <Typography
-                      variant="small"
-                      color={ answer.variants.error && answer.variants.displayError ? 'red' : 'blue-gray' }>
-                      Variants
-                    </Typography>
-                    <Input
-                      name={ `answer-${ index }-variants` }
-                      type="text"
-                      label={ `Question answer #${ index + 1 } variants (separated by comma)` }
-                      onChange={ (e) => setAnswerVariantsValue(index, e.target.value) }
-                      onFocus={ () => setAnswerVariantsFocused(index, true) }
-                      onBlur={ () => setAnswerVariantsFocused(index, false) }
-                      value={ answer.variants.value }
-                      aria-invalid={ answer.variants.error ? 'true' : 'false' }
-                      error={ !!answer.variants.error && answer.variants.displayError }
-                      required/>
-                    { answer.variants.error && answer.variants.displayError && <Typography
-                      variant="small"
-                      color="red"
-                      className="flex items-center gap-1">
-                      <ExclamationCircleIcon className="w-1/12"/>
-                      <span className="w-11/12">{ answer.variants.error }</span>
-                    </Typography> }
+            { type.value === QuestionType.TYPE && (
+              <div className="flex flex-col gap-6">
+                { answers.map((answer: AnswerInputState, index: number) => (
+                  <div key={ `answer-${ index }` } className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
+                      <Input
+                        name={ `answer-${ index }-variants` }
+                        type="text"
+                        label={ `[${ index + 1 }] variants (separated by comma)` }
+                        onChange={ (e) => setAnswerVariantsValue(index, e.target.value) }
+                        onFocus={ () => setAnswerVariantsFocused(index, true) }
+                        onBlur={ () => setAnswerVariantsFocused(index, false) }
+                        value={ answer.variants.value }
+                        aria-invalid={ answer.variants.error ? 'true' : 'false' }
+                        error={ !!answer.variants.error && answer.variants.displayError }
+                        required/>
+                      { answer.variants.error && answer.variants.displayError &&
+                        <Error text={ answer.variants.error }/> }
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Textarea
+                        rows={ 1 }
+                        resize
+                        name={ `answer-${ index }-explanation` }
+                        type="text"
+                        label={ `[${ index + 1 }] explanation` }
+                        onChange={ (e) => setAnswerExplanationValue(index, e.target.value) }
+                        onFocus={ () => setAnswerExplanationFocused(index, true) }
+                        onBlur={ () => setAnswerExplanationFocused(index, false) }
+                        value={ answer.explanation?.value }
+                        aria-invalid={ answer.explanation?.error ? 'true' : 'false' }
+                        error={ !!answer.explanation?.error && answer.explanation?.displayError }/>
+                      { answer.explanation?.error && answer.explanation.displayError &&
+                        <Error text={ answer.explanation.error }/> }
+                    </div>
+                    <div className="flex flex-col gap-1 -mt-3">
+                      <Checkbox
+                        label={ <Typography variant="small">[{ index + 1 }] Answer correct</Typography> }
+                        name={ `answer-${ index }-correct` }
+                        defaultChecked={ answer.correct.value }
+                        onChange={ (e) => setAnswerCorrect(index, 'value', e.target.checked) }/>
+                    </div>
+                    { answers.length > 1 && (
+                      <div className="-mt-3">
+                        <Button
+                          type="button"
+                          onClick={ () => removeAnswer(index) }>
+                          <XMarkIcon className="inline-block h-4 w-4"/> Remove
+                        </Button>
+                      </div>
+                    ) }
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <Typography
-                      variant="small"
-                      color={ answer.explanation?.error && answer.explanation.displayError ? 'red' : 'blue-gray' }>
-                      Explanation
-                    </Typography>
-                    <Textarea
-                      name={ `answer-${ index }-explanation` }
-                      type="text"
-                      label={ `Question answer #${ index + 1 } explanation` }
-                      onChange={ (e) => setAnswerExplanationValue(index, e.target.value) }
-                      onFocus={ () => setAnswerExplanationFocused(index, true) }
-                      onBlur={ () => setAnswerExplanationFocused(index, false) }
-                      value={ answer.explanation?.value }
-                      aria-invalid={ answer.explanation?.error ? 'true' : 'false' }
-                      error={ !!answer.explanation?.error && answer.explanation?.displayError }/>
-                    { answer.explanation?.error && answer.explanation.displayError && <Typography
-                      variant="small"
-                      color="red"
-                      className="flex items-center gap-1">
-                      <ExclamationCircleIcon className="w-1/12"/>
-                      <span className="w-11/12">{ answer.explanation.error }</span>
-                    </Typography> }
-                  </div>
-                  <div className="flex flex-col gap-1 -mt-3">
-                    <Checkbox
-                      label={
-                        <div>
-                          <Typography variant="small">
-                            Correct
-                          </Typography>
-                          <Typography variant="small" className="text-xs">
-                            Question answer #{ index + 1 } correct
-                          </Typography>
-                        </div>
-                      }
-                      name={ `answer-${ index }-correct` }
-                      defaultChecked={ answer.correct.value }
-                      onChange={ (e) => setAnswerCorrect(index, 'value', e.target.checked) }/>
-                  </div>
-                  { answers.length > 1 && <div className="-mt-3">
-                    <Button
-                      type="button"
-                      onClick={ () => removeAnswer(index) }>
-                      <XMarkIcon className="inline-block h-4 w-4"/> Remove
-                    </Button>
-                  </div> }
-                </div>) }
+                )) }
                 <div key="control">
                   <Button
                     type="button"
@@ -651,93 +644,64 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                     <CreateIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
-                { answersError && <Typography
-                  variant="small"
-                  color="red"
-                  className="flex items-center gap-1">
-                  <ExclamationCircleIcon className="w-1/12"/>
-                  <span className="w-11/12">{ answersError }</span>
-                </Typography> }
+                { answersError && <Error text={ answersError }/> }
               </div>
-            </div> }
+            ) }
 
-            { type.value === QuestionType.CHOICE && <div className="flex flex-col gap-2">
-              <Typography variant="h6">Choices</Typography>
-              <div className="border border-solid rounded border-blue-gray-100 p-3 flex flex-col gap-3">
-                { choices.map((choice: ChoiceInputState, index: number) => <div key={ `choice-${ index }` }
-                                                                                className="flex flex-col gap-3">
-                  <span className="flex flex-col gap-1">Question choice #{ index + 1 }</span>
-                  <div className="flex flex-col gap-1">
-                    <Typography
-                      variant="small"
-                      color={ choice.title.error && choice.title.displayError ? 'red' : 'blue-gray' }>
-                      Title
-                    </Typography>
-                    <Textarea
-                      name={ `choice-${ index }-title` }
-                      type="text"
-                      label={ `Question choice #${ index + 1 } title` }
-                      onChange={ (e) => setChoiceTitleValue(index, e.target.value) }
-                      onFocus={ () => setChoiceTitleFocused(index, true) }
-                      onBlur={ () => setChoiceTitleFocused(index, false) }
-                      value={ choice.title.value }
-                      aria-invalid={ choice.title.error ? 'true' : 'false' }
-                      error={ !!choice.title.error && choice.title.displayError }
-                      required/>
-                    { choice.title.error && choice.title.displayError && <Typography
-                      variant="small"
-                      color="red"
-                      className="flex items-center gap-1">
-                      <ExclamationCircleIcon className="w-1/12"/>
-                      <span className="w-11/12">{ choice.title.error }</span>
-                    </Typography> }
+            { type.value === QuestionType.CHOICE && (
+              <div className="flex flex-col gap-6">
+                { choices.map((choice: ChoiceInputState, index: number) => (
+                  <div key={ `choice-${ index }` } className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
+                      <Textarea
+                        rows={ 1 }
+                        resize
+                        name={ `choice-${ index }-title` }
+                        type="text"
+                        label={ `[${ index + 1 }] Choice title` }
+                        onChange={ (e) => setChoiceTitleValue(index, e.target.value) }
+                        onFocus={ () => setChoiceTitleFocused(index, true) }
+                        onBlur={ () => setChoiceTitleFocused(index, false) }
+                        value={ choice.title.value }
+                        aria-invalid={ choice.title.error ? 'true' : 'false' }
+                        error={ !!choice.title.error && choice.title.displayError }
+                        required/>
+                      { choice.title.error && choice.title.displayError && <Error text={ choice.title.error }/> }
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Textarea
+                        rows={ 1 }
+                        resize
+                        name={ `choice-${ index }-explanation` }
+                        type="text"
+                        label={ `[${ index + 1 }] Choice explanation` }
+                        onChange={ (e) => setChoiceExplanationValue(index, e.target.value) }
+                        onFocus={ () => setChoiceExplanationFocused(index, true) }
+                        onBlur={ () => setChoiceExplanationFocused(index, false) }
+                        value={ choice.explanation?.value }
+                        aria-invalid={ choice.explanation?.error ? 'true' : 'false' }
+                        error={ !!choice.explanation?.error && choice.explanation?.displayError }/>
+                      { choice.explanation?.error && choice.explanation?.displayError &&
+                        <Error text={ choice.explanation.error }/> }
+                    </div>
+                    <div className="flex flex-col gap-1 -mt-3">
+                      <Checkbox
+                        label={ <Typography variant="small">[{ index + 1 }] Choice correct</Typography> }
+                        name={ `choice-${ index }-correct` }
+                        defaultChecked={ choice.correct.value }
+                        onChange={ (e) => setChoiceCorrect(index, 'value', e.target.checked) }/>
+                    </div>
+                    { choices.length > 1 && (
+                      <div className="-mt-3">
+                        <Button
+                          type="button"
+                          onClick={ () => removeChoice(index) }>
+                          <XMarkIcon className="inline-block h-4 w-4"/> Remove
+                        </Button>
+                      </div>
+                    ) }
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <Typography
-                      variant="small"
-                      color={ choice.explanation?.error && choice.explanation.displayError ? 'red' : 'blue-gray' }>
-                      Explanation
-                    </Typography>
-                    <Textarea
-                      name={ `choice-${ index }-explanation` }
-                      type="text"
-                      label={ `Question choice #${ index + 1 } explanation` }
-                      onChange={ (e) => setChoiceExplanationValue(index, e.target.value) }
-                      onFocus={ () => setChoiceExplanationFocused(index, true) }
-                      onBlur={ () => setChoiceExplanationFocused(index, false) }
-                      value={ choice.explanation?.value }
-                      aria-invalid={ choice.explanation?.error ? 'true' : 'false' }
-                      error={ !!choice.explanation?.error && choice.explanation?.displayError }/>
-                    { choice.explanation?.error && choice.explanation?.displayError && <Typography
-                      variant="small"
-                      color="red"
-                      className="flex items-center gap-1">
-                      <ExclamationCircleIcon className="w-1/12"/>
-                      <span className="w-11/12">{ choice.explanation.error }</span>
-                    </Typography> }
-                  </div>
-                  <div className="flex flex-col gap-1 -mt-3">
-                    <Checkbox
-                      label={
-                        <div>
-                          <Typography variant="small">Correct</Typography>
-                          <Typography variant="small" className="text-xs">
-                            Question choice #{ index + 1 } correct
-                          </Typography>
-                        </div>
-                      }
-                      name={ `choice-${ index }-correct` }
-                      defaultChecked={ choice.correct.value }
-                      onChange={ (e) => setChoiceCorrect(index, 'value', e.target.checked) }/>
-                  </div>
-                  { choices.length > 1 && <div className="-mt-3">
-                    <Button
-                      type="button"
-                      onClick={ () => removeChoice(index) }>
-                      <XMarkIcon className="inline-block h-4 w-4"/> Remove
-                    </Button>
-                  </div> }
-                </div>) }
+                )) }
                 <div key="control">
                   <Button
                     type="button"
@@ -745,25 +709,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                     <CreateIcon className="inline-block h-4 w-4"/> Add
                   </Button>
                 </div>
-                { choicesError && <Typography
-                  variant="small"
-                  color="red"
-                  className="flex items-center gap-1">
-                  <ExclamationCircleIcon className="w-1/12"/>
-                  <span className="w-11/12">{ choicesError }</span>
-                </Typography> }
+                { choicesError && <Error text={ choicesError }/> }
               </div>
-            </div> }
+            ) }
 
             <div className="flex flex-col gap-2">
-              <Typography
-                variant="h6"
-                color={ difficulty.error && difficulty.displayError ? 'red' : 'blue-gray' }>
-                Difficulty
-              </Typography>
               <Select
                 name="difficulty"
-                label="Question difficulty"
+                label="Difficulty"
                 onChange={ (difficulty) => setDifficultyValue(difficulty!) }
                 onFocus={ () => setDifficultyFocused(true) }
                 containerProps={ {
@@ -771,27 +724,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 } }
                 value={ difficulty.value }
                 aria-invalid={ difficulty.error ? 'true' : 'false' }
-                error={ !!difficulty.error && difficulty.displayError }>
-                { Object.values(QuestionDifficulty)
-                  .map((difficulty) => <Option key={ difficulty } value={ difficulty }
-                                               className="capitalize">{ difficulty }</Option>) }
+                error={ !!difficulty.error && difficulty.displayError }
+                className="capitalize">
+                { Object.values(QuestionDifficulty).map((difficulty) => (
+                  <Option key={ difficulty } value={ difficulty } className="capitalize">{ difficulty }</Option>
+                )) }
               </Select>
-              { difficulty.error && difficulty.displayError && <Typography
-                variant="small"
-                color="red"
-                className="flex items-center gap-1">
-                <ExclamationCircleIcon className="w-1/12"/>
-                <span className="w-11/12">{ difficulty.error }</span>
-              </Typography> }
+              { difficulty.error && difficulty.displayError && <Error text={ difficulty.error }/> }
             </div>
 
-            { error && <Typography
-              variant="small"
-              color="red"
-              className="flex items-center gap-1">
-              <ExclamationCircleIcon className="w-1/12"/>
-              <span className="w-11/12">{ error }</span>
-            </Typography> }
+            { error && <Error text={ error }/> }
 
             <div>
               <Button
