@@ -1,5 +1,5 @@
 import {
-  CubeIcon as Logo,
+  FireIcon as Logo,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   UserCircleIcon,
