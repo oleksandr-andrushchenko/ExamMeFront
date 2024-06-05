@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import Token from '../schema/auth/Token'
 import Me from '../schema/me/Me'
 import Permission from '../enum/Permission'
@@ -21,7 +21,7 @@ interface Data {
   permissionHierarchy?: PermissionHierarchy | undefined
 }
 
-export default function AuthProvider({ children }: { children: React.ReactNode }): ReactNode {
+export default function AuthProvider({ children }: { children: ReactNode }) {
   const authString = localStorage.getItem('auth')
   const [ auth, setAuth ] = useState<Token | undefined>(authString ? JSON.parse(authString) : undefined)
   const defaultData = { me: undefined, permissionHierarchy: undefined }
@@ -56,14 +56,15 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     return false
   }
 
-  useEffect((): void => {
+  useEffect(() => {
     if (auth) {
       localStorage.setItem('auth', JSON.stringify(auth))
       apiQuery<{ me: Me, permission: PermissionQuery }>(
         authProviderQuery(),
-        (data): void => setData({ me: data.me, permissionHierarchy: data.permission.hierarchy }),
+        data => setData({ me: data.me, permissionHierarchy: data.permission.hierarchy }),
         () => setAuth(undefined),
-        () => {},
+        () => {
+        },
       )
     } else {
       localStorage.removeItem('auth')

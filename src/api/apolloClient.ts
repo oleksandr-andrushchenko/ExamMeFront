@@ -40,10 +40,10 @@ export function apiQuery<T = any, TVariables extends OperationVariables = Operat
   setData: (data: T) => void,
   setError: (message: string) => void,
   setLoading: (loading: boolean) => void,
-): void {
+) {
   setLoading(true)
   apolloClient.query<T>(options)
-    .then(({ data, errors }): void => {
+    .then(({ data, errors }) => {
       if (errors) {
         const error = errors
           .filter(error => !error.message.startsWith('Access denied!'))
@@ -57,8 +57,8 @@ export function apiQuery<T = any, TVariables extends OperationVariables = Operat
 
       setData(data)
     })
-    .catch((err): void => setError(err.message))
-    .finally((): void => setLoading(false))
+    .catch(err => setError(err.message))
+    .finally(() => setLoading(false))
 }
 
 export function apiMutate<
@@ -71,10 +71,10 @@ export function apiMutate<
   setData: (data: TData) => void,
   setError: (message: string) => void,
   setLoading: (loading: boolean) => void,
-): void {
+) {
   setLoading(true)
   apolloClient.mutate<TData, TVariables, TContext, TCache>(options)
-    .then(({ data, errors }): void => {
+    .then(({ data, errors }) => {
       if (errors) {
         const error = errors
           .filter(error => !error.message.startsWith('Access denied!'))
@@ -88,6 +88,6 @@ export function apiMutate<
 
       setData(data)
     })
-    .catch((err): void => setError(err.message))
-    .finally((): void => setLoading(false))
+    .catch(err => setError(err.message))
+    .finally(() => setLoading(false))
 }

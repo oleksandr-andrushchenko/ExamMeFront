@@ -5,7 +5,7 @@ import App from '../src/components/App'
 
 // configure({ reactStrictMode: true })
 
-export const config = (): void => {
+export const config = () => {
   beforeAll(() => {
     jest.useFakeTimers()
   })
