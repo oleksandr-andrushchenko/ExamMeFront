@@ -38,7 +38,7 @@ import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQ
 import Error from '../components/Error'
 
 export default function Category(): ReactNode {
-  const defaultSearchParams = { size: '10' }
+  const defaultSearchParams = { size: '20' }
   const [ queryWithCategory, setQueryWithCategory ] = useState<boolean>(true)
   const { categoryId }: { categoryId: string } = useParams()
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)

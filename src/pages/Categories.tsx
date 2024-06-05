@@ -34,7 +34,7 @@ import Error from '../components/Error'
 
 export default function Categories(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
-  const defaultSearchParams = { size: '10' }
+  const defaultSearchParams = { size: '20' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const [ error, setError ] = useState<string>('')

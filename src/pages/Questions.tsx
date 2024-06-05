@@ -37,7 +37,7 @@ import Error from '../components/Error'
 export default function Questions(): ReactNode {
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ withCategories, setWithCategories ] = useState<boolean>(true)
-  const defaultSearchParams = { size: '10' }
+  const defaultSearchParams = { size: '20' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Category[]>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
