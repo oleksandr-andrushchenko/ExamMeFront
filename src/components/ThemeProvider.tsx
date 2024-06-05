@@ -81,12 +81,12 @@ const theme = {
           },
           sizes: {
             md: {
-              input: {
+              textarea: {
                 borderRadius: 'rounded',
               },
             },
             lg: {
-              input: {
+              textarea: {
                 borderRadius: 'rounded',
               },
             },
