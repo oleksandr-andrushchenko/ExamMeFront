@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, IconButton, Textarea, Tooltip, Typography } from '@material-tailwind/react'
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
@@ -14,7 +14,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function AddCategory({ category, onSubmit, iconButton }: Props): ReactNode {
+export default function AddCategory({ category, onSubmit, iconButton }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -38,21 +38,21 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
 
     return ''
   }
-  const setNameValue = (value: string): void => {
+  const setNameValue = (value: string) => {
     const error = getNameError(value)
     setName({ ...name, ...{ value, error } })
   }
-  const setNameFocused = (focused: boolean): void => {
+  const setNameFocused = (focused: boolean) => {
     const error = focused ? name.error : getNameError()
     const displayError = error && !focused ? true : name.displayError
     setName({ ...name, ...{ focused, error, displayError } })
   }
-  const setNameError = (error: string): void => {
+  const setNameError = (error: string) => {
     const displayError = !!error
     setName({ ...name, ...{ error, displayError } })
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e): Promise<void> => {
     e.preventDefault()
     setProcessing(true)
 
@@ -69,14 +69,14 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props): 
     if (category) {
       apiMutate<{ updateCategory: Category }>(
         updateCategoryMutation(category.id!, transfer),
-        (data): void => callback(data.updateCategory),
+        data => callback(data.updateCategory),
         setError,
         setProcessing,
       )
     } else {
       apiMutate<{ createCategory: Category }>(
         createCategoryMutation(transfer),
-        (data): void => callback(data.createCategory),
+        data => callback(data.createCategory),
         setError,
         setProcessing,
       )

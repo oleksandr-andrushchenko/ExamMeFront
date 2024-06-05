@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import QuestionTransfer, {
   QuestionAnswer,
@@ -45,19 +45,19 @@ type ChoiceInputState = {
   [key in keyof QuestionChoice]: InputState
 }
 
-export default function AddQuestion({ category, question, onSubmit, iconButton }: Props): ReactNode {
+export default function AddQuestion({ category, question, onSubmit, iconButton }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const [ categories, setCategories ] = useState<Category[]>()
   const handleOpen = () => setOpen(!open)
-  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
 
   useEffect(() => {
     if (!category && !question) {
       apiQuery<{ categories: Category[] }>(
         categoriesSelectQuery(),
-        (data): void => setCategories(data.categories),
+        data => setCategories(data.categories),
         setError,
         setLoading,
       )
@@ -82,16 +82,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setTitleValue = (value: string): void => {
+  const setTitleValue = (value: string) => {
     const error = getTitleError(value)
     setTitle({ ...title, ...{ value, error } })
   }
-  const setTitleFocused = (focused: boolean): void => {
+  const setTitleFocused = (focused: boolean) => {
     const error = focused ? title.error : getTitleError()
     const displayError = error && !focused ? true : title.displayError
     setTitle({ ...title, ...{ focused, error, displayError } })
   }
-  const setTitleError = (error: string): void => {
+  const setTitleError = (error: string) => {
     const displayError = !!error
     setTitle({ ...title, ...{ error, displayError } })
   }
@@ -106,16 +106,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setCategoryIdValue = (value: string): void => {
+  const setCategoryIdValue = (value: string) => {
     const error = getCategoryIdError(value)
     setCategoryId({ ...categoryId, ...{ value, error } })
   }
-  const setCategoryIdFocused = (focused: boolean): void => {
+  const setCategoryIdFocused = (focused: boolean) => {
     const error = focused ? categoryId.error : getCategoryIdError()
     const displayError = error && !focused ? true : categoryId.displayError
     setCategoryId({ ...categoryId, ...{ focused, error, displayError } })
   }
-  const setCategoryIdError = (error: string): void => {
+  const setCategoryIdError = (error: string) => {
     const displayError = !!error
     setCategoryId({ ...categoryId, ...{ error, displayError } })
   }
@@ -130,16 +130,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setTypeValue = (value: string): void => {
+  const setTypeValue = (value: string) => {
     const error = getTypeError(value)
     setType({ ...type, ...{ value, error } })
   }
-  const setTypeFocused = (focused: boolean): void => {
+  const setTypeFocused = (focused: boolean) => {
     const error = focused ? type.error : getTypeError()
     const displayError = error && !focused ? true : type.displayError
     setType({ ...type, ...{ focused, error, displayError } })
   }
-  const setTypeError = (error: string): void => {
+  const setTypeError = (error: string) => {
     const displayError = !!error
     setType({ ...type, ...{ error, displayError } })
   }
@@ -161,7 +161,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     : [ { ...defaultAnswerInputState } ]
   const [ answers, setAnswers ] = useState<AnswerInputState[]>(defaultAnswers)
   const [ answersError, setAnswersError ] = useState<string>('')
-  const setAnswer = (index: number, prop: string, key: string, value: any): void => {
+  const setAnswer = (index: number, prop: string, key: string, value: any) => {
     const tmp = answers.slice()
     // @ts-ignore
     tmp[index][prop][key] = value
@@ -184,14 +184,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setAnswerVariantsValue = (index: number, value: string): void => {
+  const setAnswerVariantsValue = (index: number, value: string) => {
     const tmp = answers.slice()
     const old: InputState = tmp[index]['variants']
     const error = getAnswerVariantsError(index, value)
     tmp[index]['variants'] = { ...old, ...{ value, error } }
     setAnswers(tmp)
   }
-  const setAnswerVariantsFocused = (index: number, focused: boolean): void => {
+  const setAnswerVariantsFocused = (index: number, focused: boolean) => {
     const tmp = answers.slice()
     const old: InputState = tmp[index]['variants']
     const error = focused ? old.error : getAnswerVariantsError(index)
@@ -212,14 +212,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setAnswerExplanationValue = (index: number, value: any): void => {
+  const setAnswerExplanationValue = (index: number, value: any) => {
     const tmp = answers.slice()
     const old: InputState = tmp[index]['explanation']!
     const error = getAnswerExplanationError(index, value)
     tmp[index]['explanation'] = { ...old, ...{ value, error } }
     setAnswers(tmp)
   }
-  const setAnswerExplanationFocused = (index: number, focused: boolean): void => {
+  const setAnswerExplanationFocused = (index: number, focused: boolean) => {
     const tmp = answers.slice()
     const old: InputState = tmp[index]['explanation']!
     const error = focused ? old.error : getAnswerExplanationError(index)
@@ -228,12 +228,12 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     setAnswers(tmp)
   }
   const setAnswerCorrect = (index: number, key: string, value: any) => setAnswer(index, 'correct', key, value)
-  const addAnswer = (): void => {
+  const addAnswer = () => {
     const tmp = answers.slice()
     tmp.push({ ...defaultAnswerInputState })
     setAnswers(tmp)
   }
-  const removeAnswer = (index: number): void => {
+  const removeAnswer = (index: number) => {
     const tmp = answers.slice()
     tmp.splice(index, 1)
     setAnswers(tmp)
@@ -256,7 +256,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     : [ { ...defaultChoiceInputState } ]
   const [ choices, setChoices ] = useState<ChoiceInputState[]>(defaultChoices)
   const [ choicesError, setChoicesError ] = useState<string>('')
-  const setChoice = (index: number, prop: string, key: string, value: any): void => {
+  const setChoice = (index: number, prop: string, key: string, value: any) => {
     const tmp = choices.slice()
     // @ts-ignore
     tmp[index][prop][key] = value
@@ -279,14 +279,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setChoiceTitleValue = (index: number, value: string): void => {
+  const setChoiceTitleValue = (index: number, value: string) => {
     const tmp = choices.slice()
     const old: InputState = tmp[index]['title']
     const error = getChoiceTitleError(index, value)
     tmp[index]['title'] = { ...old, ...{ value, error } }
     setChoices(tmp)
   }
-  const setChoiceTitleFocused = (index: number, focused: boolean): void => {
+  const setChoiceTitleFocused = (index: number, focused: boolean) => {
     const tmp = choices.slice()
     const old: InputState = tmp[index]['title']
     const error = focused ? old.error : getChoiceTitleError(index)
@@ -307,14 +307,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setChoiceExplanationValue = (index: number, value: any): void => {
+  const setChoiceExplanationValue = (index: number, value: any) => {
     const tmp = choices.slice()
     const old: InputState = tmp[index]['explanation']!
     const error = getChoiceExplanationError(index, value)
     tmp[index]['explanation'] = { ...old, ...{ value, error } }
     setChoices(tmp)
   }
-  const setChoiceExplanationFocused = (index: number, focused: boolean): void => {
+  const setChoiceExplanationFocused = (index: number, focused: boolean) => {
     const tmp = choices.slice()
     const old: InputState = tmp[index]['explanation']!
     const error = focused ? old.error : getChoiceExplanationError(index)
@@ -323,12 +323,12 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     setChoices(tmp)
   }
   const setChoiceCorrect = (index: number, key: string, value: any) => setChoice(index, 'correct', key, value)
-  const addChoice = (): void => {
+  const addChoice = () => {
     const tmp = choices.slice()
     tmp.push({ ...defaultChoiceInputState })
     setChoices(tmp)
   }
-  const removeChoice = (index: number): void => {
+  const removeChoice = (index: number) => {
     const tmp = choices.slice()
     tmp.splice(index, 1)
     setChoices(tmp)
@@ -344,16 +344,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return ''
   }
-  const setDifficultyValue = (value: string): void => {
+  const setDifficultyValue = (value: string) => {
     const error = getDifficultyError(value)
     setDifficulty({ ...difficulty, ...{ value, error } })
   }
-  const setDifficultyFocused = (focused: boolean): void => {
+  const setDifficultyFocused = (focused: boolean) => {
     const error = focused ? difficulty.error : getDifficultyError()
     const displayError = error && !focused ? true : difficulty.displayError
     setDifficulty({ ...difficulty, ...{ focused, error, displayError } })
   }
-  const setDifficultyError = (error: string): void => {
+  const setDifficultyError = (error: string) => {
     const displayError = !!error
     setDifficulty({ ...difficulty, ...{ error, displayError } })
   }
@@ -422,7 +422,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
     return true
   }
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e): Promise<void> => {
     e.preventDefault()
 
     if (!validate()) {
@@ -485,14 +485,14 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     if (question) {
       apiMutate<{ updateQuestion: Question }>(
         updateQuestionMutation(question.id!, transfer),
-        (data): void => callback(data.updateQuestion),
+        data => callback(data.updateQuestion),
         setError,
         setProcessing,
       )
     } else {
       apiMutate<{ createQuestion: Question }>(
         createQuestionMutation(transfer),
-        (data): void => callback(data.createQuestion),
+        data => callback(data.createQuestion),
         setError,
         setProcessing,
       )
@@ -586,7 +586,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
             { type.value === QuestionType.TYPE && (
               <div className="flex flex-col gap-6">
-                { answers.map((answer: AnswerInputState, index: number) => (
+                { answers.map((answer: AnswerInputState, index) => (
                   <div key={ `answer-${ index }` } className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <Input
@@ -650,7 +650,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
             { type.value === QuestionType.CHOICE && (
               <div className="flex flex-col gap-6">
-                { choices.map((choice: ChoiceInputState, index: number) => (
+                { choices.map((choice: ChoiceInputState, index) => (
                   <div key={ `choice-${ index }` } className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
                       <Textarea

@@ -1,8 +1,8 @@
-import { Input, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
-import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
+import { Input } from '@material-tailwind/react'
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react'
 import InputState, { defaultInputState } from '../schema/InputState'
 import testsRunning from '../utils/testsRunning'
+import Error from './Error'
 
 interface Props {
   setValue: (email?: string) => void
@@ -10,7 +10,7 @@ interface Props {
   focus?: boolean
 }
 
-export default function EmailSection({ setValue, error, focus = false }: Props): ReactNode {
+export default function EmailSection({ setValue, error, focus = false }: Props) {
   const [ email, setEmail ] = useState<InputState>({ ...defaultInputState })
   const getEmailError = (value: string | undefined = undefined): string => {
     value = value === undefined ? email.value : value
@@ -25,26 +25,26 @@ export default function EmailSection({ setValue, error, focus = false }: Props):
 
     return ''
   }
-  const setEmailValue = (value: string): void => {
+  const setEmailValue = (value: string) => {
     const error = getEmailError(value)
     setValue(error ? undefined : value)
     setEmail({ ...email, ...{ value, error } })
   }
-  const setEmailFocused = (focused: boolean): void => {
+  const setEmailFocused = (focused: boolean) => {
     const error = focused ? email.error : getEmailError()
     const displayError = error && !focused ? true : email.displayError
     setEmail({ ...email, ...{ focused, error, displayError } })
   }
-  const setEmailError = (error: string): void => {
+  const setEmailError = (error: string) => {
     const displayError = !!error
     setEmail({ ...email, ...{ error, displayError } })
   }
 
-  useEffect((): void => setEmailError(error), [ error ])
+  useEffect(() => setEmailError(error), [ error ])
 
   const ref = useRef<HTMLInputElement>()
-  useEffect((): void => {
-    const restore = (): void => {
+  useEffect(() => {
+    const restore = () => {
       ref.current!.name = 'email'
       ref.current!.type = 'email'
       ref.current!.value = ''
@@ -56,11 +56,6 @@ export default function EmailSection({ setValue, error, focus = false }: Props):
 
   return (
     <div className="flex flex-col gap-2">
-      <Typography
-        variant="h6"
-        color={ email.error && email.displayError ? 'red' : 'blue-gray' }>
-        Your Email
-      </Typography>
       <Input
         inputRef={ ref as MutableRefObject<any> }
         name={ `temp${ Date.now() }` }
@@ -68,21 +63,15 @@ export default function EmailSection({ setValue, error, focus = false }: Props):
         disabled={ true }
         size="lg"
         label="Email Address"
-        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setEmailValue(e.target.value) }
-        onFocus={ (): void => setEmailFocused(true) }
-        onBlur={ (): void => setEmailFocused(false) }
+        onChange={ (e) => setEmailValue(e.target.value) }
+        onFocus={ () => setEmailFocused(true) }
+        onBlur={ () => setEmailFocused(false) }
         value={ email.value }
         aria-invalid={ email.error ? 'true' : 'false' }
         error={ !!email.error && email.displayError }
         required
       />
-      { email.error && email.displayError && <Typography
-        variant="small"
-        color="red"
-        className="flex items-center gap-1 font-normal">
-        <ExclamationCircleIcon className="w-1/12"/>
-        <span className="w-11/12">{ email.error }</span>
-      </Typography> }
+      { email.error && <Error text={ email.error }/> }
     </div>
   )
 }

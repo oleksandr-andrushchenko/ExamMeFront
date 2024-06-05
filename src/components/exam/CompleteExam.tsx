@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { CheckIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import Exam from '../../schema/exam/Exam'
 import { apiMutate } from '../../api/apolloClient'
 import completeExamMutation from '../../api/exam/completeExamMutation'
@@ -8,11 +8,11 @@ import Error from '../Error'
 
 interface Props {
   exam: Exam
-  onSubmit?: () => void
+  onSubmit?: (exam: Exam) => void
   iconButton?: boolean
 }
 
-export default function CompleteExam({ exam, onSubmit, iconButton }: Props): ReactNode {
+export default function CompleteExam({ exam, onSubmit, iconButton }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -21,9 +21,9 @@ export default function CompleteExam({ exam, onSubmit, iconButton }: Props): Rea
   const onClick = () => {
     apiMutate<{ completeExam: Exam }>(
       completeExamMutation(exam.id!),
-      (_): void => {
+      data => {
         setOpen(false)
-        onSubmit && onSubmit()
+        onSubmit && onSubmit(data.completeExam)
       },
       setError,
       setProcessing,

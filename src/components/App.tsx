@@ -8,7 +8,6 @@ import NotFound from '../pages/NotFound'
 import TermsAndConditions from '../pages/TermsAndConditions'
 import AuthProvider from '../context/AuthProvider'
 import { default as Path } from '../enum/Route'
-import { ReactNode } from 'react'
 import Question from '../pages/Question'
 import Questions from '../pages/Questions'
 import Exam from '../pages/Exam'
@@ -32,7 +31,7 @@ const routes = <Routes>
   </Route>
 </Routes>
 
-export default function App(): ReactNode {
+export default function App() {
   return (
     <AuthProvider>
       <ThemeProvider>

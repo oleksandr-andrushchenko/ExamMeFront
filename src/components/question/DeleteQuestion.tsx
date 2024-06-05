@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import Question from '../../schema/question/Question'
 import { apiMutate } from '../../api/apolloClient'
 import removeQuestionMutation from '../../api/question/removeQuestionMutation'
@@ -12,7 +12,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function DeleteQuestion({ question, onSubmit, iconButton }: Props): ReactNode {
+export default function DeleteQuestion({ question, onSubmit, iconButton }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -21,7 +21,7 @@ export default function DeleteQuestion({ question, onSubmit, iconButton }: Props
   const onClick = () => {
     apiMutate<{ removeQuestion: boolean }>(
       removeQuestionMutation(question.id!),
-      (_): void => {
+      (_) => {
         setOpen(false)
         onSubmit && onSubmit()
       },

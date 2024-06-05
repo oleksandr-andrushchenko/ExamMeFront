@@ -1,5 +1,4 @@
 import { ThemeProvider as TailwindThemeProvider } from '@material-tailwind/react'
-import { ReactNode } from 'react'
 
 const theme = {
   checkbox: {
@@ -283,7 +282,7 @@ const theme = {
   },
 }
 
-export default function ThemeProvider({ children }: { children: any }): ReactNode {
+export default function ThemeProvider({ children }: { children: any }) {
   return (
     <TailwindThemeProvider value={ theme }>
       { children }

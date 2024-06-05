@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ interface Props {
   onClose?: () => void
 }
 
-export default function Auth({ register, dialogOnly, onClose }: Props): ReactNode {
+export default function Auth({ register, dialogOnly, onClose }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ listenClose, setListenClose ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -43,7 +43,7 @@ export default function Auth({ register, dialogOnly, onClose }: Props): ReactNod
   ]
 
   useEffect(() => {
-    dialogOnly && setTimeout((): void => {
+    dialogOnly && setTimeout(() => {
       setOpen(true)
       setListenClose(true)
     }, 1)

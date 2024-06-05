@@ -1,20 +1,20 @@
 import {
-  FireIcon as Logo,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
+  FireIcon as Logo,
   UserCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom'
 import classNames from '../utils/classNames'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Collapse, IconButton, Navbar, Typography } from '@material-tailwind/react'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Auth from './Auth'
 
-export default function NavBar(): ReactNode {
+export default function NavBar() {
   const navigation = [
     { name: 'Categories', href: Route.CATEGORIES },
     { name: 'Questions', href: Route.QUESTIONS },
@@ -22,7 +22,7 @@ export default function NavBar(): ReactNode {
   const [ openNav, setOpenNav ] = useState<boolean>(false)
   const { auth, me, setAuth } = useAuth()
 
-  useEffect((): void => {
+  useEffect(() => {
     window.addEventListener(
       'resize',
       () => window.innerWidth >= 960 && setOpenNav(false),

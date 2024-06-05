@@ -1,8 +1,7 @@
 import NavBar from './NavBar'
 import { Outlet } from 'react-router-dom'
-import { ReactNode } from 'react'
 
-export default function Layout(): ReactNode {
+export default function Layout() {
   return (
     <div className="min-h-full">
       <NavBar/>

@@ -1,6 +1,6 @@
 import { Button, IconButton, Tooltip } from '@material-tailwind/react'
 import { PlayIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
@@ -19,12 +19,12 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function AddExam({ category, iconButton }: Props): ReactNode {
+export default function AddExam({ category, iconButton }: Props) {
   const { auth } = useAuth()
   const [ exam, setExam ] = useState<Exam>()
   const [ showAuth, setShowAuth ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
-  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
@@ -44,7 +44,7 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
 
     apiMutate<{ createExam: Exam }>(
       createExamMutation(transfer),
-      (data): void => callback(data.createExam),
+      data => callback(data.createExam),
       setError,
       setProcessing,
     )
@@ -54,7 +54,7 @@ export default function AddExam({ category, iconButton }: Props): ReactNode {
     if (auth) {
       apiQuery<{ exams: Exam[] }>(
         oneNonCompletedCategoryExamsQuery(category.id!),
-        (data): void => setExam(data.exams[0] || null),
+        data => setExam(data.exams[0] || null),
         setError,
         setLoading,
       )

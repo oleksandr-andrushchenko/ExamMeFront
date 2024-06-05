@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import removeCategoryMutation from '../../api/category/removeCategoryMutation'
@@ -12,7 +12,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function DeleteCategory({ category, onSubmit, iconButton }: Props): ReactNode {
+export default function DeleteCategory({ category, onSubmit, iconButton }: Props) {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -21,7 +21,7 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
   const onClick = () => {
     apiMutate<{ removeCategory: boolean }>(
       removeCategoryMutation(category.id!),
-      (_): void => {
+      _ => {
         setOpen(false)
         onSubmit && onSubmit()
       },

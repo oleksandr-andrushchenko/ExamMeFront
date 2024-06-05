@@ -1,8 +1,8 @@
-import { Input, Typography } from '@material-tailwind/react'
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
-import React, { MutableRefObject, ReactNode, useEffect, useRef, useState } from 'react'
+import { Input } from '@material-tailwind/react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 import InputState, { defaultInputState } from '../schema/InputState'
 import testsRunning from '../utils/testsRunning'
+import Error from './Error'
 
 interface Props {
   setValue: (password?: string) => void
@@ -10,7 +10,7 @@ interface Props {
   confirm?: boolean
 }
 
-export default function PasswordSection({ setValue, error, confirm = false }: Props): ReactNode {
+export default function PasswordSection({ setValue, error, confirm = false }: Props) {
   const [ password, setPassword ] = useState<InputState>({ ...defaultInputState })
   const getPasswordError = (value: string | undefined = undefined): string => {
     value = value === undefined ? password.value : value
@@ -25,17 +25,17 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pr
 
     return ''
   }
-  const setPasswordValue = (value: string): void => {
+  const setPasswordValue = (value: string) => {
     const error = getPasswordError(value)
     setValue(error ? undefined : value)
     setPassword({ ...password, ...{ value, error } })
   }
-  const setPasswordFocused = (focused: boolean): void => {
+  const setPasswordFocused = (focused: boolean) => {
     const error = focused ? password.error : getPasswordError()
     const displayError = error && !focused ? true : password.displayError
     setPassword({ ...password, ...{ focused, error, displayError } })
   }
-  const setPasswordError = (error: string): void => {
+  const setPasswordError = (error: string) => {
     const displayError = !!error
     setPassword({ ...password, ...{ error, displayError } })
   }
@@ -49,23 +49,23 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pr
 
     return ''
   }
-  const setConfirmPasswordValue = (value: string): void => {
+  const setConfirmPasswordValue = (value: string) => {
     const error = getConfirmPasswordError(value)
     setConfirmPassword({ ...confirmPassword, ...{ value, error } })
   }
-  const setConfirmPasswordFocused = (focused: boolean): void => {
+  const setConfirmPasswordFocused = (focused: boolean) => {
     const error = focused ? confirmPassword.error : getConfirmPasswordError()
     const displayError = error && !focused ? true : confirmPassword.displayError
     setConfirmPassword({ ...confirmPassword, ...{ focused, error, displayError } })
   }
 
-  useEffect((): void => setPasswordError(error), [ error ])
-  useEffect((): void => setConfirmPasswordValue(confirmPassword.value), [ password ])
+  useEffect(() => setPasswordError(error), [ error ])
+  useEffect(() => setConfirmPasswordValue(confirmPassword.value), [ password ])
 
   const ref = useRef<HTMLInputElement>()
   const confirmRef = useRef<HTMLInputElement>()
-  useEffect((): void => {
-    const restore = (): void => {
+  useEffect(() => {
+    const restore = () => {
       ref.current!.name = 'password'
       ref.current!.type = 'password'
       ref.current!.disabled = false
@@ -82,11 +82,6 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pr
 
   return <>
     <div className="flex flex-col gap-2">
-      <Typography
-        variant="h6"
-        color={ password.error && password.displayError ? 'red' : 'blue-gray' }>
-        Password
-      </Typography>
       <Input
         inputRef={ ref as MutableRefObject<any> }
         name={ `temp${ Date.now() }` }
@@ -94,29 +89,18 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pr
         disabled={ true }
         size="lg"
         label="Password"
-        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setPasswordValue(e.target.value) }
-        onFocus={ (): void => setPasswordFocused(true) }
-        onBlur={ (): void => setPasswordFocused(false) }
+        onChange={ (e) => setPasswordValue(e.target.value) }
+        onFocus={ () => setPasswordFocused(true) }
+        onBlur={ () => setPasswordFocused(false) }
         value={ password.value }
         aria-invalid={ password.error ? 'true' : 'false' }
         error={ !!password.error && password.displayError }
         required
       />
-      { password.error && password.displayError && <Typography
-        variant="small"
-        color="red"
-        className="flex items-center gap-1 font-normal">
-        <ExclamationCircleIcon className="w-1/12"/>
-        <span className="w-11/12">{ password.error }</span>
-      </Typography> }
+      { password.error && <Error text={ password.error }/> }
     </div>
 
     { confirm && <div className="flex flex-col gap-2">
-      <Typography
-        variant="h6"
-        color={ confirmPassword.error && confirmPassword.displayError ? 'red' : 'blue-gray' }>
-        Confirm Password
-      </Typography>
       <Input
         inputRef={ confirmRef as MutableRefObject<any> }
         name={ `temp${ Date.now() }` }
@@ -124,22 +108,16 @@ export default function PasswordSection({ setValue, error, confirm = false }: Pr
         disabled={ true }
         size="lg"
         label="Confirm Password"
-        onChange={ (e: React.ChangeEvent<HTMLInputElement>): void => setConfirmPasswordValue(e.target.value) }
-        onFocus={ (): void => setConfirmPasswordFocused(true) }
-        onBlur={ (): void => setConfirmPasswordFocused(false) }
+        onChange={ (e) => setConfirmPasswordValue(e.target.value) }
+        onFocus={ () => setConfirmPasswordFocused(true) }
+        onBlur={ () => setConfirmPasswordFocused(false) }
         value={ confirmPassword.value }
         aria-invalid={ confirmPassword.error ? 'true' : 'false' }
         error={ !!confirmPassword.error && confirmPassword.displayError }
         aria-describedby="confirmnote"
         required
       />
-      { confirmPassword.error && confirmPassword.displayError && <Typography
-        variant="small"
-        color="red"
-        className="flex items-center gap-1 font-normal">
-        <ExclamationCircleIcon className="w-1/12"/>
-        <span className="w-11/12">{ confirmPassword.error }</span>
-      </Typography> }
+      { confirmPassword.error && <Error text={ confirmPassword.error }/> }
     </div> }
   </>
 }

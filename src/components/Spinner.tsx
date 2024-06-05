@@ -1,14 +1,14 @@
 import { Button, Spinner as TailwindSpinner, Typography } from '@material-tailwind/react'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 interface Props {
   type?: 'button' | 'text'
   height?: number
   width?: number
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-export default function Spinner({ type, height, width, children }: Props): ReactNode {
+export default function Spinner({ type, height, width, children }: Props) {
   if (type === 'button') {
     return (
       <span className="animate-pulse">
@@ -24,17 +24,13 @@ export default function Spinner({ type, height, width, children }: Props): React
   }
 
   if (type === 'text') {
-    return (
-      <Typography
-        as="span"
-        className={ `animate-pulse inline-block ${ height ?? 'h-2' } ${ width ?? 'w-24' } rounded-full bg-gray-300` }
-      >
-        { children ?? '' }
-      </Typography>
-    )
+    return <Typography
+      as="span"
+      className={ `animate-pulse inline-block ${ height ?? 'h-2' } ${ width ?? 'w-24' } rounded-full bg-gray-300` }
+    >
+      { children ?? '' }
+    </Typography>
   }
 
-  return (
-    <TailwindSpinner className="h-8 w-8 text-gray-900/50"/>
-  )
+  return <TailwindSpinner className="h-8 w-8 text-gray-900/50"/>
 }
