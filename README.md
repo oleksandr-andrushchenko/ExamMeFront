@@ -18,3 +18,7 @@
 * AddQuestion new props: as icon, target redirect, custom text
 * Question page UI (same as in exam without selection option + comments + question statistic)
 * Multi choice answers? Not supported yet but can be created?
+* Load butch exams for AddExam component on http://localhost:8081/categories
+* Completed exams page
+* Subscriptions
+* Keep single choices for the beginning (create/update forms/backend)
