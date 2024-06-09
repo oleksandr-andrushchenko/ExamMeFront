@@ -83,23 +83,20 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
     }
   }
 
+  const icon = category ? <UpdateIcon className="inline-block h-4 w-4"/> :
+    <CreateIcon className="inline-block h-4 w-4"/>
+  const label = category ? 'Update category' : 'Add category'
+
   return <>
-    {
-      iconButton
-        ? <Tooltip content={ category ? 'Update category' : 'Add category' }>
-          <IconButton
-            onClick={ handleOpen }
-            disabled={ processing }>
-            { category ? <UpdateIcon className="h-4 w-4"/> : <CreateIcon className="h-4 w-4"/> }
-          </IconButton>
+    { iconButton
+      ? (
+        <Tooltip content={ label }>
+          <IconButton onClick={ handleOpen } disabled={ processing }>{ icon }</IconButton>
         </Tooltip>
-        : <Button
-          onClick={ handleOpen }
-          disabled={ processing }>
-          { category ? <UpdateIcon className="inline-block h-4 w-4"/> : <CreateIcon
-            className="inline-block h-4 w-4"/> } { category ? (processing ? 'Updating category...' : 'Update category') : (processing ? 'Adding category...' : 'Add category') }
-        </Button>
-    }
+      )
+      : (
+        <Button onClick={ handleOpen } disabled={ processing }>{ icon } { label }</Button>
+      ) }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">

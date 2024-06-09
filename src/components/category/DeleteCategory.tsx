@@ -56,7 +56,7 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
             className="mb-3"
             variant="paragraph"
             color="gray">
-            This will delete "{ category.name }" category and all its questions [ { category.questionCount } ]
+            This will delete "{ category.name }" category and all its questions [ { category.questionCount ?? 0 } ]
             permanently.
             <br/>
             You cannot undo this action.

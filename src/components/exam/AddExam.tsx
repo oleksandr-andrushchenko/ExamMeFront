@@ -62,32 +62,33 @@ export default function AddExam({ category, iconButton }: Props) {
   }, [ auth ])
 
   if (auth && exam === undefined) {
-    return <Spinner type="button"/>
+    return <Spinner type={iconButton ? 'icon-button' : 'button'}/>
   }
+
+  const icon = <PlayIcon className="inline-block h-4 w-4"/>
 
   if (auth && exam) {
     const url = Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
 
     if (iconButton) {
-      return <Tooltip content={ label }>
-        <Link to={ url }>
-          <IconButton color="orange">
-            <PlayIcon className="h-4 w-4"/>
-          </IconButton>
-        </Link>
-      </Tooltip>
+      return (
+        <Tooltip content={ label }>
+          <Link to={ url }>
+            <IconButton color="orange">{ icon }</IconButton>
+          </Link>
+        </Tooltip>
+      )
     }
 
-    return <Link to={ url }>
-      <Button color="orange">
-        <PlayIcon className="inline-block h-4 w-4"/> { label }
-      </Button>
-    </Link>
+    return (
+      <Link to={ url }>
+        <Button color="orange">{ icon } { label }</Button>
+      </Link>
+    )
   }
 
   const label = 'Start exam'
-  const processingLabel = 'Starting exam...'
   const disabled = processing || showAuth
 
   return <>
@@ -96,13 +97,13 @@ export default function AddExam({ category, iconButton }: Props) {
     { showAuth && <Auth dialogOnly onClose={ () => setShowAuth(false) }/> }
 
     { iconButton
-      ? <Tooltip content={ processing ? processingLabel : label }>
-        <IconButton color="green" onClick={ onClick } disabled={ disabled }>
-          <PlayIcon className="h-4 w-4"/>
-        </IconButton>
-      </Tooltip>
-      : <Button color="green" onClick={ onClick } disabled={ disabled }>
-        <PlayIcon className="inline-block h-4 w-4"/> { processing ? processingLabel : label }
-      </Button> }
+      ? (
+        <Tooltip content={ label }>
+          <IconButton color="green" onClick={ onClick } disabled={ disabled }>{ icon }</IconButton>
+        </Tooltip>
+      )
+      : (
+        <Button color="green" onClick={ onClick } disabled={ disabled }>{ icon } { label }</Button>
+      ) }
   </>
 }

@@ -14,6 +14,7 @@ import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery'
 import Error from '../components/Error'
+import QuestionPermission from '../enum/question/QuestionPermission'
 
 export default function Question() {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -43,13 +44,13 @@ export default function Question() {
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
-      { question === undefined ? <Spinner type="text"/> :
+      { !question ? <Spinner type="text"/> :
         <Link to={ Route.CATEGORY.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
-      { question === undefined ? <Spinner type="text"/> :
+      { !question ? <Spinner type="text"/> :
         <Link to={ Route.QUESTION.replace(':questionId', question.id!) }>{ question.title }</Link> }
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">{ question === undefined ?
+    <Typography as="h1" variant="h2" className="mt-1">{ !question ?
       <Spinner type="text"/> : question.title }</Typography>
 
     <Rating/>
@@ -59,17 +60,17 @@ export default function Question() {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(Permission.UPDATE_QUESTION, question) && (question === undefined ? <Spinner type="button"/> :
+      { checkAuth(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
         <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
-      { checkAuth(Permission.DELETE_QUESTION, question) && (question === undefined ? <Spinner type="button"/> :
+      { checkAuth(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
         <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
 
     <table className="w-full table-auto text-left text-sm capitalize mt-4">
       <tbody>
       <tr>
-        <th>Title</th>
+        <th className="w-2/12">Title</th>
         <td>{ question ? question.title : <Spinner type="text"/> }</td>
       </tr>
       <tr>
@@ -82,12 +83,10 @@ export default function Question() {
       </tr>
       <tr>
         <th>
-          { question === undefined ? <Spinner type="text"/> : (
-            question.type === QuestionType.CHOICE ? 'Choices' : 'Answers'
-          ) }
+          { !question ? <Spinner type="text"/> : (question.type === QuestionType.CHOICE ? 'Choices' : 'Answers') }
         </th>
         <td>
-          { question === undefined ? <Spinner type="text"/> : (
+          { !question ? <Spinner type="text"/> : (
             question.type === QuestionType.CHOICE
               ? question.choices!.map((choice: QuestionChoice, index) => (
                 <Checkbox

@@ -1,7 +1,7 @@
 import {
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
-  FireIcon as Logo,
+  CodeBracketIcon as Logo,
   UserCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid'
@@ -52,50 +52,48 @@ export default function NavBar() {
         </Link>
       </Typography>
     }) }
-    {
-      auth && me === undefined
-        ? <Typography
-          as="li"
-          variant="small"
-          className="p-1 font-normal">
-          <Spinner type="text"/>
-        </Typography>
-        : (
-          me
-            ? <>
-              <Typography
-                as="li"
-                variant="small"
-                className="p-1 font-normal truncate">
-                <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
-                { me.email }
-              </Typography>
-              <Typography
-                as="li"
-                variant="small"
-                className="p-1 font-normal">
-                <Button
-                  onClick={ () => setAuth(undefined) }>
-                  <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
-                </Button>
-              </Typography>
-            </>
-            : <>
-              <Typography
-                as="li"
-                variant="small"
-                className="p-1 font-normal">
-                <Auth/>
-              </Typography>
-              <Typography
-                as="li"
-                variant="small"
-                className="p-1 font-normal">
-                <Auth register/>
-              </Typography>
-            </>
-        )
-    }
+    { auth && !me
+      ? <Typography
+        as="li"
+        variant="small"
+        className="p-1 font-normal">
+        <Spinner type="text"/>
+      </Typography>
+      : (
+        me
+          ? <>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal truncate">
+              <UserCircleIcon className="inline-block h-4 w-4 mr-1"/>
+              { me.email }
+            </Typography>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal">
+              <Button
+                onClick={ () => setAuth(undefined) }>
+                <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
+              </Button>
+            </Typography>
+          </>
+          : <>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal">
+              <Auth/>
+            </Typography>
+            <Typography
+              as="li"
+              variant="small"
+              className="p-1 font-normal">
+              <Auth register/>
+            </Typography>
+          </>
+      ) }
   </ul>
 
   return (

@@ -17,7 +17,6 @@ import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
-import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Category from '../schema/category/Category'
 import Question from '../schema/question/Question'
@@ -36,6 +35,9 @@ import categoryPageQuestionsQuery from '../api/category/categoryPageQuestionsQue
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQuestionsAndCategoryQuery'
 import Error from '../components/Error'
+import ExamPermission from '../enum/exam/ExamPermission'
+import CategoryPermission from '../enum/category/CategoryPermission'
+import QuestionPermission from '../enum/question/QuestionPermission'
 
 export default function Category() {
   const defaultSearchParams = { size: '20' }
@@ -128,11 +130,11 @@ export default function Category() {
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.CATEGORIES }>Categories</Link>
-      { category === undefined ? <Spinner type="text"/> :
+      { !category ? <Spinner type="text"/> :
         <Link to={ Route.CATEGORY.replace(':categoryId', category.id!) }>{ category.name }</Link> }
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">{ category === undefined ?
+    <Typography as="h1" variant="h2" className="mt-1">{ !category ?
       <Spinner type="text"/> : category.name }</Typography>
 
     <Rating/>
@@ -142,16 +144,16 @@ export default function Category() {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(Permission.CREATE_QUESTION, category) && (category === undefined ?
+      { checkAuth(QuestionPermission.CREATE, category) && (!category ?
         <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
-      { checkAuth(Permission.UPDATE_CATEGORY, category) && (category === undefined ? <Spinner type="button"/> :
+      { checkAuth(CategoryPermission.UPDATE, category) && (!category ? <Spinner type="button"/> :
         <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
-      { checkAuth(Permission.DELETE_CATEGORY, category) && (category === undefined ? <Spinner type="button"/> :
+      { checkAuth(CategoryPermission.DELETE, category) && (!category ? <Spinner type="button"/> :
         <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
-      { category === undefined ? <Spinner type="button"/> : (category.questionCount > 0) &&
+      { !category ? <Spinner type="button"/> : !!category.questionCount && checkAuth(ExamPermission.CREATE) &&
         <AddExam category={ category }/> }
     </div>
 
@@ -245,14 +247,12 @@ export default function Category() {
       <thead>
       <tr>
         { tableColumns.map((head) => (
-          <th key={ head }>
-            { head }
-          </th>
+          <th key={ head }>{ head }</th>
         )) }
       </tr>
       </thead>
       <tbody>
-      { questions === undefined && (
+      { !questions && (
         <tr>
           <td colSpan={ tableColumns.length } className="p-5 text-center">
             <Spinner type="text" width="w-full"/>
@@ -263,16 +263,12 @@ export default function Category() {
       ) }
       { questions && questions.data.length === 0 && (
         <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            No data
-          </td>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
         </tr>
       ) }
       { questions && questions.data && questions.data.map((question: Question, index) => (
         <tr key={ question.id }>
-          <td>
-            { index + 1 }
-          </td>
+          <td>{ index + 1 }</td>
 
           <td className="truncate max-w-[400px]">
             <Tooltip content={ question.title }>
@@ -284,26 +280,18 @@ export default function Category() {
             </Tooltip>
           </td>
 
-          <td>
-            { question.difficulty }
-          </td>
+          <td>{ question.difficulty }</td>
 
-          <td>
-            { question.type }
-          </td>
+          <td>{ question.type }</td>
 
-          <td>
-            <Rating readonly/>
-          </td>
+          <td><Rating readonly/></td>
 
-          <td>
-            <div className="flex justify-end gap-1">
-              { checkAuth(Permission.UPDATE_QUESTION, question) &&
-                <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
+          <td className="flex justify-end gap-1">
+            { checkAuth(QuestionPermission.UPDATE, question) &&
+              <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-              { checkAuth(Permission.DELETE_QUESTION, question) &&
-                <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
-            </div>
+            { checkAuth(QuestionPermission.DELETE, question) &&
+              <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>
       )) }

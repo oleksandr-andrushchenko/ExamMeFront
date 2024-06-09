@@ -6,6 +6,7 @@ export default interface Exam {
   category?: Category
   questionNumber?: number
   questionCount?: number
+  correctAnswerCount?: number
   answeredQuestionCount?: number
   completedAt?: number
   ownerId?: string

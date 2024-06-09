@@ -17,7 +17,6 @@ import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
-import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
 import AddQuestion from '../components/question/AddQuestion'
@@ -33,6 +32,7 @@ import { apiQuery } from '../api/apolloClient'
 import questionsPageQuestionsQuery from '../api/question/questionsPageQuestionsQuery'
 import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsPageQuestionsAndCategoriesQuery'
 import Error from '../components/Error'
+import QuestionPermission from '../enum/question/QuestionPermission'
 
 export default function Questions() {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -131,7 +131,7 @@ export default function Questions() {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(Permission.CREATE_QUESTION) && <AddQuestion onSubmit={ onQuestionCreated }/> }
+      { checkAuth(QuestionPermission.CREATE) && <AddQuestion onSubmit={ onQuestionCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -149,7 +149,7 @@ export default function Questions() {
         </TabsHeader>
       </Tabs>
 
-      { categories === undefined ? <Spinner type="button"/> : (
+      { !categories ? <Spinner type="button"/> : (
         <Select
           label="Category"
           onChange={ (categoryId) => applySearchParams({ categoryId }) }
@@ -242,14 +242,12 @@ export default function Questions() {
       <thead>
       <tr>
         { tableColumns.map((head) => (
-          <th key={ head }>
-            { head }
-          </th>
+          <th key={ head }>{ head }</th>
         )) }
       </tr>
       </thead>
       <tbody>
-      { questions === undefined && (
+      { !questions && (
         <tr>
           <td colSpan={ tableColumns.length } className="p-5 text-center">
             <Spinner type="text" width="w-full"/>
@@ -260,16 +258,12 @@ export default function Questions() {
       ) }
       { questions && questions.data.length === 0 && (
         <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            No data
-          </td>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
         </tr>
       ) }
       { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index) => (
         <tr key={ question.id }>
-          <td>
-            { index + 1 }
-          </td>
+          <td>{ index + 1 }</td>
 
           <td className="truncate max-w-[250px]">
             <Tooltip content={ question.title }>
@@ -282,33 +276,25 @@ export default function Questions() {
           </td>
 
           <td className="truncate max-w-[100px]">
-            { categories === undefined ? <Spinner/> : (
+            { !categories ? <Spinner/> : (
               <Tooltip content={ getCategory(question.categoryId!).name }>
                 { getCategory(question.categoryId!).name }
               </Tooltip>
             ) }
           </td>
 
-          <td>
-            { question.difficulty }
-          </td>
+          <td>{ question.difficulty }</td>
 
-          <td>
-            { question.type }
-          </td>
+          <td>{ question.type }</td>
 
-          <td>
-            <Rating readonly/>
-          </td>
+          <td><Rating readonly/></td>
 
-          <td>
-            <div className="flex justify-end gap-1">
-              { checkAuth(Permission.UPDATE_QUESTION, question) &&
-                <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
+          <td className="flex justify-end gap-1">
+            { checkAuth(QuestionPermission.UPDATE, question) &&
+              <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-              { checkAuth(Permission.DELETE_QUESTION, question) &&
-                <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
-            </div>
+            { checkAuth(QuestionPermission.DELETE, question) &&
+              <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>
       )) }

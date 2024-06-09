@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import Spinner from './Spinner'
 import Unauthorized from '../pages/Unauthorized'
-import Auth from './Auth'
+import Unauthenticated from '../pages/Unauthenticated'
 
 interface Props {
   permission: any
@@ -11,5 +11,17 @@ interface Props {
 export default function RequireLoggedIn({ permission }: Props) {
   const { auth, me, checkAuth } = useAuth()
 
-  return auth && me === undefined ? <Spinner/> : (checkAuth(permission) ? <Outlet/> : (me ? <Unauthorized/> : <Auth/>))
+  if (!auth) {
+    return <Unauthenticated/>
+  }
+
+  if (!me) {
+    return <Spinner/>
+  }
+
+  if (!checkAuth(permission)) {
+    return <Unauthorized/>
+  }
+
+  return <Outlet/>
 }

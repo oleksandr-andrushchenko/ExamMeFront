@@ -18,7 +18,6 @@ import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
-import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
@@ -31,6 +30,10 @@ import categoriesPageCategoriesQuery from '../api/category/categoriesPageCategor
 import CategoryQuery from '../schema/category/CategoryQuery'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import Error from '../components/Error'
+import ExamPermission from '../enum/exam/ExamPermission'
+import AddExam from '../components/exam/AddExam'
+import CategoryPermission from '../enum/category/CategoryPermission'
+import QuestionPermission from '../enum/question/QuestionPermission'
 
 export default function Categories() {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -41,7 +44,7 @@ export default function Categories() {
   const { checkAuth } = useAuth()
   const navigate = useNavigate()
 
-  const onCategoryCreated = (category: Category) => refresh() && navigate(Route.CATEGORY.replace(':categoryId', category.id!))
+  const onCategoryCreated = (category: Category) => navigate(Route.CATEGORY.replace(':categoryId', category.id!))
   const onCategoryUpdated = () => refresh()
   const onCategoryDeleted = () => refresh()
   const onQuestionCreated = () => refresh()
@@ -112,7 +115,7 @@ export default function Categories() {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(Permission.CREATE_CATEGORY) && <AddCategory onSubmit={ onCategoryCreated }/> }
+      { checkAuth(CategoryPermission.CREATE) && <AddCategory onSubmit={ onCategoryCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -174,14 +177,12 @@ export default function Categories() {
       <thead>
       <tr>
         { tableColumns.map((head) => (
-          <th key={ head }>
-            { head }
-          </th>
+          <th key={ head }>{ head }</th>
         )) }
       </tr>
       </thead>
       <tbody>
-      { categories === undefined && (
+      { !categories && (
         <tr>
           <td colSpan={ tableColumns.length } className="p-5 text-center">
             <Spinner type="text" width="w-full"/>
@@ -192,16 +193,12 @@ export default function Categories() {
       ) }
       { categories && categories.data.length === 0 && (
         <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            No data
-          </td>
+          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
         </tr>
       ) }
       { categories && categories.data && categories.data.map((category: Category, index) => (
         <tr key={ category.id }>
-          <td>
-            { index + 1 }
-          </td>
+          <td>{ index + 1 }</td>
 
           <td className="truncate max-w-[500px]">
             <Tooltip content={ category.name }>
@@ -213,25 +210,22 @@ export default function Categories() {
             </Tooltip>
           </td>
 
-          <td>
-            { category.questionCount }
-          </td>
+          <td>{ category.questionCount ?? 0 }</td>
 
-          <td>
-            <Rating readonly/>
-          </td>
+          <td><Rating readonly/></td>
 
-          <td>
-            <div className="flex justify-end gap-1">
-              { checkAuth(Permission.CREATE_QUESTION) &&
-                <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
+          <td className="flex justify-end gap-1">
+            { checkAuth(QuestionPermission.CREATE) &&
+              <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
-              { checkAuth(Permission.UPDATE_CATEGORY, category) &&
-                <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
+            { checkAuth(CategoryPermission.UPDATE, category) &&
+              <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
-              { checkAuth(Permission.DELETE_CATEGORY, category) &&
-                <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
-            </div>
+            { checkAuth(CategoryPermission.DELETE, category) &&
+              <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
+
+            { !!category.questionCount && checkAuth(ExamPermission.CREATE) &&
+              <AddExam category={ category } iconButton/> }
           </td>
         </tr>
       )) }

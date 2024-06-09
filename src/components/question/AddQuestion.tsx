@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputState, { defaultInputState } from '../../schema/InputState'
 import QuestionTransfer, {
   QuestionAnswer,
@@ -501,23 +501,20 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
   useEffect(() => setDisabled(isDisabled()), [ title, categoryId, type, choices, answers, difficulty ])
 
+  const icon = question ? <UpdateIcon className="inline-block h-4 w-4"/> :
+    <CreateIcon className="inline-block h-4 w-4"/>
+  const label = question ? 'Update question' : 'Add question'
+
   return <>
-    {
-      iconButton
-        ? <Tooltip content={ question ? 'Update question' : 'Add question' }>
-          <IconButton
-            onClick={ handleOpen }
-            disabled={ processing }>
-            { question ? <UpdateIcon className="h-4 w-4"/> : <CreateIcon className="h-4 w-4"/> }
-          </IconButton>
+    { iconButton
+      ? (
+        <Tooltip content={ label }>
+          <IconButton onClick={ handleOpen } disabled={ processing }>{ icon }</IconButton>
         </Tooltip>
-        : <Button
-          onClick={ handleOpen }
-          disabled={ processing }>
-          { question ? <UpdateIcon className="inline-block h-4 w-4"/> : <CreateIcon
-            className="inline-block h-4 w-4"/> } { question ? (processing ? 'Updating Question...' : 'Update Question') : (processing ? 'Adding question...' : 'Add question') }
-        </Button>
-    }
+      )
+      : (
+        <Button onClick={ handleOpen } disabled={ processing }>{ icon } { label }</Button>
+      ) }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -525,7 +522,7 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
             { question ? 'Update question' : 'Add question' }
           </Typography>
           <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
-            { !category && !question && (categories === undefined ? <Spinner type="button"/> : ((
+            { !category && !question && (!categories ? <Spinner type="button"/> : ((
               <div className="flex flex-col gap-2">
                 <Select
                   name="category"
