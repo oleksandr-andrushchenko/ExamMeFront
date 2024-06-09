@@ -5,7 +5,17 @@ export default function completeExamMutation(examId: string): any {
     mutation: gql`
         mutation CompleteExam($examId: ID!) {
             completeExam(examId: $examId) {
+                id
+                questionNumber
+                questionCount
+                answeredQuestionCount
+                correctAnswerCount
                 categoryId
+                category {
+                    name
+                    requiredScore
+                }
+                completedAt
                 ownerId
             }
         }

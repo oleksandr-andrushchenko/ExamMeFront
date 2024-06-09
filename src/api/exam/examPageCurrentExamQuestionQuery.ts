@@ -10,10 +10,13 @@ export default function examPageCurrentExamQuestionQuery(examId: string): any {
                     questionNumber
                     questionCount
                     answeredQuestionCount
+                    correctAnswerCount
                     categoryId
                     category {
                         name
+                        requiredScore
                     }
+                    completedAt
                     ownerId
                 }
                 question {

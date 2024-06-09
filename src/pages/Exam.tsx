@@ -16,6 +16,9 @@ import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
 import examPageCurrentExamQuestionQuery from '../api/exam/examPageCurrentExamQuestionQuery'
 import clearExamQuestionAnswerMutation from '../api/exam/clearExamQuestionAnswerMutation'
 import Error from '../components/Error'
+import Unauthenticated from './Unauthenticated'
+import Unauthorized from './Unauthorized'
+import Exam from '../schema/exam/Exam'
 
 export default function Exam() {
   const { examId } = useParams<Params>() as { examId: string }
@@ -25,12 +28,14 @@ export default function Exam() {
   const [ clearing, setClearing ] = useState<boolean>(false)
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const { auth, checkAuth } = useAuth()
+  const { auth, me, checkAuth } = useAuth()
   const navigate = useNavigate()
+  const exam = examQuestion?.exam
+  const category = exam?.category
 
   const onPrevQuestionClick = () => setQuestionNumber(getQuestionNumber() - 1)
   const onNextQuestionClick = () => setQuestionNumber(getQuestionNumber() + 1)
-  const onExamCompleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!))
+  const onExamCompleted = (exam: Exam) => setExamQuestion({ ...examQuestion, ...{ exam } })
   const onExamDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
 
   const getQuestionNumber = (): number | undefined => {
@@ -116,30 +121,71 @@ export default function Exam() {
   }, [ examQuestion?.exam?.category?.name ])
 
   if (!auth) {
-
+    return <Unauthenticated/>
   }
 
-  if (!checkAuth(ExamPermission.GET, examQuestion?.exam)) {
-
+  if (!me) {
+    return <Spinner/>
   }
 
-  return <>
-    <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.CATEGORIES }>Categories</Link>
-      { examQuestion === undefined ? <Spinner type="text"/> :
-        <Link
-          to={ Route.CATEGORY.replace(':categoryId', examQuestion.exam!.categoryId!) }>{ examQuestion.exam!.category!.name }</Link> }
-      <Link to={ Route.EXAM.replace(':examId', examId) }>Exam</Link>
-    </Breadcrumbs>
+  if (examQuestion && !checkAuth(ExamPermission.GET, examQuestion?.exam)) {
+    return <Unauthorized/>
+  }
 
-    <Typography as="h1" variant="h2" className="mt-1">Exam: { examQuestion === undefined ?
-      <Spinner type="text"/> : examQuestion.exam!.category!.name }</Typography>
+  const layout = (header: string, body) => {
+    return <>
+      <Breadcrumbs>
+        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.CATEGORIES }>Categories</Link>
+        { !examQuestion ? <Spinner type="text"/> :
+          <Link to={ Route.CATEGORY.replace(':categoryId', examQuestion.exam!.categoryId!) }>
+            { examQuestion.exam!.category!.name }
+          </Link> }
+        <Link to={ Route.EXAM.replace(':examId', examId) }>Exam</Link>
+      </Breadcrumbs>
 
-    <Typography variant="small" className="mt-1">Exam questions</Typography>
+      <Typography as="h1" variant="h2" className="mt-1">
+        Exam: { examQuestion ? examQuestion.exam!.category!.name : <Spinner type="text"/> }
+      </Typography>
 
-    { error && <Error text={ error }/> }
+      <Typography variant="small" className="mt-1">{ header }</Typography>
 
+      { error && <Error text={ error }/> }
+
+      { body }
+    </>
+  }
+
+  if (exam?.completedAt) {
+    const score = Math.floor(100 * exam.correctAnswerCount / exam!.questionCount)
+    const requiredScore = category?.requiredScore ?? 0
+    const passed = score > requiredScore
+
+    return layout('Exam completed', <>
+      <table className="w-full table-auto text-left text-sm capitalize mt-4">
+        <tbody>
+        <tr>
+          <th className="w-2/12">Completion date</th>
+          <td>{ new Date(exam.completedAt).toDateString() }</td>
+        </tr>
+        <tr>
+          <th>Correct answers</th>
+          <td>{ exam.correctAnswerCount }/{ exam?.questionCount } ({ score }%)</td>
+        </tr>
+        <tr>
+          <th>Required score</th>
+          <td>{ requiredScore }%</td>
+        </tr>
+        <tr>
+          <th>Passed</th>
+          <td className={ `font-bold text-${ passed ? 'green' : 'red' }-700` }>{ passed ? 'Yes' : 'No' }</td>
+        </tr>
+        </tbody>
+      </table>
+    </>)
+  }
+
+  return layout('Exam questions', <>
     <div className="flex gap-1 items-center mt-4">
       { examQuestion &&
         <ButtonGroup variant="outlined">
@@ -158,27 +204,27 @@ export default function Exam() {
         <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
     </div>
 
-    { examQuestion === undefined ? <Spinner type="text" height="h-3"/> :
+    { !examQuestion ? <Spinner type="text" height="h-3"/> :
       <Progress
         value={ Math.floor(100 * (getQuestionNumber() + 1) / examQuestion.exam!.questionCount) }
         label="Steps"
         size="sm"
         className="mt-4"/> }
 
-    { examQuestion === undefined ? <Spinner type="text" height="h-4"/> :
+    { !examQuestion ? <Spinner type="text" height="h-4"/> :
       <Progress
         value={ Math.floor(100 * examQuestion.exam!.answeredQuestionCount / examQuestion.exam!.questionCount) }
         label="Answered"
         size="lg"
         className="mt-4"/> }
 
-    { examQuestion === undefined ? <Spinner type="text"/> :
+    { !examQuestion ? <Spinner type="text"/> :
       <Typography as="h2" variant="h6" className="mt-4">
         Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }
       </Typography> }
 
     <div className="flex flex-col gap-8 mt-4">
-      { examQuestion === undefined ? <Spinner/> : (
+      { !examQuestion ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
           ? examQuestion.question!.choices!.map((choice: QuestionChoice, index) => (
             <Checkbox
@@ -198,5 +244,5 @@ export default function Exam() {
             disabled={ answering }/>
       ) }
     </div>
-  </>
+  </>)
 }
