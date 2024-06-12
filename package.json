@@ -13,9 +13,11 @@
   "dependencies": {
     "@apollo/client": "^3.10.3",
     "@material-tailwind/react": "^2.1.0",
+    "formik": "^2.4.6",
     "graphql": "^16.8.1",
     "react": "^18.2.0",
-    "react-router-dom": "6.4"
+    "react-router-dom": "6.4",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@headlessui/react": "^1.7.18",

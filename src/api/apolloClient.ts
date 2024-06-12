@@ -70,9 +70,9 @@ export function apiMutate<
   options: MutationOptions<TData, TVariables, TContext>,
   setData: (data: TData) => void,
   setError: (message: string) => void,
-  setLoading: (loading: boolean) => void,
+  setLoading?: (loading: boolean) => void,
 ) {
-  setLoading(true)
+  setLoading && setLoading(true)
   apolloClient.mutate<TData, TVariables, TContext, TCache>(options)
     .then(({ data, errors }) => {
       if (errors) {
@@ -89,5 +89,5 @@ export function apiMutate<
       setData(data)
     })
     .catch(err => setError(err.message))
-    .finally(() => setLoading(false))
+    .finally(() => setLoading && setLoading(false))
 }

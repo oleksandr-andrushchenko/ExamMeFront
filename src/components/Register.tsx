@@ -1,76 +1,89 @@
-import { Button, Checkbox, Typography } from '@material-tailwind/react'
+import { Button, Typography } from '@material-tailwind/react'
 import React, { ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
-import EmailSection from './EmailSection'
-import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
-import { apiMutate } from '../api/apolloClient'
-import registerMutation from '../api/auth/registerMutation'
-import Token from '../schema/auth/Token'
 import Error from './Error'
+import { Form, Formik, FormikHelpers } from 'formik'
+import * as yup from 'yup'
+import FormikInput from './formik/FormikInput'
+import FormikCheckbox from './formik/FormikCheckbox'
+import { apiMutate } from '../api/apolloClient'
+import Token from '../schema/auth/Token'
+import registerMutation from '../api/auth/registerMutation'
 
 interface Props {
   onSubmit: () => void
   buttons?: ReactNode
 }
 
+interface Form {
+  Email: string,
+  Password: string,
+  ConfirmPassword: string,
+  Terms: boolean,
+}
+
 export default function Register({ buttons, onSubmit }: Props) {
-  const [ processing, setProcessing ] = useState<boolean>(false)
-  const [ email, setEmail ] = useState<string>('')
-  const [ emailError, _ ] = useState<string>('')
-  const [ password, setPassword ] = useState<string>('')
-  const [ passwordError, __ ] = useState<string>('')
   const [ error, setError ] = useState<string>('')
   const { setAuth } = useAuth()
-  const [ terms, setTerms ] = useState<boolean>(false)
-
-  const handleSubmit = async (e): Promise<void> => {
-    e.preventDefault()
-
-    apiMutate<{ authenticate: Token }>(
-      registerMutation({ email, password }),
-      data => setAuth(data.authenticate) && onSubmit(),
-      setError,
-      setProcessing,
-    )
-  }
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
-      <Typography variant="h4" color="blue-gray">Register</Typography>
+    <Formik
+      initialValues={ {
+        Email: '',
+        Password: '',
+        ConfirmPassword: '',
+        Terms: false,
+      } }
+      validationSchema={ yup.object({
+        Email: yup.string().email().required(),
+        Password: yup.string().min(8).max(24).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/).required(),
+        ConfirmPassword: yup.string().required().oneOf([ yup.ref('Password'), null ] as any, 'Passwords must match'),
+        Terms: yup.bool().required().oneOf([ true ], 'Terms must be accepted'),
+      }) }
+      onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>): any => {
+        apiMutate<{ authenticate: Token }>(
+          registerMutation({ email: values.Email, password: values.Password }),
+          data => {
+            setSubmitting(false)
+            setAuth(data.authenticate) && onSubmit()
+          },
+          setError,
+        )
+      } }>
+      { ({ isSubmitting }) => (
+        <Form className="flex flex-col gap-6">
+          <Typography variant="h4" color="blue-gray">Register</Typography>
 
-      <EmailSection setValue={ setEmail as any } error={ emailError } focus/>
-      <PasswordSection setValue={ setPassword as any } error={ passwordError } confirm/>
+          <div className="flex flex-col gap-2">
+            <FormikInput name="Email" type="email" label="Email Address"/>
+          </div>
 
-      <div className="-mt-4">
-        <Checkbox
-          label={
-            <Typography
-              variant="small"
-              color="gray"
-              className="flex items-center font-normal">
-              I agree the
-              <Link to={ Route.TERMS_AND_CONDITIONS }>Terms and Conditions</Link>
-            </Typography>
-          }
-          onChange={ (e) => setTerms(e.target.checked) }
-          required
-        />
-      </div>
+          <div className="flex flex-col gap-2">
+            <FormikInput name="Password" type="password" label="Password"/>
+          </div>
 
-      { error && <Error text={ error }/> }
+          <div className="flex flex-col gap-2">
+            <FormikInput name="ConfirmPassword" type="password" label="Confirm password"/>
+          </div>
 
-      <div>
-        { buttons }
-        <Button
-          size="md"
-          type="submit"
-          className="ml-1"
-          disabled={ !email || !password || !terms || processing }>
-          { processing ? 'Registering in...' : 'Register' }
-        </Button>
-      </div>
-    </form>
+          <div className="-mt-4">
+            <FormikCheckbox name="Terms">
+              I agree the <Link to={ Route.TERMS_AND_CONDITIONS }>Terms and Conditions</Link>
+            </FormikCheckbox>
+          </div>
+
+          { error && <Error text={ error }/> }
+
+          <div>
+            { buttons }
+            <Button type="submit" className="ml-1" size="md" disabled={ isSubmitting }>
+              { isSubmitting ? 'Registering in...' : 'Register' }
+            </Button>
+          </div>
+        </Form>
+      ) }
+    </Formik>
   )
 }

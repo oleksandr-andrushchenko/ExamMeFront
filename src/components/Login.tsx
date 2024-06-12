@@ -1,12 +1,13 @@
 import { Button, Typography } from '@material-tailwind/react'
 import React, { ReactNode, useState } from 'react'
-import EmailSection from './EmailSection'
-import PasswordSection from './PasswordSection'
 import useAuth from '../hooks/useAuth'
 import { apiMutate } from '../api/apolloClient'
+import Error from './Error'
+import { Form, Formik, FormikHelpers } from 'formik'
+import * as yup from 'yup'
+import FormikInput from './formik/FormikInput'
 import Token from '../schema/auth/Token'
 import authenticateMutation from '../api/auth/authenticateMutation'
-import Error from './Error'
 
 interface Props {
   onSubmit: () => void
@@ -14,56 +15,67 @@ interface Props {
   onRegisterClick?: () => void
 }
 
+interface Form {
+  Email: string,
+  Password: string,
+}
+
 export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
-  const [ processing, setProcessing ] = useState<boolean>(false)
-  const [ email, setEmail ] = useState<string>('')
-  const [ emailError, _ ] = useState<string>('')
-  const [ password, setPassword ] = useState<string>('')
-  const [ passwordError, __ ] = useState<string>('')
   const [ error, setError ] = useState<string>('')
   const { setAuth } = useAuth()
 
-  const handleSubmit = async (e): Promise<void> => {
-    e.preventDefault()
-
-    apiMutate<{ authenticate: Token }>(
-      authenticateMutation({ email, password }),
-      data => setAuth(data.authenticate) && onSubmit(),
-      setError,
-      setProcessing,
-    )
-  }
-
   return (
-    <form className="flex flex-col gap-6" onSubmit={ handleSubmit } method="post">
-      <Typography variant="h4" color="blue-gray">Login</Typography>
+    <Formik
+      initialValues={ {
+        Email: '',
+        Password: '',
+      } }
+      validationSchema={ yup.object({
+        Email: yup.string().email().required(),
+        Password: yup.string().min(8).max(24).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/).required(),
+      }) }
+      onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+        apiMutate<{ authenticate: Token }>(
+          authenticateMutation({ email: values.Email, password: values.Password }),
+          data => {
+            setSubmitting(false)
+            setAuth(data.authenticate) && onSubmit()
+          },
+          setError,
+        )
+      } }>
+      { ({ isSubmitting }) => (
+        <Form className="flex flex-col gap-6">
+          <Typography variant="h4" color="blue-gray">Login</Typography>
 
-      <EmailSection setValue={ setEmail as any } error={ emailError } focus/>
-      <PasswordSection setValue={ setPassword as any } error={ passwordError }/>
+          <div className="flex flex-col gap-2">
+            <FormikInput name="Email" type="email" label="Email Address"/>
+          </div>
 
-      { error && <Error text={ error }/> }
+          <div className="flex flex-col gap-2">
+            <FormikInput name="Password" type="password" label="Password"/>
+          </div>
 
-      <div>
-        { buttons }
-        <Button
-          size="md"
-          type="submit"
-          className="ml-1"
-          disabled={ !email || !password || processing }>
-          { processing ? 'Logging in...' : 'Login' }
-        </Button>
+          { error && <Error text={ error }/> }
 
-        { onRegisterClick &&
-          <Typography variant="small" color="gray" className="mt-4 font-normal">
-            Don't have an account?
-            <Button
-              variant="text"
-              onClick={ onRegisterClick }
-              className="font-medium text-gray-900">
-              Register
+          <div>
+            { buttons }
+
+            <Button type="submit" className="ml-1" size="md" disabled={ isSubmitting }>
+              { isSubmitting ? 'Logging in...' : 'Login' }
             </Button>
-          </Typography> }
-      </div>
-    </form>
+
+            { onRegisterClick && (
+              <Typography variant="small" color="gray" className="mt-4 font-normal">
+                Don't have an account?
+                <Button variant="text" className="font-medium text-gray-900" onClick={ onRegisterClick }>
+                  Register
+                </Button>
+              </Typography>
+            ) }
+          </div>
+        </Form>
+      ) }
+    </Formik>
   )
 }
