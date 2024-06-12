@@ -4,7 +4,6 @@ import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
-import Permission from '../enum/Permission'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
 import DeleteQuestion from '../components/question/DeleteQuestion'
@@ -55,19 +54,11 @@ export default function Question() {
 
     <Rating/>
 
-    <Typography variant="small" className="mt-1">Question info</Typography>
-
     { error && <Error text={ error }/> }
 
-    <div className="flex gap-1 items-center mt-4">
-      { checkAuth(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
-        <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
+    <Typography variant="small" className="mt-4">Question info</Typography>
 
-      { checkAuth(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
-        <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
-    </div>
-
-    <table className="w-full table-auto text-left text-sm capitalize mt-4">
+    <table className="w-full table-auto text-left text-sm capitalize">
       <tbody>
       <tr>
         <th className="w-2/12">Title</th>
@@ -110,5 +101,13 @@ export default function Question() {
       </tr>
       </tbody>
     </table>
+
+    <div className="flex gap-1 items-center mt-4">
+      { checkAuth(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
+        <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
+
+      { checkAuth(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
+        <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
+    </div>
   </>
 }

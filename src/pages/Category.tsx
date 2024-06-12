@@ -139,9 +139,22 @@ export default function Category() {
 
     <Rating/>
 
-    <Typography variant="small" className="mt-1">Category info</Typography>
-
     { error && <Error text={ error }/> }
+
+    <Typography variant="small" className="mt-4">Category info</Typography>
+
+    <table className="w-full table-auto text-left text-sm capitalize">
+      <tbody>
+      <tr>
+        <th className="w-2/12">Name</th>
+        <td>{ category ? category.name : <Spinner type="text"/> }</td>
+      </tr>
+      <tr>
+        <th>Required score</th>
+        <td>{ category ? (category.requiredScore ?? 0) : <Spinner type="text"/> }</td>
+      </tr>
+      </tbody>
+    </table>
 
     <div className="flex gap-1 items-center mt-4">
       { checkAuth(QuestionPermission.CREATE, category) && (!category ?
@@ -157,7 +170,9 @@ export default function Category() {
         <AddExam category={ category }/> }
     </div>
 
-    <div className="flex gap-1 items-center mt-4">
+    <Typography variant="small" className="mt-4">Category questions</Typography>
+
+    <div className="flex gap-1 items-center">
       <Tabs value="all" className="min-w-[170px]">
         <TabsHeader>
           { tableFilters.map((value) => (
