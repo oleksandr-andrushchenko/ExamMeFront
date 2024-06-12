@@ -18,10 +18,10 @@ interface Props {
 }
 
 interface Form {
-  Email: string,
-  Password: string,
-  ConfirmPassword: string,
-  Terms: boolean,
+  Email: string
+  Password: string
+  ConfirmPassword: string
+  Terms: boolean
 }
 
 export default function Register({ buttons, onSubmit }: Props) {
@@ -43,8 +43,12 @@ export default function Register({ buttons, onSubmit }: Props) {
         Terms: yup.bool().required().oneOf([ true ], 'Terms must be accepted'),
       }) }
       onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>): any => {
+        const transfer = {
+          email: values.Email,
+          password: values.Password,
+        }
         apiMutate<{ authenticate: Token }>(
-          registerMutation({ email: values.Email, password: values.Password }),
+          registerMutation(transfer),
           data => {
             setSubmitting(false)
             setAuth(data.authenticate) && onSubmit()

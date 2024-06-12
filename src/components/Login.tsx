@@ -16,8 +16,8 @@ interface Props {
 }
 
 interface Form {
-  Email: string,
-  Password: string,
+  Email: string
+  Password: string
 }
 
 export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
@@ -35,8 +35,12 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
         Password: yup.string().min(8).max(24).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/).required(),
       }) }
       onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+        const transfer = {
+          email: values.Email,
+          password: values.Password,
+        }
         apiMutate<{ authenticate: Token }>(
-          authenticateMutation({ email: values.Email, password: values.Password }),
+          authenticateMutation(transfer),
           data => {
             setSubmitting(false)
             setAuth(data.authenticate) && onSubmit()

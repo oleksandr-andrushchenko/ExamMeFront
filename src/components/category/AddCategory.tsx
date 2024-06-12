@@ -17,7 +17,7 @@ interface Props {
 }
 
 interface Form {
-  Name: string,
+  Name: string
 }
 
 export default function AddCategory({ category, onSubmit, iconButton }: Props) {
@@ -53,11 +53,13 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
               Name: yup.string().min(3).max(100).matches(/^[a-zA-Z]/).required(),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
-              const transfer = { name: values.Name }
-              const callback = (affectedCategory: Category) => {
+              const transfer = {
+                name: values.Name,
+              }
+              const callback = (category: Category) => {
                 setSubmitting(false)
                 setOpen(false)
-                onSubmit && onSubmit(affectedCategory)
+                onSubmit && onSubmit(category)
               }
 
               if (category) {
