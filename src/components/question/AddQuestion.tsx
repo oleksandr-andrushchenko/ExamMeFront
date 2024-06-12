@@ -59,7 +59,8 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     <CreateIcon className="inline-block h-4 w-4"/>
   const label = question ? 'Update question' : 'Add question'
 
-  // todo:
+  // todo: add check correctness validation
+  // todo: add single choice selection at the beginning
 
   return <>
     { iconButton
