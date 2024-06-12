@@ -47,7 +47,7 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
           </Typography>
           <Formik
             initialValues={ {
-              Name: '',
+              Name: category?.name || '',
             } }
             validationSchema={ yup.object({
               Name: yup.string().min(3).max(100).matches(/^[a-zA-Z]/).required(),
