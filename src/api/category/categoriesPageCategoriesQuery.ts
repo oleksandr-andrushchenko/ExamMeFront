@@ -31,6 +31,7 @@ export default function categoriesPageCategoriesQuery(filter: CategoryQuery = {}
                     id
                     name
                     questionCount
+                    requiredScore
                     ownerId
                 }
                 meta {

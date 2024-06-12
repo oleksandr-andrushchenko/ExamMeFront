@@ -9,6 +9,7 @@ import Error from '../Error'
 import { Form, Formik, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import FormikTextarea from '../formik/FormikTextarea'
+import FormikInput from '../formik/FormikInput'
 
 interface Props {
   category?: Category
@@ -18,6 +19,7 @@ interface Props {
 
 interface Form {
   Name: string
+  RequiredScore
 }
 
 export default function AddCategory({ category, onSubmit, iconButton }: Props) {
@@ -48,13 +50,16 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
           <Formik
             initialValues={ {
               Name: category?.name || '',
+              RequiredScore: category?.requiredScore || 0,
             } }
             validationSchema={ yup.object({
               Name: yup.string().min(3).max(100).matches(/^[a-zA-Z]/).required(),
+              RequiredScore: yup.number().min(0).max(100).optional(),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
               const transfer = {
                 name: values.Name,
+                requiredScore: values.RequiredScore,
               }
               const callback = (category: Category) => {
                 setOpen(false)
@@ -81,6 +86,10 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
               <Form className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                   <FormikTextarea name="Name" label="Name"/>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <FormikInput name="RequiredScore" type="number" label="Required score"/>
                 </div>
 
                 { error && <Error text={ error }/> }

@@ -85,7 +85,7 @@ export default function Categories() {
   }
 
   const tableFilters = [ 'all', 'free', 'subscription' ]
-  const tableColumns = [ '#', 'Title', 'Questions', 'Rating', '' ]
+  const tableColumns = [ '#', 'Title', 'Questions', 'Required score', 'Rating', '' ]
   const showClear = (): boolean => {
     const def = new URLSearchParams(defaultSearchParams)
     def.sort()
@@ -211,6 +211,7 @@ export default function Categories() {
           </td>
 
           <td>{ category.questionCount ?? 0 }</td>
+          <td>{ category.requiredScore ?? 0 }</td>
 
           <td><Rating readonly/></td>
 
