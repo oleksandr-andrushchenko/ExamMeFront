@@ -13,11 +13,10 @@ export default function FormikSelect({ name, label, options }) {
         label={ label || name }
         onChange={ value => helper.setValue(value) }
         onBlur={ input.onBlur }
-        // containerProps={ {
-        //   onBlur: (e) => !e.nativeEvent.relatedTarget && helper.setTouched(false),
-        // } }
+        containerProps={ {
+          onBlur: (e) => !e.nativeEvent.relatedTarget && helper.setTouched(false),
+        } }
         defaultValue={ meta.value }
-        // value={ meta.value }
         success={ meta.touched && !meta.error }
         error={ meta.touched && !!meta.error }
         className="capitalize">

@@ -41,11 +41,9 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
         }
         apiMutate<{ authenticate: Token }>(
           authenticateMutation(transfer),
-          data => {
-            setSubmitting(false)
-            setAuth(data.authenticate) && onSubmit()
-          },
+          data => setAuth(data.authenticate) && onSubmit(),
           setError,
+          setSubmitting,
         )
       } }>
       { ({ isSubmitting }) => (

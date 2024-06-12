@@ -2,7 +2,6 @@ import { Button, Card, CardBody, Dialog, IconButton, Tooltip, Typography } from 
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import React, { useEffect, useState } from 'react'
 import QuestionTransfer, {
-  QuestionAnswer,
   QuestionChoice,
   QuestionDifficulty,
   QuestionType,
@@ -32,10 +31,9 @@ interface Props {
 
 interface Form {
   Title: string
-  Type: QuestionType | ''
+  Type: QuestionType
   CategoryId: string
   Difficulty: QuestionDifficulty | ''
-  Answers: QuestionAnswer[]
   Choices: QuestionChoice[]
 }
 
@@ -82,15 +80,13 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
           <Formik
             initialValues={ {
               Title: question?.title || '',
-              Type: question?.type || '',
+              Type: question?.type || QuestionType.CHOICE,
               CategoryId: question?.categoryId || '',
               Difficulty: question?.difficulty || '',
-              Answers: question?.answers || [ new QuestionAnswer() ],
               Choices: question?.choices || [ new QuestionChoice() ],
             } }
             validationSchema={ yup.object({
               Title: yup.string().min(10).max(300).matches(/^[a-zA-Z]/).required(),
-              // todo: oneOf
               CategoryId: category || question ? yup.string().optional() : yup.lazy(_ => {
                 if (categories) {
                   return yup.string().oneOf(categories.map(category => category.id)).required()
@@ -100,22 +96,6 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
               }),
               Type: yup.string().oneOf(Object.values(QuestionType)).required(),
               Difficulty: yup.string().oneOf(Object.values(QuestionDifficulty)).required(),
-              Answers: yup.mixed().when('Type', {
-                is: QuestionType.TYPE,
-                then: () => yup.array().of(
-                  yup.object().shape({
-                    variants: yup.string().min(2).matches(/^[a-zA-Z0-9]/).required(),
-                    explanation: yup.lazy((value) => {
-                      if (!!value) {
-                        return yup.string().min(10).max(3000).matches(/^[a-zA-Z]/)
-                      }
-
-                      return yup.string().nullable().optional()
-                    }),
-                    correct: yup.boolean(),
-                  }),
-                ),
-              }),
               Choices: yup.mixed().when('Type', {
                 is: QuestionType.CHOICE,
                 then: () => yup.array().of(
@@ -139,12 +119,16 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 title: values.Title,
                 type: values.Type,
                 difficulty: values.Difficulty,
-                answers: values.Answers,
-                choices: values.Choices,
+                choices: values.Choices.map(choice => {
+                  if (!choice.explanation) {
+                    delete choice.explanation
+                  }
+
+                  return choice
+                }),
               }
 
               const callback = (question: Question) => {
-                setSubmitting(false)
                 setOpen(false)
                 onSubmit && onSubmit(question)
               }
@@ -154,133 +138,95 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                   updateQuestionMutation(question.id!, transfer as QuestionUpdateTransfer),
                   data => callback(data.updateQuestion),
                   setError,
+                  setSubmitting,
                 )
               } else {
                 apiMutate<{ createQuestion: Question }>(
                   createQuestionMutation(transfer as QuestionTransfer),
                   data => callback(data.createQuestion),
                   setError,
+                  setSubmitting,
                 )
               }
             } }>
-            { ({ values, errors, isSubmitting }) => {
-              // todo: remove
-              console.log(values, errors)
-              return (
-                <Form className="flex flex-col gap-6">
-                  { !category && !question && (!categories ? <Spinner type="button"/> : (
-                    <div className="flex flex-col gap-2">
-                      <FormikSelect
-                        name="CategoryId"
-                        label="Category"
-                        options={ categories.map(category => ({ value: category.id, label: category.name })) }/>
-                    </div>
-                  )) }
-
-                  <div className="flex flex-col gap-2">
-                    <FormikTextarea name="Title"/>
-                  </div>
-
+            { ({ values, isSubmitting }) => (
+              <Form className="flex flex-col gap-6">
+                { !category && !question && (!categories ? <Spinner type="button"/> : (
                   <div className="flex flex-col gap-2">
                     <FormikSelect
-                      name="Type"
-                      options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }/>
+                      name="CategoryId"
+                      label="Category"
+                      options={ categories.map(category => ({ value: category.id, label: category.name })) }/>
                   </div>
+                )) }
 
-                  { values.Type === QuestionType.TYPE && (
-                    <FieldArray name="Answers">
-                      { ({ remove, push }) => (
-                        <div className="flex flex-col gap-6">
-                          { values.Answers.map((answer, index) => (
-                            <div key={ `Answers.${ index }` } className="flex flex-col gap-3">
-                              <div className="flex flex-col gap-1">
-                                <FormikInput name={ `Answers.${ index }.variants` }>
-                                  [{ index + 1 }] variants (separated by comma)
-                                </FormikInput>
-                              </div>
-                              <div className="flex flex-col gap-1">
-                                <FormikTextarea name={ `Answers.${ index }.explanation` }>
-                                  [{ index + 1 }] explanation
-                                </FormikTextarea>
-                              </div>
-                              <div className="flex flex-col gap-1 -mt-3">
-                                <FormikCheckbox name={ `Answers.${ index }.correct` }>
-                                  [{ index + 1 }] Answer correct
-                                </FormikCheckbox>
-                              </div>
-                              { values.Answers.length > 0 && (
-                                <Button type="button" className="-mt-3" onClick={ () => remove(index) }>
-                                  <XMarkIcon className="inline-block h-4 w-4"/> Remove
-                                </Button>
-                              ) }
+                <div className="flex flex-col gap-2">
+                  <FormikTextarea name="Title"/>
+                </div>
+
+                <div className="flex flex-col gap-2 hidden">
+                  <FormikSelect
+                    name="Type"
+                    options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }/>
+                </div>
+
+                { values.Type === QuestionType.CHOICE && (
+                  <FieldArray name="Choices">
+                    { ({ remove, push }) => (
+                      <div className="flex flex-col gap-6">
+                        { values.Choices.map((choice, index) => (
+                          <div key={ `Choices.${ index }` } className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
+                              <FormikInput name={ `Choices.${ index }.title` }>
+                                [{ index + 1 }] Choice title
+                              </FormikInput>
                             </div>
-                          )) }
-                          <Button type="button" className="-mt-3" onClick={ () => push(new QuestionAnswer()) }>
-                            <CreateIcon className="inline-block h-4 w-4"/> Add
-                          </Button>
-                        </div>
-                      ) }
-                    </FieldArray>
-                  ) }
-
-                  { values.Type === QuestionType.CHOICE && (
-                    <FieldArray name="Choices">
-                      { ({ remove, push }) => (
-                        <div className="flex flex-col gap-6">
-                          { values.Choices.map((choice, index) => (
-                            <div key={ `Choices.${ index }` } className="flex flex-col gap-3">
-                              <div className="flex flex-col gap-1">
-                                <FormikInput name={ `Choices.${ index }.title` }>
-                                  [{ index + 1 }] Choice title
-                                </FormikInput>
-                              </div>
-                              <div className="flex flex-col gap-1">
-                                <FormikTextarea name={ `Choices.${ index }.explanation` }>
-                                  [{ index + 1 }] Choice explanation
-                                </FormikTextarea>
-                              </div>
-                              <div className="flex flex-col gap-1 -mt-3">
-                                <FormikCheckbox name={ `Choices.${ index }.correct` }>
-                                  [{ index + 1 }] Choice correct
-                                </FormikCheckbox>
-                              </div>
-                              { values.Choices.length > 1 && (
-                                <Button type="button" className="-mt-3" onClick={ () => remove(index) }>
-                                  <XMarkIcon className="inline-block h-4 w-4"/> Remove
-                                </Button>
-                              ) }
+                            <div className="flex flex-col gap-1">
+                              <FormikTextarea name={ `Choices.${ index }.explanation` }>
+                                [{ index + 1 }] Choice explanation
+                              </FormikTextarea>
                             </div>
-                          )) }
-                          <Button type="button" className="-mt-3" onClick={ () => push(new QuestionChoice()) }>
-                            <CreateIcon className="inline-block h-4 w-4"/> Add
-                          </Button>
-                        </div>
-                      ) }
-                    </FieldArray>
-                  ) }
+                            <div className="flex flex-col gap-1 -mt-3">
+                              <FormikCheckbox name={ `Choices.${ index }.correct` }>
+                                [{ index + 1 }] Choice correct
+                              </FormikCheckbox>
+                            </div>
+                            { values.Choices.length > 1 && (
+                              <Button type="button" className="-mt-3" onClick={ () => remove(index) }>
+                                <XMarkIcon className="inline-block h-4 w-4"/> Remove
+                              </Button>
+                            ) }
+                          </div>
+                        )) }
+                        <Button type="button" className="-mt-3" onClick={ () => push(new QuestionChoice()) }>
+                          <CreateIcon className="inline-block h-4 w-4"/> Add
+                        </Button>
+                      </div>
+                    ) }
+                  </FieldArray>
+                ) }
 
-                  <div className="flex flex-col gap-2">
-                    <FormikSelect
-                      name="Difficulty"
-                      options={ Object.values(QuestionDifficulty).map(difficulty => ({
-                        value: difficulty,
-                        label: difficulty,
-                      })) }/>
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <FormikSelect
+                    name="Difficulty"
+                    options={ Object.values(QuestionDifficulty).map(difficulty => ({
+                      value: difficulty,
+                      label: difficulty,
+                    })) }/>
+                </div>
 
-                  { error && <Error text={ error }/> }
+                { error && <Error text={ error }/> }
 
-                  <div>
-                    <Button type="reset" onClick={ handleOpen }>
-                      Cancel
-                    </Button>
-                    <Button size="md" className="ml-1" type="submit" disabled={ isSubmitting }>
-                      { question ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
-                    </Button>
-                  </div>
-                </Form>
-              )
-            } }
+                <div>
+                  <Button type="reset" onClick={ handleOpen }>
+                    Cancel
+                  </Button>
+                  <Button size="md" className="ml-1" type="submit" disabled={ isSubmitting }>
+                    { question ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
+                  </Button>
+                </div>
+              </Form>
+            ) }
           </Formik>
         </CardBody>
       </Card>

@@ -41,11 +41,6 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
                     categoryId
                     title
                     type
-                    answers {
-                        variants
-                        correct
-                        explanation
-                    }
                     choices {
                         title
                         correct

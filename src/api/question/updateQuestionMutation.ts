@@ -13,11 +13,6 @@ export default function updateQuestionMutation(questionId: string, questionUpdat
                     name
                 }
                 type
-                answers {
-                    variants
-                    correct
-                    explanation
-                }
                 choices {
                     title
                     correct

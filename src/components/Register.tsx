@@ -49,11 +49,9 @@ export default function Register({ buttons, onSubmit }: Props) {
         }
         apiMutate<{ authenticate: Token }>(
           registerMutation(transfer),
-          data => {
-            setSubmitting(false)
-            setAuth(data.authenticate) && onSubmit()
-          },
+          data => setAuth(data.authenticate) && onSubmit(),
           setError,
+          setSubmitting,
         )
       } }>
       { ({ isSubmitting }) => (

@@ -57,7 +57,6 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
                 name: values.Name,
               }
               const callback = (category: Category) => {
-                setSubmitting(false)
                 setOpen(false)
                 onSubmit && onSubmit(category)
               }
@@ -67,12 +66,14 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
                   updateCategoryMutation(category.id!, transfer),
                   data => callback(data.updateCategory),
                   setError,
+                  setSubmitting,
                 )
               } else {
                 apiMutate<{ createCategory: Category }>(
                   createCategoryMutation(transfer),
                   data => callback(data.createCategory),
                   setError,
+                  setSubmitting,
                 )
               }
             } }>

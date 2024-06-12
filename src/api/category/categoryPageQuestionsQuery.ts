@@ -40,11 +40,6 @@ export default function categoryPageQuestionsQuery(categoryId: string, filter: Q
                     title
                     type
                     categoryId
-                    answers {
-                        variants
-                        correct
-                        explanation
-                    }
                     choices {
                         title
                         correct

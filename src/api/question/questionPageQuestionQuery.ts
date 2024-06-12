@@ -12,11 +12,6 @@ export default function questionPageQuestionQuery(questionId: string): any {
                     name
                 }
                 type
-                answers {
-                    variants
-                    correct
-                    explanation
-                }
                 choices {
                     title
                     correct

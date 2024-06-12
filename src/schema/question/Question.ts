@@ -1,4 +1,4 @@
-import { QuestionAnswer, QuestionChoice, QuestionDifficulty, QuestionType } from './QuestionTransfer'
+import { QuestionChoice, QuestionDifficulty, QuestionType } from './QuestionTransfer'
 import Category from '../category/Category'
 import Rating from '../Rating'
 
@@ -8,7 +8,6 @@ export default interface Question {
   category?: Category
   title?: string
   type?: QuestionType
-  answers?: QuestionAnswer[]
   choices?: QuestionChoice[]
   difficulty?: QuestionDifficulty
   multiChoice?: boolean
