@@ -3,19 +3,17 @@ import Error from '../Error'
 import React from 'react'
 import { Checkbox, Typography } from '@material-tailwind/react'
 
-export default function FormikCheckbox({ name, children }) {
+export default function FormikCheckbox({ name, label, children }) {
   const [ input, meta ] = useField({ name })
 
   return (
     <>
       <Checkbox
         name={ name }
-        label={
-          <Typography
-            variant="small"
-            color="gray"
-            className="flex items-center font-normal">{ children }</Typography>
-        }
+        label={ label || (children || []).join('') || <Typography
+          variant="small"
+          color="gray"
+          className="flex items-center font-normal">{ children }</Typography> }
         onChange={ input.onChange }
         onBlur={ input.onBlur }/>
 

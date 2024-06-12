@@ -3,7 +3,7 @@ import Error from '../Error'
 import React from 'react'
 import { Textarea } from '@material-tailwind/react'
 
-export default function FormikTextarea({ name, label }) {
+export default function FormikTextarea({ name, label, children }) {
   const [ input, meta ] = useField({ name })
 
   return (
@@ -12,7 +12,7 @@ export default function FormikTextarea({ name, label }) {
         rows={ 1 }
         resize
         name={ name }
-        label={ label }
+        label={ label || (children || []).join('') || name }
         onChange={ input.onChange }
         onBlur={ input.onBlur }
         value={ meta.value }
