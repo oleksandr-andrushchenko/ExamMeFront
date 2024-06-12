@@ -1,13 +1,13 @@
-export interface QuestionChoice {
-  title: string
-  correct: boolean
-  explanation?: string
+export class QuestionChoice {
+  title: string = ''
+  correct: boolean = false
+  explanation?: string = ''
 }
 
-export interface QuestionAnswer {
-  variants: string[]
-  correct: boolean
-  explanation?: string
+export class QuestionAnswer {
+  variants: string = ''
+  correct: boolean = false
+  explanation?: string = ''
 }
 
 export enum QuestionType {
