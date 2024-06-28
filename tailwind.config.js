@@ -12,8 +12,8 @@ export default withMT({
   theme: {
     extend: {
       fontFamily: {
-        // sans: ['Lato', ...defaultTheme.fontFamily.sans],
-        sans: ['Oswald', ...defaultTheme.fontFamily.sans],
+        sans: ['Lato', ...defaultTheme.fontFamily.sans],
+        // sans: ['Oswald', ...defaultTheme.fontFamily.sans],
         // sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
         // sans: ['Poppins', ...defaultTheme.fontFamily.sans],
         // sans: ['Raleway', ...defaultTheme.fontFamily.sans],

@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ interface Props {
   onClose?: () => void
 }
 
-export default function Auth({ register, dialogOnly, onClose }: Props) {
+const Auth = ({ register, dialogOnly, onClose }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ listenClose, setListenClose ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -67,7 +67,8 @@ export default function Auth({ register, dialogOnly, onClose }: Props) {
           <Tabs value={ activeTab }>
             <TabsHeader
               className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
-              indicatorProps={ { className: 'bg-transparent border-b-2 border-gray-900 shadow-none rounded-none' } }>
+              indicatorProps={ { className: 'bg-transparent border-b-2 border-gray-900 shadow-none rounded-none' } }
+            >
               { tabs.map(({ key, header }) => <Tab key={ key } value={ key }>{ header }</Tab>) }
             </TabsHeader>
             <TabsBody>
@@ -79,3 +80,5 @@ export default function Auth({ register, dialogOnly, onClose }: Props) {
     </Dialog>
   </>
 }
+
+export default memo(Auth)

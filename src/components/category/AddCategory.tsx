@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
+import { memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import updateCategoryMutation from '../../api/category/updateCategoryMutation'
@@ -18,11 +18,11 @@ interface Props {
 }
 
 interface Form {
-  Name: string
-  RequiredScore
+  name: string
+  requiredScore: number
 }
 
-export default function AddCategory({ category, onSubmit, iconButton }: Props) {
+const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
@@ -33,14 +33,10 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
 
   return <>
     { iconButton
-      ? (
-        <Tooltip content={ label }>
-          <IconButton onClick={ handleOpen }>{ icon }</IconButton>
-        </Tooltip>
-      )
-      : (
-        <Button onClick={ handleOpen }>{ icon } { label }</Button>
-      ) }
+      ? <Tooltip content={ label }>
+        <IconButton onClick={ handleOpen }>{ icon }</IconButton>
+      </Tooltip>
+      : <Button onClick={ handleOpen }>{ icon } { label }</Button> }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -49,17 +45,24 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
           </Typography>
           <Formik
             initialValues={ {
-              Name: category?.name || '',
-              RequiredScore: category?.requiredScore || 0,
+              name: category?.name || '',
+              requiredScore: category?.requiredScore || 0,
             } }
             validationSchema={ yup.object({
-              Name: yup.string().min(3).max(100).matches(/^[a-zA-Z]/).required(),
-              RequiredScore: yup.number().min(0).max(100).optional(),
+              name: yup.string()
+                .min(3, 'Name must be at least 3 characters')
+                .max(100, 'Name cannot exceed 100 characters')
+                .matches(/^[a-zA-Z]/, 'Name must start with a letter')
+                .required('Name is required'),
+              requiredScore: yup.number()
+                .min(0, 'Score must be at least 0')
+                .max(100, 'Score cannot exceed 100')
+                .optional(),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
               const transfer = {
-                name: values.Name,
-                requiredScore: values.RequiredScore,
+                name: values.name,
+                requiredScore: values.requiredScore,
               }
               const callback = (category: Category) => {
                 setOpen(false)
@@ -85,11 +88,11 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
             { ({ isSubmitting }) => (
               <Form className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                  <FormikTextarea name="Name" label="Name"/>
+                  <FormikTextarea name="name" label="Name"/>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <FormikInput name="RequiredScore" type="number" label="Required score"/>
+                  <FormikInput name="requiredScore" type="number" label="Required score"/>
                 </div>
 
                 { error && <Error text={ error }/> }
@@ -110,3 +113,5 @@ export default function AddCategory({ category, onSubmit, iconButton }: Props) {
     </Dialog>
   </>
 }
+
+export default memo(AddCategory)

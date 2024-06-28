@@ -1,6 +1,6 @@
 import { Button, IconButton, Tooltip } from '@material-tailwind/react'
 import { PlayIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
@@ -19,7 +19,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function AddExam({ category, iconButton }: Props) {
+const AddExam = ({ category, iconButton }: Props) => {
   const { auth } = useAuth()
   const [ exam, setExam ] = useState<Exam>()
   const [ showAuth, setShowAuth ] = useState<boolean>(false)
@@ -62,7 +62,7 @@ export default function AddExam({ category, iconButton }: Props) {
   }, [ auth ])
 
   if (auth && exam === undefined) {
-    return <Spinner type={iconButton ? 'icon-button' : 'button'}/>
+    return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
   }
 
   const icon = <PlayIcon className="inline-block h-4 w-4"/>
@@ -97,13 +97,11 @@ export default function AddExam({ category, iconButton }: Props) {
     { showAuth && <Auth dialogOnly onClose={ () => setShowAuth(false) }/> }
 
     { iconButton
-      ? (
-        <Tooltip content={ label }>
-          <IconButton color="green" onClick={ onClick } disabled={ disabled }>{ icon }</IconButton>
-        </Tooltip>
-      )
-      : (
-        <Button color="green" onClick={ onClick } disabled={ disabled }>{ icon } { label }</Button>
-      ) }
+      ? <Tooltip content={ label }>
+        <IconButton color="green" onClick={ onClick } disabled={ disabled }>{ icon }</IconButton>
+      </Tooltip>
+      : <Button color="green" onClick={ onClick } disabled={ disabled }>{ icon } { label }</Button> }
   </>
 }
+
+export default memo(AddExam)

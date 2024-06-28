@@ -2,9 +2,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import Route from '../enum/Route'
 import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
 import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
-export default function NotFound() {
+const NotFound = () => {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
 
@@ -27,3 +27,5 @@ export default function NotFound() {
     </div>
   </>
 }
+
+export default memo(NotFound)

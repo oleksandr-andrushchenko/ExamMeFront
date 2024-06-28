@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import QuestionTransfer, {
   QuestionChoice,
   QuestionDifficulty,
@@ -30,14 +30,14 @@ interface Props {
 }
 
 interface Form {
-  Title: string
-  Type: QuestionType
-  CategoryId: string
-  Difficulty: QuestionDifficulty | ''
-  Choices: QuestionChoice[]
+  title: string
+  type: QuestionType
+  categoryId: string
+  difficulty: QuestionDifficulty | ''
+  choices: QuestionChoice[]
 }
 
-export default function AddQuestion({ category, question, onSubmit, iconButton }: Props) {
+const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ categories, setCategories ] = useState<Category[]>()
   const handleOpen = () => setOpen(!open)
@@ -59,19 +59,12 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     <CreateIcon className="inline-block h-4 w-4"/>
   const label = question ? 'Update question' : 'Add question'
 
-  // todo: add check correctness validation
-  // todo: add single choice selection at the beginning
-
   return <>
     { iconButton
-      ? (
-        <Tooltip content={ label }>
-          <IconButton onClick={ handleOpen }>{ icon }</IconButton>
-        </Tooltip>
-      )
-      : (
-        <Button onClick={ handleOpen }>{ icon } { label }</Button>
-      ) }
+      ? <Tooltip content={ label }>
+        <IconButton onClick={ handleOpen }>{ icon }</IconButton>
+      </Tooltip>
+      : <Button onClick={ handleOpen }>{ icon } { label }</Button> }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -80,34 +73,53 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
           </Typography>
           <Formik
             initialValues={ {
-              Title: question?.title || '',
-              Type: question?.type || QuestionType.CHOICE,
-              CategoryId: question?.categoryId || '',
-              Difficulty: question?.difficulty || '',
-              Choices: question?.choices || [ new QuestionChoice() ],
+              title: question?.title || '',
+              type: question?.type || QuestionType.CHOICE,
+              categoryId: question?.categoryId || '',
+              difficulty: question?.difficulty || '',
+              choices: question?.choices || [ new QuestionChoice() ],
             } }
             validationSchema={ yup.object({
-              Title: yup.string().min(10).max(300).matches(/^[a-zA-Z]/).required(),
-              CategoryId: category || question ? yup.string().optional() : yup.lazy(_ => {
+              title: yup.string()
+                .min(10, 'Title must be at least 10 characters')
+                .max(300, 'Title cannot exceed 300 characters')
+                .matches(/^[a-zA-Z]/, 'Title must start with a letter')
+                .required('Title is required'),
+              categoryId: category || question ? yup.string().optional() : yup.lazy(_ => {
                 if (categories) {
-                  return yup.string().oneOf(categories.map(category => category.id)).required()
+                  return yup.string()
+                    .oneOf(categories.map(category => category.id))
+                    .required('Category is required')
                 }
 
-                return yup.string().required()
+                return yup.string().required('Category is required')
               }),
-              Type: yup.string().oneOf(Object.values(QuestionType)).required(),
-              Difficulty: yup.string().oneOf(Object.values(QuestionDifficulty)).required(),
-              Choices: yup.mixed().when('Type', {
+              type: yup.string()
+                .oneOf(Object.values(QuestionType))
+                .required('Type is required'),
+              difficulty: yup.string()
+                .oneOf(Object.values(QuestionDifficulty))
+                .required('Difficulty is required'),
+              choices: yup.mixed().when('type', {
                 is: QuestionType.CHOICE,
                 then: () => yup.array().of(
                   yup.object().shape({
-                    title: yup.string().min(10).max(3000).matches(/^[a-zA-Z]/).required(),
+                    title: yup.string()
+                      .min(10, 'Choice title must be at least 10 characters')
+                      .max(3000, 'Choice title cannot exceed 3000 characters')
+                      .matches(/^[a-zA-Z]/, 'Choice title must start with a letter')
+                      .required('Choice title is required'),
                     explanation: yup.lazy((value) => {
                       if (!!value) {
-                        return yup.string().min(10).max(3000).matches(/^[a-zA-Z]/)
+                        return yup.string()
+                          .min(10, 'Choice explanation must be at least 10 characters')
+                          .max(3000, 'Choice explanation cannot exceed 3000 characters')
+                          .matches(/^[a-zA-Z]/, 'Explanation must start with a letter')
                       }
 
-                      return yup.string().nullable().optional()
+                      return yup.string()
+                        .nullable()
+                        .optional()
                     }),
                     correct: yup.boolean(),
                   }),
@@ -116,11 +128,11 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
               const transfer = {
-                categoryId: category?.id || question?.categoryId || values.CategoryId || '',
-                title: values.Title,
-                type: values.Type,
-                difficulty: values.Difficulty,
-                choices: values.Choices.map(choice => {
+                categoryId: category?.id || question?.categoryId || values.categoryId || '',
+                title: values.title,
+                type: values.type,
+                difficulty: values.difficulty,
+                choices: values.choices.map(choice => {
                   if (!choice.explanation) {
                     delete choice.explanation
                   }
@@ -155,44 +167,46 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
                 { !category && !question && (!categories ? <Spinner type="button"/> : (
                   <div className="flex flex-col gap-2">
                     <FormikSelect
-                      name="CategoryId"
+                      name="categoryId"
                       label="Category"
-                      options={ categories.map(category => ({ value: category.id, label: category.name })) }/>
+                      options={ categories.map(category => ({ value: category.id, label: category.name })) }
+                    />
                   </div>
                 )) }
 
                 <div className="flex flex-col gap-2">
-                  <FormikTextarea name="Title"/>
+                  <FormikTextarea name="title"/>
                 </div>
 
                 <div className="flex flex-col gap-2 hidden">
                   <FormikSelect
-                    name="Type"
-                    options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }/>
+                    name="type"
+                    options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }
+                  />
                 </div>
 
-                { values.Type === QuestionType.CHOICE && (
-                  <FieldArray name="Choices">
+                { values.type === QuestionType.CHOICE && (
+                  <FieldArray name="choices">
                     { ({ remove, push }) => (
                       <div className="flex flex-col gap-6">
-                        { values.Choices.map((choice, index) => (
-                          <div key={ `Choices.${ index }` } className="flex flex-col gap-3">
+                        { values.choices.map((choice, index) => (
+                          <div key={ `choices.${ index }` } className="flex flex-col gap-3">
                             <div className="flex flex-col gap-1">
-                              <FormikInput name={ `Choices.${ index }.title` }>
+                              <FormikInput name={ `choices.${ index }.title` }>
                                 [{ index + 1 }] Choice title
                               </FormikInput>
                             </div>
                             <div className="flex flex-col gap-1">
-                              <FormikTextarea name={ `Choices.${ index }.explanation` }>
+                              <FormikTextarea name={ `choices.${ index }.explanation` }>
                                 [{ index + 1 }] Choice explanation
                               </FormikTextarea>
                             </div>
                             <div className="flex flex-col gap-1 -mt-3">
-                              <FormikCheckbox name={ `Choices.${ index }.correct` }>
+                              <FormikCheckbox name={ `choices.${ index }.correct` }>
                                 [{ index + 1 }] Choice correct
                               </FormikCheckbox>
                             </div>
-                            { values.Choices.length > 1 && (
+                            { values.choices.length > 1 && (
                               <Button type="button" className="-mt-3" onClick={ () => remove(index) }>
                                 <XMarkIcon className="inline-block h-4 w-4"/> Remove
                               </Button>
@@ -209,11 +223,12 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
 
                 <div className="flex flex-col gap-2">
                   <FormikSelect
-                    name="Difficulty"
+                    name="difficulty"
                     options={ Object.values(QuestionDifficulty).map(difficulty => ({
                       value: difficulty,
                       label: difficulty,
-                    })) }/>
+                    })) }
+                  />
                 </div>
 
                 { error && <Error text={ error }/> }
@@ -234,3 +249,5 @@ export default function AddQuestion({ category, question, onSubmit, iconButton }
     </Dialog>
   </>
 }
+
+export default memo(AddQuestion)

@@ -2,9 +2,9 @@ import { Breadcrumbs, Typography } from '@material-tailwind/react'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { Link } from 'react-router-dom'
 import Route from '../enum/Route'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
-export default function Home() {
+const Home = () => {
   useEffect(() => {
     document.title = 'ExamMe'
   }, [])
@@ -19,3 +19,5 @@ export default function Home() {
     <Typography variant="small" className="mt-1">Latest activities</Typography>
   </>
 }
+
+export default memo(Home)

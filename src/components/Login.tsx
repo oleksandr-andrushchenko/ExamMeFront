@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-tailwind/react'
-import React, { ReactNode, useState } from 'react'
+import { memo, ReactNode, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import { apiMutate } from '../api/apolloClient'
 import Error from './Error'
@@ -16,28 +16,34 @@ interface Props {
 }
 
 interface Form {
-  Email: string
-  Password: string
+  email: string
+  password: string
 }
 
-export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
+const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
   const [ error, setError ] = useState<string>('')
   const { setAuth } = useAuth()
 
   return (
     <Formik
       initialValues={ {
-        Email: '',
-        Password: '',
+        email: '',
+        password: '',
       } }
       validationSchema={ yup.object({
-        Email: yup.string().email().required(),
-        Password: yup.string().min(8).max(24).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/).required(),
+        email: yup.string()
+          .email('Invalid email address')
+          .required('Email is required'),
+        password: yup.string()
+          .min(8, 'Password must be at least 8 characters')
+          .max(24, 'Password cannot exceed 24 characters')
+          .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/, 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+          .required('Password is required'),
       }) }
       onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
         const transfer = {
-          email: values.Email,
-          password: values.Password,
+          email: values.email,
+          password: values.password,
         }
         apiMutate<{ authenticate: Token }>(
           authenticateMutation(transfer),
@@ -51,11 +57,11 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
           <Typography variant="h4" color="blue-gray">Login</Typography>
 
           <div className="flex flex-col gap-2">
-            <FormikInput name="Email" type="email" label="Email Address"/>
+            <FormikInput name="email" type="email" label="Email Address"/>
           </div>
 
           <div className="flex flex-col gap-2">
-            <FormikInput name="Password" type="password" label="Password"/>
+            <FormikInput name="password" type="password" label="Password"/>
           </div>
 
           { error && <Error text={ error }/> }
@@ -81,3 +87,5 @@ export default function Login({ onSubmit, buttons, onRegisterClick }: Props) {
     </Formik>
   )
 }
+
+export default memo(Login)

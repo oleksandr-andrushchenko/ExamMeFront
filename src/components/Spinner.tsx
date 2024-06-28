@@ -1,5 +1,5 @@
 import { Button, IconButton, Spinner as TailwindSpinner, Typography } from '@material-tailwind/react'
-import { ReactNode } from 'react'
+import { memo, ReactNode } from 'react'
 
 interface Props {
   type?: 'button' | 'icon-button' | 'text'
@@ -8,14 +8,15 @@ interface Props {
   children?: ReactNode
 }
 
-export default function Spinner({ type, height, width, children }: Props) {
+const Spinner = ({ type, height, width, children }: Props) => {
   if (type === 'button') {
     return (
       <span className="animate-pulse">
         <Button
           disabled
           tabIndex={ -1 }
-          className={ `${ height ?? 'h-8' } ${ width ?? 'w-24' } bg-gray-300 shadow-none hover:shadow-none` }>
+          className={ `${ height ?? 'h-8' } ${ width ?? 'w-24' } bg-gray-300 shadow-none hover:shadow-none` }
+        >
         { children ?? '' }
       </Button>
       </span>
@@ -25,10 +26,7 @@ export default function Spinner({ type, height, width, children }: Props) {
   if (type === 'icon-button') {
     return (
       <span className="animate-pulse">
-        <IconButton
-          disabled
-          tabIndex={ -1 }
-          className={ `bg-gray-300 shadow-none hover:shadow-none` }>
+        <IconButton disabled tabIndex={ -1 } className={ `bg-gray-300 shadow-none hover:shadow-none` }>
           &nbsp;
         </IconButton>
       </span>
@@ -39,7 +37,8 @@ export default function Spinner({ type, height, width, children }: Props) {
     return (
       <Typography
         as="span"
-        className={ `animate-pulse inline-block ${ height ?? 'h-2' } ${ width ?? 'w-24' } rounded-full bg-gray-300` }>
+        className={ `animate-pulse inline-block ${ height ?? 'h-2' } ${ width ?? 'w-24' } rounded-full bg-gray-300` }
+      >
         { children ?? '' }
       </Typography>
     )
@@ -47,3 +46,5 @@ export default function Spinner({ type, height, width, children }: Props) {
 
   return <TailwindSpinner className="h-8 w-8 text-gray-900/50"/>
 }
+
+export default memo(Spinner)

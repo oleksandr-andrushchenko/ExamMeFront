@@ -1,25 +1,23 @@
 import { useField } from 'formik'
 import Error from '../Error'
-import React from 'react'
 import { Input } from '@material-tailwind/react'
 
-export default function FormikInput({ name, type, size, label, children }) {
-  const [ input, meta ] = useField({ name })
+export default function FormikInput({ name, type = 'text', size = 'lg', label, children }) {
+  const [ input, meta ] = useField(name)
+  const { touched, error } = meta
 
   return (
     <>
       <Input
-        name={ name }
-        type={ type || 'text' }
-        size={ size || 'lg' }
+        { ...input }
+        type={ type }
+        size={ size }
         label={ label || (children || []).join('') || name }
-        onChange={ input.onChange }
-        onBlur={ input.onBlur }
-        value={ meta.value }
-        success={ meta.touched && !meta.error }
-        error={ meta.touched && !!meta.error }/>
+        success={ touched && !error }
+        error={ touched && !!error }
+      />
 
-      { meta.touched && meta.error && <Error text={ meta.error }/> }
+      { touched && error && <Error text={ error }/> }
     </>
   )
 };

@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
+import { memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import removeCategoryMutation from '../../api/category/removeCategoryMutation'
@@ -12,7 +12,7 @@ interface Props {
   iconButton?: boolean
 }
 
-export default function DeleteCategory({ category, onSubmit, iconButton }: Props) {
+const DeleteCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
@@ -34,15 +34,11 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
     {
       iconButton
         ? <Tooltip content="Delete category">
-          <IconButton
-            onClick={ handleOpen }
-            disabled={ processing }>
+          <IconButton onClick={ handleOpen } disabled={ processing }>
             <XMarkIcon className="h-4 w-4"/>
           </IconButton>
         </Tooltip>
-        : <Button
-          onClick={ handleOpen }
-          disabled={ processing }>
+        : <Button onClick={ handleOpen } disabled={ processing }>
           <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting category...' : 'Delete category' }
         </Button>
     }
@@ -52,10 +48,7 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
           <Typography variant="h4" color="blue-gray">
             Are you sure you want to delete "{ category.name }" category?
           </Typography>
-          <Typography
-            className="mb-3"
-            variant="paragraph"
-            color="gray">
+          <Typography className="mb-3" variant="paragraph" color="gray">
             This will delete "{ category.name }" category and all its questions [ { category.questionCount ?? 0 } ]
             permanently.
             <br/>
@@ -65,15 +58,10 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
           { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
-          <Button
-            onClick={ handleOpen }>
+          <Button onClick={ handleOpen }>
             Cancel
           </Button>
-          <Button
-            size="md"
-            className="ml-1"
-            onClick={ onClick }
-            disabled={ processing }>
+          <Button size="md" className="ml-1" onClick={ onClick } disabled={ processing }>
             <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting...' : 'Delete' }
           </Button>
         </CardFooter>
@@ -81,3 +69,5 @@ export default function DeleteCategory({ category, onSubmit, iconButton }: Props
     </Dialog>
   </>
 }
+
+export default memo(DeleteCategory)

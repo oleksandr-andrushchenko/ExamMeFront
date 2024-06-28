@@ -17,7 +17,7 @@ import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import Spinner from '../components/Spinner'
 import AddCategory from '../components/category/AddCategory'
 import AddQuestion from '../components/question/AddQuestion'
@@ -35,7 +35,7 @@ import AddExam from '../components/exam/AddExam'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
 
-export default function Categories() {
+const Categories = () => {
   const [ _, setLoading ] = useState<boolean>(true)
   const defaultSearchParams = { size: '20' }
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
@@ -126,7 +126,8 @@ export default function Categories() {
               key={ value }
               value={ value }
               className="text-xs small text-small capitalize"
-              onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+              onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }
+            >
               { value }
             </Tab>
           )) }
@@ -137,13 +138,15 @@ export default function Categories() {
         label="Search"
         value={ searchParams.get('search') || '' }
         onChange={ (e) => applySearchParams({ search: e.target.value }) }
-        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }/>
+        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }
+      />
 
       <Select
         label="Size"
         onChange={ (size: string) => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
-        className="capitalize">
+        className="capitalize"
+      >
         { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
           <Option
             key={ size }
@@ -182,20 +185,16 @@ export default function Categories() {
       </tr>
       </thead>
       <tbody>
-      { !categories && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-          </td>
-        </tr>
-      ) }
-      { categories && categories.data.length === 0 && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
-        </tr>
-      ) }
+      { !categories && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+        </td>
+      </tr> }
+      { categories && categories.data.length === 0 && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      </tr> }
       { categories && categories.data && categories.data.map((category: Category, index) => (
         <tr key={ category.id }>
           <td>{ index + 1 }</td>
@@ -234,3 +233,5 @@ export default function Categories() {
     </table>
   </>
 }
+
+export default memo(Categories)

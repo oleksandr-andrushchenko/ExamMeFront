@@ -2,10 +2,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
 import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
 import Route from '../enum/Route'
-import React, { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import Auth from '../components/Auth'
 
-export default function Unauthenticated() {
+const Unauthenticated = () => {
   const navigate = useNavigate()
   const goBack = () => navigate(-1)
 
@@ -29,3 +29,5 @@ export default function Unauthenticated() {
     </div>
   </>
 }
+
+export default memo(Unauthenticated)

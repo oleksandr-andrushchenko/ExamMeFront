@@ -1,7 +1,8 @@
 import NavBar from './NavBar'
 import { Outlet } from 'react-router-dom'
+import { memo } from 'react'
 
-export default function Layout() {
+const Layout = () => {
   return (
     <div className="min-h-full">
       <NavBar/>
@@ -11,3 +12,5 @@ export default function Layout() {
     </div>
   )
 }
+
+export default memo(Layout)

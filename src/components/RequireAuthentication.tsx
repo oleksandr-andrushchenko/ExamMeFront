@@ -8,7 +8,7 @@ interface Props {
   permission: any
 }
 
-export default function RequireLoggedIn({ permission }: Props) {
+export default function RequireAuthentication({ permission }: Props) {
   const { auth, me, checkAuth } = useAuth()
 
   if (!auth) {

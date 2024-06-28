@@ -15,7 +15,7 @@ import {
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
 import Category from '../schema/category/Category'
@@ -39,7 +39,7 @@ import ExamPermission from '../enum/exam/ExamPermission'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
 
-export default function Category() {
+const Category = () => {
   const defaultSearchParams = { size: '20' }
   const [ queryWithCategory, setQueryWithCategory ] = useState<boolean>(true)
   const { categoryId }: { categoryId: string } = useParams()
@@ -267,20 +267,16 @@ export default function Category() {
       </tr>
       </thead>
       <tbody>
-      { !questions && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-          </td>
-        </tr>
-      ) }
-      { questions && questions.data.length === 0 && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
-        </tr>
-      ) }
+      { !questions && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+        </td>
+      </tr> }
+      { questions && questions.data.length === 0 && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      </tr> }
       { questions && questions.data && questions.data.map((question: Question, index) => (
         <tr key={ question.id }>
           <td>{ index + 1 }</td>
@@ -289,7 +285,8 @@ export default function Category() {
             <Tooltip content={ question.title }>
               <Link
                 key={ question.id }
-                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
+                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+              >
                 { question.title }
               </Link>
             </Tooltip>
@@ -314,3 +311,5 @@ export default function Category() {
     </table>
   </>
 }
+
+export default memo(Category)

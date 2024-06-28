@@ -5,13 +5,13 @@ import Categories from '../pages/Categories'
 import ThemeProvider from './ThemeProvider'
 import Category from '../pages/Category'
 import NotFound from '../pages/NotFound'
-import TermsAndConditions from '../pages/TermsAndConditions'
+import Terms from '../pages/Terms'
 import { AuthProvider } from '../hooks/useAuth'
 import { default as Path } from '../enum/Route'
 import Question from '../pages/Question'
 import Questions from '../pages/Questions'
 import Exam from '../pages/Exam'
-import RequireLoggedIn from './RequireLoggedIn'
+import RequireAuthentication from './RequireAuthentication'
 import ExamPermission from '../enum/exam/ExamPermission'
 import { ApolloProvider } from '@apollo/client'
 import apolloClient from '../api/apolloClient'
@@ -23,10 +23,10 @@ const routes = <Routes>
     <Route path={ Path.CATEGORY } element={ <Category/> }/>
     <Route path={ Path.QUESTIONS } element={ <Questions/> }/>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
-    <Route element={ <RequireLoggedIn permission={ ExamPermission.GET }/> }>
+    <Route element={ <RequireAuthentication permission={ ExamPermission.GET }/> }>
       <Route path={ Path.EXAM } element={ <Exam/> }/>
     </Route>
-    <Route path={ Path.TERMS_AND_CONDITIONS } element={ <TermsAndConditions/> }/>
+    <Route path={ Path.TERMS } element={ <Terms/> }/>
     <Route path="*" element={ <NotFound/> }/>
   </Route>
 </Routes>

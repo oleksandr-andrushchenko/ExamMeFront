@@ -15,7 +15,7 @@ import {
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
@@ -34,7 +34,7 @@ import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsP
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
 
-export default function Questions() {
+const Questions = () => {
   const [ _, setLoading ] = useState<boolean>(true)
   const [ withCategories, setWithCategories ] = useState<boolean>(true)
   const defaultSearchParams = { size: '20' }
@@ -142,7 +142,8 @@ export default function Questions() {
               key={ value }
               value={ value }
               className="text-xs small text-small capitalize"
-              onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }>
+              onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }
+            >
               { value }
             </Tab>
           )) }
@@ -154,13 +155,15 @@ export default function Questions() {
           label="Category"
           onChange={ (categoryId) => applySearchParams({ categoryId }) }
           value={ searchParams.get('categoryId') || '' }
-          className="capitalize">
+          className="capitalize"
+        >
           { categories.map((category: Category) => (
             <Option
               key={ category.id }
               value={ category.id }
               disabled={ category.id === searchParams.get('categoryId') }
-              className="capitalize truncate max-w-[170px]">
+              className="capitalize truncate max-w-[170px]"
+            >
               { category.name }
             </Option>
           )) }
@@ -171,13 +174,15 @@ export default function Questions() {
         label="Difficulty"
         onChange={ (difficulty) => applySearchParams({ difficulty }) }
         value={ searchParams.get('difficulty') || '' }
-        className="capitalize">
+        className="capitalize"
+      >
         { Object.values(QuestionDifficulty).map((difficulty) => (
           <Option
             key={ difficulty }
             value={ difficulty }
             disabled={ difficulty === searchParams.get('difficulty') }
-            className="capitalize">
+            className="capitalize"
+          >
             { difficulty }
           </Option>
         )) }
@@ -187,13 +192,15 @@ export default function Questions() {
         label="Type"
         onChange={ (type) => applySearchParams({ type }) }
         value={ searchParams.get('type') || '' }
-        className="capitalize">
+        className="capitalize"
+      >
         { Object.values(QuestionType).map((type: string) => (
           <Option
             key={ type }
             value={ type }
             disabled={ type === searchParams.get('type') }
-            className="capitalize">
+            className="capitalize"
+          >
             { type }
           </Option>
         )) }
@@ -203,18 +210,21 @@ export default function Questions() {
         label="Search"
         value={ searchParams.get('search') || '' }
         onChange={ (e) => applySearchParams({ search: e.target.value }) }
-        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }/>
+        icon={ <MagnifyingGlassIcon className="h-4 w-4"/> }
+      />
 
       <Select
         label="Size"
         onChange={ (size) => applySearchParams({ size }) }
         value={ searchParams.get('size') || '' }
-        className="capitalize">
+        className="capitalize"
+      >
         { [ 1, 5, 10, 20, 30, 40, 50 ].map((size) => (
           <Option
             key={ size }
             value={ `${ size }` }
-            disabled={ `${ size }` === searchParams.get('size') }>
+            disabled={ `${ size }` === searchParams.get('size') }
+          >
             { size }
           </Option>
         )) }
@@ -232,10 +242,9 @@ export default function Questions() {
           </IconButton>
         </ButtonGroup>) }
 
-      { showClear() &&
-        <div>
-          <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
-        </div> }
+      { showClear() && <div>
+        <Button variant="outlined" onClick={ clearSearchParams }>Clear</Button>
+      </div> }
     </div>
 
     <table className="w-full table-auto text-left text-sm capitalize mt-4">
@@ -247,20 +256,16 @@ export default function Questions() {
       </tr>
       </thead>
       <tbody>
-      { !questions && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-            <Spinner type="text" width="w-full"/>
-          </td>
-        </tr>
-      ) }
-      { questions && questions.data.length === 0 && (
-        <tr>
-          <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
-        </tr>
-      ) }
+      { !questions && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+        </td>
+      </tr> }
+      { questions && questions.data.length === 0 && <tr>
+        <td colSpan={ tableColumns.length } className="p-5 text-center">No data</td>
+      </tr> }
       { questions && questions.data && questions.data.filter((question) => getCategory(question.categoryId!)).map((question: Question, index) => (
         <tr key={ question.id }>
           <td>{ index + 1 }</td>
@@ -269,7 +274,8 @@ export default function Questions() {
             <Tooltip content={ question.title }>
               <Link
                 key={ question.id }
-                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }>
+                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+              >
                 { question.title }
               </Link>
             </Tooltip>
@@ -302,3 +308,5 @@ export default function Questions() {
     </table>
   </>
 }
+
+export default memo(Questions)

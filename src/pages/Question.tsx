@@ -2,7 +2,7 @@ import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Checkbox, Input, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
@@ -15,7 +15,7 @@ import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
 
-export default function Question() {
+const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
   const [ question, setQuestion ] = useState<Question>()
   const [ _, setLoading ] = useState<boolean>(true)
@@ -84,14 +84,16 @@ export default function Question() {
                   key={ `${ question.id }-${ index }` }
                   name="choice"
                   label={ choice.title }
-                  disabled={ true }/>
+                  disabled={ true }
+                />
               ))
               : <Input
                 type="text"
                 name="answer"
                 size="lg"
                 label="Answer"
-                disabled={ true }/>
+                disabled={ true }
+              />
           ) }
         </td>
       </tr>
@@ -111,3 +113,5 @@ export default function Question() {
     </div>
   </>
 }
+
+export default memo(Question)

@@ -2,7 +2,7 @@ import { Link, Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Button, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
-import React, { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
 import ExamPermission from '../enum/exam/ExamPermission'
@@ -20,7 +20,7 @@ import Unauthenticated from './Unauthenticated'
 import Unauthorized from './Unauthorized'
 import Exam from '../schema/exam/Exam'
 
-export default function Exam() {
+const Exam = () => {
   const { examId } = useParams<Params>() as { examId: string }
   const [ questionNumber, setQuestionNumber ] = useState<number>()
   const [ examQuestion, setExamQuestion ] = useState<ExamQuestion>()
@@ -209,14 +209,16 @@ export default function Exam() {
         value={ Math.floor(100 * (getQuestionNumber() + 1) / examQuestion.exam!.questionCount) }
         label="Steps"
         size="sm"
-        className="mt-4"/> }
+        className="mt-4"
+      /> }
 
     { !examQuestion ? <Spinner type="text" height="h-4"/> :
       <Progress
         value={ Math.floor(100 * examQuestion.exam!.answeredQuestionCount / examQuestion.exam!.questionCount) }
         label="Answered"
         size="lg"
-        className="mt-4"/> }
+        className="mt-4"
+      /> }
 
     { !examQuestion ? <Spinner type="text"/> :
       <Typography as="h2" variant="h6" className="mt-4">
@@ -233,7 +235,8 @@ export default function Exam() {
               defaultChecked={ index === examQuestion.choice }
               onChange={ (e) => e.target.checked ? createAnswer(index) : clearAnswer() }
               label={ choice.title }
-              disabled={ answering }/>
+              disabled={ answering }
+            />
           ))
           : <Input
             type="text"
@@ -241,8 +244,11 @@ export default function Exam() {
             size="lg"
             label="Answer"
             onChange={ (e) => createAnswer(e.target.value) }
-            disabled={ answering }/>
+            disabled={ answering }
+          />
       ) }
     </div>
   </>)
 }
+
+export default memo(Exam)
