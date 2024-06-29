@@ -16,6 +16,5 @@ export default function oneNonCompletedCategoryExamsQuery(categoryId: string): a
       completion: false,
       size: 1,
     },
-    fetchPolicy: 'network-only',
   }
 }

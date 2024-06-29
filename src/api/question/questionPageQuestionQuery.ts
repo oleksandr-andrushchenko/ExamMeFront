@@ -25,6 +25,5 @@ export default function questionPageQuestionQuery(questionId: string): any {
     variables: {
       questionId,
     },
-    fetchPolicy: 'network-only',
   }
 }

@@ -15,4 +15,6 @@ export default interface Question {
   ownerId?: string
   createdAt?: number
   updatedAt?: number
+
+  // todo: add tags
 }

@@ -44,7 +44,5 @@ export default function answerExamQuestionMutation(
       question,
       examQuestionAnswer,
     },
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }

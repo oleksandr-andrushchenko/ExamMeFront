@@ -36,7 +36,5 @@ export default function examPageCurrentExamQuestionQuery(examId: string): any {
     variables: {
       examId,
     },
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }

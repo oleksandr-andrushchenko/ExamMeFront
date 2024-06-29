@@ -42,6 +42,11 @@ export function apiQuery<T = any, TVariables extends OperationVariables = Operat
   setLoading: (loading: boolean) => void,
 ) {
   setLoading(true)
+  options = {
+    errorPolicy: 'all',
+    fetchPolicy: 'network-only',
+    ...options,
+  }
   apolloClient.query<T>(options)
     .then(({ data, errors }) => {
       if (errors) {
@@ -70,9 +75,14 @@ export function apiMutate<
   options: MutationOptions<TData, TVariables, TContext>,
   setData: (data: TData) => void,
   setError: (message: string) => void,
-  setLoading?: (loading: boolean) => void,
+  setLoading: (loading: boolean) => void,
 ) {
-  setLoading && setLoading(true)
+  setLoading(true)
+  options = {
+    errorPolicy: 'all',
+    fetchPolicy: 'network-only',
+    ...options,
+  }
   apolloClient.mutate<TData, TVariables, TContext, TCache>(options)
     .then(({ data, errors }) => {
       if (errors) {

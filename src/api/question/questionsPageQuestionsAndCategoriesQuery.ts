@@ -57,7 +57,5 @@ export default function questionsPageQuestionsAndCategoriesQuery(filter: Questio
         }
     `,
     variables: filter,
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }

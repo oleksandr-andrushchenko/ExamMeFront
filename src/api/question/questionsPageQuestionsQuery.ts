@@ -53,7 +53,5 @@ export default function questionsPageQuestionsQuery(filter: QuestionQuery = {}):
         }
     `,
     variables: filter,
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }

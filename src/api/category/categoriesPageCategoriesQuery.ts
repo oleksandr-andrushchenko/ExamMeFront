@@ -42,6 +42,5 @@ export default function categoriesPageCategoriesQuery(filter: CategoryQuery = {}
         }
     `,
     variables: filter,
-    fetchPolicy: 'network-only',
   }
 }

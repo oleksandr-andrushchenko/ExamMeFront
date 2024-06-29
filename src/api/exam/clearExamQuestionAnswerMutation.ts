@@ -34,7 +34,5 @@ export default function clearExamQuestionAnswerMutation(examId: string, question
       examId,
       question,
     },
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }

@@ -34,7 +34,5 @@ export default function examPageExamQuestionQuery(examId: string, question: numb
       examId,
       question,
     },
-    errorPolicy: 'all',
-    fetchPolicy: 'network-only',
   }
 }
