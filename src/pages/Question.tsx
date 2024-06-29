@@ -39,6 +39,18 @@ const Question = () => {
     document.title = question?.title || 'ExamMe'
   }, [])
 
+  const choices = (question: Question) => {
+    if (question.type === QuestionType.CHOICE) {
+      return (question.choices || []).map((choice: QuestionChoice, index) => (
+        <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
+      ))
+    }
+
+    return (
+      <Input type="text" name="answer" size="lg" label="Answer" disabled={ true }/>
+    )
+  }
+
   return <>
     <Breadcrumbs>
       <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
@@ -77,24 +89,7 @@ const Question = () => {
           { !question ? <Spinner type="text"/> : (question.type === QuestionType.CHOICE ? 'Choices' : 'Answers') }
         </th>
         <td>
-          { !question ? <Spinner type="text"/> : (
-            question.type === QuestionType.CHOICE
-              ? question.choices!.map((choice: QuestionChoice, index) => (
-                <Checkbox
-                  key={ `${ question.id }-${ index }` }
-                  name="choice"
-                  label={ choice.title }
-                  disabled={ true }
-                />
-              ))
-              : <Input
-                type="text"
-                name="answer"
-                size="lg"
-                label="Answer"
-                disabled={ true }
-              />
-          ) }
+          { !question ? <Spinner type="text"/> : choices(question) }
         </td>
       </tr>
       <tr>
