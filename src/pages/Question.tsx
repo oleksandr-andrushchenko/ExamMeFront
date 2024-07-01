@@ -70,7 +70,7 @@ const Question = () => {
 
     <Typography variant="small" className="mt-4">Question info</Typography>
 
-    <table className="w-full table-auto text-left text-sm capitalize">
+    <table className="w-full table-auto text-left text-sm">
       <tbody>
       <tr>
         <th className="w-2/12">Title</th>

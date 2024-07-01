@@ -162,7 +162,7 @@ const Exam = () => {
     const passed = score > requiredScore
 
     return layout('Exam completed', <>
-      <table className="w-full table-auto text-left text-sm capitalize mt-4">
+      <table className="w-full table-auto text-left text-sm mt-4">
         <tbody>
         <tr>
           <th className="w-2/12">Completion date</th>

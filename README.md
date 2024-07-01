@@ -22,3 +22,4 @@
 * Completed exams page
 * Subscriptions
 * Keep single choices for the beginning (create/update forms/backend)
+* User management page

@@ -125,7 +125,7 @@ const Categories = () => {
             <Tab
               key={ value }
               value={ value }
-              className="text-xs small text-small capitalize"
+              className="text-xs small text-small"
               onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }
             >
               { value }
@@ -176,7 +176,7 @@ const Categories = () => {
       ) }
     </div>
 
-    <table className="w-full table-auto text-left text-sm capitalize mt-4">
+    <table className="w-full table-auto text-left text-sm mt-4">
       <thead>
       <tr>
         { tableColumns.map((head) => (
