@@ -7,7 +7,7 @@ export default function FormikTextarea({ name, label, children }) {
   const { touched, error } = meta
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <Textarea
         { ...input }
         rows={ 1 }
@@ -19,6 +19,6 @@ export default function FormikTextarea({ name, label, children }) {
       />
 
       { touched && error && <Error text={ error }/> }
-    </>
+    </div>
   )
 };

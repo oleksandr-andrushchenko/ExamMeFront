@@ -8,7 +8,7 @@ export default function FormikSelect({ name, label, options }) {
   const { setTouched, setValue } = helper
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <Select
         { ...input }
         name={ name }
@@ -33,6 +33,6 @@ export default function FormikSelect({ name, label, options }) {
       </Select>
 
       { touched && error && <Error text={ error }/> }
-    </>
+    </div>
   )
 };

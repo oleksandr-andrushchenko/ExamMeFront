@@ -7,7 +7,7 @@ export default function FormikCheckbox({ name, label, children }) {
   const { touched, error } = meta
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <Checkbox
         { ...input }
         name={ name }
@@ -23,6 +23,6 @@ export default function FormikCheckbox({ name, label, children }) {
       />
 
       { touched && error && <Error text={ error }/> }
-    </>
+    </div>
   )
 };
