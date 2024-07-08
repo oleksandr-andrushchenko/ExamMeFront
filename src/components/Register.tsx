@@ -67,23 +67,13 @@ const Register = ({ buttons, onSubmit }: Props) => {
         <Form className="flex flex-col gap-6">
           <Typography variant="h4" color="blue-gray">Register</Typography>
 
-          <div className="flex flex-col gap-2">
-            <FormikInput name="email" type="email" label="Email Address"/>
-          </div>
+          <FormikInput name="email" type="email" label="Email Address"/>
+          <FormikInput name="password" type="password" label="Password"/>
+          <FormikInput name="confirmPassword" type="password" label="Confirm password"/>
 
-          <div className="flex flex-col gap-2">
-            <FormikInput name="password" type="password" label="Password"/>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <FormikInput name="confirmPassword" type="password" label="Confirm password"/>
-          </div>
-
-          <div className="-mt-4">
-            <FormikCheckbox name="terms">
-              I agree to the <Link to={ Route.TERMS }>Terms and Conditions</Link>
-            </FormikCheckbox>
-          </div>
+          <FormikCheckbox name="terms">
+            I agree to the <Link to={ Route.TERMS }>Terms and Conditions</Link>
+          </FormikCheckbox>
 
           { error && <Error text={ error }/> }
 

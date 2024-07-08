@@ -56,13 +56,8 @@ const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
         <Form className="flex flex-col gap-6">
           <Typography variant="h4" color="blue-gray">Login</Typography>
 
-          <div className="flex flex-col gap-2">
-            <FormikInput name="email" type="email" label="Email Address"/>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <FormikInput name="password" type="password" label="Password"/>
-          </div>
+          <FormikInput name="email" type="email" label="Email Address"/>
+          <FormikInput name="password" type="password" label="Password"/>
 
           { error && <Error text={ error }/> }
 
