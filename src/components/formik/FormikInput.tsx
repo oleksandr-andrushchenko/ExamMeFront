@@ -7,7 +7,7 @@ export default function FormikInput({ name, type = 'text', size = 'lg', label, c
   const { touched, error } = meta
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <Input
         { ...input }
         type={ type }
@@ -18,6 +18,6 @@ export default function FormikInput({ name, type = 'text', size = 'lg', label, c
       />
 
       { touched && error && <Error text={ error }/> }
-    </>
+    </div>
   )
 };
