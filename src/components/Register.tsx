@@ -10,7 +10,7 @@ import FormikInput from './formik/FormikInput'
 import FormikCheckbox from './formik/FormikCheckbox'
 import { apiMutate } from '../api/apolloClient'
 import Token from '../schema/auth/Token'
-import registerMutation from '../api/auth/registerMutation'
+import createMeAndAuthenticationToken from '../api/me/createMeAndAuthenticationToken'
 
 interface Props {
   onSubmit: () => void
@@ -26,7 +26,7 @@ interface Form {
 
 const Register = ({ buttons, onSubmit }: Props) => {
   const [ error, setError ] = useState<string>('')
-  const { setAuth } = useAuth()
+  const { setAuthenticationToken } = useAuth()
 
   return (
     <Formik
@@ -56,9 +56,9 @@ const Register = ({ buttons, onSubmit }: Props) => {
           email: values.email,
           password: values.password,
         }
-        apiMutate<{ authenticate: Token }>(
-          registerMutation(transfer),
-          data => setAuth(data.authenticate) && onSubmit(),
+        apiMutate<{ createAuthenticationToken: Token }>(
+          createMeAndAuthenticationToken(transfer),
+          data => setAuthenticationToken(data.createAuthenticationToken) && onSubmit(),
           setError,
           setSubmitting,
         )

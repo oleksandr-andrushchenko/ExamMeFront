@@ -7,11 +7,11 @@ import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
 import Question from '../schema/question/Question'
 import DeleteQuestion from '../components/question/DeleteQuestion'
-import { QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
+import { QuestionChoice, QuestionType } from '../schema/question/CreateQuestion'
 import AddQuestion from '../components/question/AddQuestion'
 import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
-import questionPageQuestionQuery from '../api/question/questionPageQuestionQuery'
+import getQuestionForQuestionPage from '../api/question/getQuestionForQuestionPage'
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
 
@@ -20,7 +20,7 @@ const Question = () => {
   const [ question, setQuestion ] = useState<Question>()
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const { checkAuth } = useAuth()
+  const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
   const onQuestionUpdated = (question: Question) => setQuestion(question)
@@ -28,7 +28,7 @@ const Question = () => {
 
   useEffect(() => {
     apiQuery<{ question: Question }>(
-      questionPageQuestionQuery(questionId),
+      getQuestionForQuestionPage(questionId),
       data => setQuestion(data.question),
       setError,
       setLoading,
@@ -100,10 +100,10 @@ const Question = () => {
     </table>
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
+      { checkAuthorization(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
         <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
-      { checkAuth(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
+      { checkAuthorization(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
         <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
   </>

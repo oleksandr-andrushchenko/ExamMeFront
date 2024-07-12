@@ -22,17 +22,19 @@ import Question from '../schema/question/Question'
 import AddQuestion from '../components/question/AddQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
+import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import Paginated from '../schema/pagination/Paginated'
 import Category from '../schema/category/Category'
 import Rating from '../components/Rating'
-import QuestionQuery from '../schema/question/QuestionQuery'
+import GetQuestions from '../schema/question/GetQuestions'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import { apiQuery } from '../api/apolloClient'
-import questionsPageQuestionsQuery from '../api/question/questionsPageQuestionsQuery'
-import questionsPageQuestionsAndCategoriesQuery from '../api/question/questionsPageQuestionsAndCategoriesQuery'
+import getQuestionsForQuestionsPage from '../api/question/getQuestionsForQuestionsPage'
+import getQuestionsAndCategoriesForQuestionsPage from '../api/question/getQuestionsAndCategoriesForQuestionsPage'
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
+import { ListIcon } from '../registry/icons'
+import H1 from '../components/typography/H1'
 
 const Questions = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -42,7 +44,7 @@ const Questions = () => {
   const [ categories, setCategories ] = useState<Category[]>()
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
   const [ error, setError ] = useState<string>('')
-  const { checkAuth } = useAuth()
+  const { checkAuthorization } = useAuth()
 
   const onQuestionCreated = () => refresh()
   const onQuestionUpdated = () => refresh()
@@ -50,13 +52,13 @@ const Questions = () => {
 
   const refresh = (): true => {
     setLoading(true)
-    const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
+    const filter: GetQuestions = urlSearchParamsToPlainObject(searchParams)
 
     if (withCategories) {
       setWithCategories(false)
 
       apiQuery<{ paginatedQuestions: Paginated<Question>, categories: Category[] }>(
-        questionsPageQuestionsAndCategoriesQuery(filter),
+        getQuestionsAndCategoriesForQuestionsPage(filter),
         data => {
           setCategories(data.categories)
           setQuestions(data.paginatedQuestions)
@@ -66,8 +68,8 @@ const Questions = () => {
       )
     } else {
       apiQuery<{ paginatedQuestions: Paginated<Question> }>(
-        questionsPageQuestionsQuery(filter),
-        data => setQuestions(data.paginatedQuestions),
+        getQuestionsForQuestionsPage(filter),
+        ({ paginatedQuestions }) => setQuestions(paginatedQuestions),
         setError,
         setLoading,
       )
@@ -75,7 +77,7 @@ const Questions = () => {
 
     return true
   }
-  const applySearchParams = (partialQueryParams: QuestionQuery = {}) => {
+  const applySearchParams = (partialQueryParams: GetQuestions = {}) => {
     setQuestions(undefined)
 
     searchParams.delete('prevCursor')
@@ -124,14 +126,14 @@ const Questions = () => {
       <Link to={ Route.CATEGORIES }>Questions</Link>
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">Questions</Typography>
+    <H1 icon={ ListIcon }>Questions</H1>
 
     <Typography variant="small" className="mt-1">Questions info</Typography>
 
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(QuestionPermission.CREATE) && <AddQuestion onSubmit={ onQuestionCreated }/> }
+      { checkAuthorization(QuestionPermission.CREATE) && <AddQuestion onSubmit={ onQuestionCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -296,10 +298,10 @@ const Questions = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuth(QuestionPermission.UPDATE, question) &&
+            { checkAuthorization(QuestionPermission.UPDATE, question) &&
               <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-            { checkAuth(QuestionPermission.DELETE, question) &&
+            { checkAuthorization(QuestionPermission.DELETE, question) &&
               <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>

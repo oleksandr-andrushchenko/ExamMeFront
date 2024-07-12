@@ -25,15 +25,15 @@ import AddQuestion from '../components/question/AddQuestion'
 import AddCategory from '../components/category/AddCategory'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { QuestionDifficulty, QuestionType } from '../schema/question/QuestionTransfer'
+import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import Paginated from '../schema/pagination/Paginated'
 import AddExam from '../components/exam/AddExam'
 import Rating from '../components/Rating'
-import QuestionQuery from '../schema/question/QuestionQuery'
+import GetQuestions from '../schema/question/GetQuestions'
 import { apiQuery } from '../api/apolloClient'
-import categoryPageQuestionsQuery from '../api/category/categoryPageQuestionsQuery'
+import getQuestionsForCategoryPage from '../api/category/getQuestionsForCategoryPage'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
-import categoryPageQuestionsAndCategoryQuery from '../api/category/categoryPageQuestionsAndCategoryQuery'
+import getCategoryAndQuestionsForCategoryPage from '../api/category/getCategoryAndQuestionsForCategoryPage'
 import Error from '../components/Error'
 import ExamPermission from '../enum/exam/ExamPermission'
 import CategoryPermission from '../enum/category/CategoryPermission'
@@ -48,7 +48,7 @@ const Category = () => {
   const [ questions, setQuestions ] = useState<Paginated<Question>>()
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const { auth, checkAuth } = useAuth()
+  const { authenticationToken, checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
   const onCategoryUpdated = (category: Category) => setCategory(category)
@@ -59,13 +59,13 @@ const Category = () => {
 
   const refresh = (): true => {
     setLoading(true)
-    const filter: QuestionQuery = urlSearchParamsToPlainObject(searchParams)
+    const filter: GetQuestions = urlSearchParamsToPlainObject(searchParams)
 
     if (queryWithCategory) {
       setQueryWithCategory(false)
 
       apiQuery<{ paginatedQuestions: Paginated<Question>, category: Category }>(
-        categoryPageQuestionsAndCategoryQuery(categoryId, filter),
+        getCategoryAndQuestionsForCategoryPage(categoryId, filter),
         data => {
           setCategory(data.category)
           setQuestions(data.paginatedQuestions)
@@ -75,7 +75,7 @@ const Category = () => {
       )
     } else {
       apiQuery<{ paginatedQuestions: Paginated<Question> }>(
-        categoryPageQuestionsQuery(categoryId, filter),
+        getQuestionsForCategoryPage(categoryId, filter),
         data => setQuestions(data.paginatedQuestions),
         setError,
         setLoading,
@@ -84,7 +84,7 @@ const Category = () => {
 
     return true
   }
-  const applySearchParams = (partialQueryParams: QuestionQuery = {}) => {
+  const applySearchParams = (partialQueryParams: GetQuestions = {}) => {
     setQuestions(undefined)
 
     searchParams.delete('prevCursor')
@@ -120,7 +120,7 @@ const Category = () => {
 
   useEffect(() => {
     refresh()
-  }, [ auth, searchParams ])
+  }, [ authenticationToken, searchParams ])
 
   useEffect(() => {
     document.title = category?.name || 'ExamMe'
@@ -157,16 +157,16 @@ const Category = () => {
     </table>
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(QuestionPermission.CREATE, category) && (!category ?
+      { checkAuthorization(QuestionPermission.CREATE, category) && (!category ?
         <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
-      { checkAuth(CategoryPermission.UPDATE, category) && (!category ? <Spinner type="button"/> :
+      { checkAuthorization(CategoryPermission.UPDATE, category) && (!category ? <Spinner type="button"/> :
         <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
-      { checkAuth(CategoryPermission.DELETE, category) && (!category ? <Spinner type="button"/> :
+      { checkAuthorization(CategoryPermission.DELETE, category) && (!category ? <Spinner type="button"/> :
         <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
-      { !category ? <Spinner type="button"/> : !!category.questionCount && checkAuth(ExamPermission.CREATE) &&
+      { !category ? <Spinner type="button"/> : !!category.questionCount && checkAuthorization(ExamPermission.CREATE) &&
         <AddExam category={ category }/> }
     </div>
 
@@ -299,10 +299,10 @@ const Category = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuth(QuestionPermission.UPDATE, question) &&
+            { checkAuthorization(QuestionPermission.UPDATE, question) &&
               <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-            { checkAuth(QuestionPermission.DELETE, question) &&
+            { checkAuthorization(QuestionPermission.DELETE, question) &&
               <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>

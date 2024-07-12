@@ -1,4 +1,4 @@
-import { QuestionChoice, QuestionDifficulty, QuestionType } from './QuestionTransfer'
+import { QuestionChoice, QuestionDifficulty, QuestionType } from './CreateQuestion'
 import Category from '../category/Category'
 import Rating from '../Rating'
 

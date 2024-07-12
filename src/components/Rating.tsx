@@ -1,7 +1,6 @@
 import { memo, useState } from 'react'
-import { Rating as MTRating, Typography } from '@material-tailwind/react'
-import { StarIcon as UnratedIcon } from '@heroicons/react/24/outline'
-import { StarIcon as RatedIcon } from '@heroicons/react/24/solid'
+import { Rating as MlRating, Typography } from '@material-tailwind/react'
+import { Star as UnratedIcon, StarFill as RatedIcon } from 'react-bootstrap-icons'
 
 interface Props {
   value: number
@@ -17,11 +16,11 @@ const Rating = ({ value = Math.ceil(Math.random() * 5), number = false, total, r
   return (
     <div className="flex items-center gap-2">
       { number && <Typography type="small">{ rated }.7</Typography> }
-      <MTRating
+      <MlRating
         value={ value }
         onChange={ (value) => setRated(value) }
-        ratedIcon={ <RatedIcon/> }
-        unratedIcon={ <UnratedIcon/> }
+        ratedIcon={ <RatedIcon className="h-5 w-5 mr-1"/> }
+        unratedIcon={ <UnratedIcon className="h-5 w-5 mr-1"/> }
         readonly={ readonly }
       />
       { (total > 0) && <Typography type="small">Based on { total } Reviews</Typography> }

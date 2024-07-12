@@ -4,16 +4,16 @@ import Me from '../schema/me/Me'
 import Permission from '../enum/Permission'
 import { default as PermissionQuery } from '../schema/auth/Permission'
 import { apiQuery } from '../api/apolloClient'
-import authProviderQuery from '../api/auth/authProviderQuery'
+import getMeAndPermissions from '../api/me/getMeAndPermissions'
 import PermissionHierarchy from '../schema/auth/PermissionHierarchy'
 
-const AuthContext = createContext({})
+const authenticationContext = createContext({})
 
-interface AuthProviderContextValue {
-  auth: Token | undefined
-  setAuth: (auth: Token | undefined) => void
+interface AuthenticationProviderContextValue {
+  authenticationToken: Token | undefined
+  setAuthenticationToken: (token: Token | undefined) => void
   me: Me | undefined
-  checkAuth: (permission: string, resource?: { ownerId?: string }, permissions?: string[]) => boolean
+  checkAuthorization: (permission: string, resource?: { ownerId?: string }, permissions?: string[]) => boolean
 }
 
 interface Data {
@@ -21,13 +21,17 @@ interface Data {
   permissionHierarchy?: PermissionHierarchy | undefined
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const authString = localStorage.getItem('auth')
-  const [ auth, setAuth ] = useState<Token | undefined>(authString ? JSON.parse(authString) : undefined)
+export function AuthenticationProvider({ children }: { children: ReactNode }) {
+  const authenticationTokenString = localStorage.getItem('authenticationToken')
+  const [ authenticationToken, setAuthenticationToken ] = useState<Token | undefined>(
+    authenticationTokenString ? JSON.parse(authenticationTokenString) : undefined,
+  )
   const defaultData = { me: undefined, permissionHierarchy: undefined }
   const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
-  const checkAuth = (permission: string, resource: { ownerId: string }, permissions: string[] = undefined): boolean => {
-    if (!auth || !me || !permissionHierarchy) {
+  const checkAuthorization = (permission: string, resource: {
+    ownerId: string
+  }, permissions: string[] = undefined): boolean => {
+    if (!authenticationToken || !me || !permissionHierarchy) {
       return false
     }
 
@@ -47,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     for (const mePermission of permissions) {
       if (permissionHierarchy.hasOwnProperty(mePermission)) {
-        if (checkAuth(permission, resource, permissionHierarchy[mePermission])) {
+        if (checkAuthorization(permission, resource, permissionHierarchy[mePermission])) {
           return true
         }
       }
@@ -57,30 +61,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (auth) {
-      localStorage.setItem('auth', JSON.stringify(auth))
+    if (authenticationToken) {
+      localStorage.setItem('authenticationToken', JSON.stringify(authenticationToken))
       apiQuery<{ me: Me, permission: PermissionQuery }>(
-        authProviderQuery(),
+        getMeAndPermissions(),
         data => setData({ me: data.me, permissionHierarchy: data.permission.hierarchy }),
-        () => setAuth(undefined),
+        () => setAuthenticationToken(undefined),
         () => {
         },
       )
     } else {
-      localStorage.removeItem('auth')
+      localStorage.removeItem('authenticationToken')
       setData(defaultData)
     }
-  }, [ auth ])
+  }, [ authenticationToken ])
 
-  const value: AuthProviderContextValue = { auth, setAuth, me, checkAuth }
+  const value: AuthenticationProviderContextValue = {
+    authenticationToken,
+    setAuthenticationToken,
+    me,
+    checkAuthorization,
+  }
 
   return (
-    <AuthContext.Provider value={ value }>
+    <authenticationContext.Provider value={ value }>
       { children }
-    </AuthContext.Provider>
+    </authenticationContext.Provider>
   )
 }
 
-export default function useAuth(): AuthProviderContextValue {
-  return useContext<AuthProviderContextValue>(AuthContext as any)
+export default function useAuth(): AuthenticationProviderContextValue {
+  return useContext<AuthenticationProviderContextValue>(authenticationContext as any)
 }

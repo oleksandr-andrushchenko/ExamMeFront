@@ -9,9 +9,9 @@ interface Props {
 }
 
 export default function RequireAuthentication({ permission }: Props) {
-  const { auth, me, checkAuth } = useAuth()
+  const { authenticationToken, me, checkAuthorization } = useAuth()
 
-  if (!auth) {
+  if (!authenticationToken) {
     return <Unauthenticated/>
   }
 
@@ -19,7 +19,7 @@ export default function RequireAuthentication({ permission }: Props) {
     return <Spinner/>
   }
 
-  if (!checkAuth(permission)) {
+  if (!checkAuthorization(permission)) {
     return <Unauthorized/>
   }
 

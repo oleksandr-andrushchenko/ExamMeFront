@@ -1,10 +1,12 @@
-import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { XMarkIcon } from '@heroicons/react/24/solid'
+import { Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
 import { memo, useState } from 'react'
 import Question from '../../schema/question/Question'
 import { apiMutate } from '../../api/apolloClient'
-import removeQuestionMutation from '../../api/question/removeQuestionMutation'
+import deleteQuestion from '../../api/question/deleteQuestion'
 import Error from '../Error'
+import { DeleteIcon } from '../../registry/icons'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
 
 interface Props {
   question: Question
@@ -19,8 +21,8 @@ const DeleteQuestion = ({ question, onSubmit, iconButton }: Props) => {
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    apiMutate<{ removeQuestion: boolean }>(
-      removeQuestionMutation(question.id!),
+    apiMutate(
+      deleteQuestion(question.id!),
       (_) => {
         setOpen(false)
         onSubmit && onSubmit()
@@ -30,18 +32,13 @@ const DeleteQuestion = ({ question, onSubmit, iconButton }: Props) => {
     )
   }
 
+  const icon = DeleteIcon
+  const label = processing ? 'Deleting Question...' : 'Delete Question'
+
   return <>
-    {
-      iconButton
-        ? <Tooltip content="Delete question">
-          <IconButton onClick={ handleOpen } disabled={ processing }>
-            <XMarkIcon className="h-4 w-4"/>
-          </IconButton>
-        </Tooltip>
-        : <Button onClick={ handleOpen } disabled={ processing }>
-          <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting Question...' : 'Delete Question' }
-        </Button>
-    }
+    { iconButton
+      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen } disabled={ processing }/>
+      : <Button icon={ icon } label={ label } onClick={ handleOpen } disabled={ processing }/> }
     <Dialog open={ open } handler={ handleOpen }>
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -57,12 +54,8 @@ const DeleteQuestion = ({ question, onSubmit, iconButton }: Props) => {
           { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
-          <Button onClick={ handleOpen }>
-            Cancel
-          </Button>
-          <Button size="md" className="ml-1" onClick={ onClick } disabled={ processing }>
-            <XMarkIcon className="inline-block h-4 w-4"/> { processing ? 'Deleting...' : 'Delete' }
-          </Button>
+          <Button label="Cancel" onClick={ handleOpen }/>{ ' ' }
+          <Button icon={ icon } label={ label } size="md" onClick={ onClick } disabled={ processing }/>
         </CardFooter>
       </Card>
     </Dialog>

@@ -1,15 +1,17 @@
-import { Button, Card, CardBody, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon } from '@heroicons/react/24/solid'
+import { Card, CardBody, Dialog, Typography } from '@material-tailwind/react'
 import { memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
-import updateCategoryMutation from '../../api/category/updateCategoryMutation'
-import createCategoryMutation from '../../api/category/createCategoryMutation'
+import updateCategory from '../../api/category/updateCategory'
+import createCategory from '../../api/category/createCategory'
 import Error from '../Error'
 import { Form, Formik, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import FormikTextarea from '../formik/FormikTextarea'
 import FormikInput from '../formik/FormikInput'
+import { CreateIcon, EditIcon } from '../../registry/icons'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
 
 interface Props {
   category?: Category
@@ -27,16 +29,13 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
 
-  const icon = category ? <UpdateIcon className="inline-block h-4 w-4"/> :
-    <CreateIcon className="inline-block h-4 w-4"/>
-  const label = category ? 'Update category' : 'Add category'
+  const icon = category ? EditIcon : CreateIcon
+  const label = category ? 'Update Category' : 'Add Category'
 
   return <>
     { iconButton
-      ? <Tooltip content={ label }>
-        <IconButton onClick={ handleOpen }>{ icon }</IconButton>
-      </Tooltip>
-      : <Button onClick={ handleOpen }>{ icon } { label }</Button> }
+      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen }/>
+      : <Button icon={ icon } label={ label } onClick={ handleOpen }/> }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -70,16 +69,16 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
               }
 
               if (category) {
-                apiMutate<{ updateCategory: Category }>(
-                  updateCategoryMutation(category.id!, transfer),
-                  data => callback(data.updateCategory),
+                apiMutate(
+                  updateCategory(category.id!, transfer),
+                  (data: { updateCategory: Category }) => callback(data.updateCategory),
                   setError,
                   setSubmitting,
                 )
               } else {
-                apiMutate<{ createCategory: Category }>(
-                  createCategoryMutation(transfer),
-                  data => callback(data.createCategory),
+                apiMutate(
+                  createCategory(transfer),
+                  (data: { createCategory: Category }) => callback(data.createCategory),
                   setError,
                   setSubmitting,
                 )
@@ -87,23 +86,21 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
             } }>
             { ({ isSubmitting }) => (
               <Form className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <FormikTextarea name="name" label="Name"/>
-                </div>
 
-                <div className="flex flex-col gap-2">
-                  <FormikInput name="requiredScore" type="number" label="Required score"/>
-                </div>
+                <FormikTextarea name="name" label="Name"/>
+                <FormikInput name="requiredScore" type="number" label="Required score"/>
 
                 { error && <Error text={ error }/> }
 
                 <div>
-                  <Button type="reset" onClick={ handleOpen }>
-                    Cancel
-                  </Button>
-                  <Button size="md" className="ml-1" type="submit" disabled={ isSubmitting }>
-                    { category ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
-                  </Button>
+                  <Button label="Cancel" type="reset" onClick={ handleOpen }/>{ ' ' }
+                  <Button
+                    icon={ icon }
+                    label={ category ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
+                    size="md"
+                    type="submit"
+                    disabled={ isSubmitting }
+                  />
                 </div>
               </Form>
             ) }

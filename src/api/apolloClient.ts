@@ -9,14 +9,14 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext((_, { headers }) => {
-  const authString = localStorage.getItem('auth')
-  const auth = authString ? JSON.parse(authString) : undefined
+  const authenticationTokenString = localStorage.getItem('authenticationToken')
+  const authenticationToken = authenticationTokenString ? JSON.parse(authenticationTokenString) : undefined
 
-  if (auth) {
+  if (authenticationToken) {
     return {
       headers: {
         ...headers,
-        authorization: `Bearer ${ auth.token }`,
+        authorization: `Bearer ${ authenticationToken.token }`,
       },
     }
   }

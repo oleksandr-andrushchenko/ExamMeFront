@@ -7,7 +7,7 @@ import { Form, Formik, FormikHelpers } from 'formik'
 import * as yup from 'yup'
 import FormikInput from './formik/FormikInput'
 import Token from '../schema/auth/Token'
-import authenticateMutation from '../api/auth/authenticateMutation'
+import createAuthenticationToken from '../api/authenticate/createAuthenticationToken'
 
 interface Props {
   onSubmit: () => void
@@ -22,7 +22,7 @@ interface Form {
 
 const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
   const [ error, setError ] = useState<string>('')
-  const { setAuth } = useAuth()
+  const { setAuthenticationToken } = useAuth()
 
   return (
     <Formik
@@ -45,9 +45,9 @@ const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
           email: values.email,
           password: values.password,
         }
-        apiMutate<{ authenticate: Token }>(
-          authenticateMutation(transfer),
-          data => setAuth(data.authenticate) && onSubmit(),
+        apiMutate(
+          createAuthenticationToken(transfer),
+          (data: { createAuthenticationToken: Token }) => setAuthenticationToken(data.createAuthenticationToken) && onSubmit(),
           setError,
           setSubmitting,
         )

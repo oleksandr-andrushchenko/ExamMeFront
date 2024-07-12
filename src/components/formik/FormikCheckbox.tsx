@@ -11,6 +11,7 @@ export default function FormikCheckbox({ name, label, children }) {
       <Checkbox
         { ...input }
         name={ name }
+        defaultChecked={ input.value }
         label={ label || (
           <Typography
             variant="small"

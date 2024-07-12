@@ -1,26 +1,24 @@
-import { Button, Card, CardBody, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { PencilSquareIcon as UpdateIcon, PlusIcon as CreateIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { Card, CardBody, Dialog, Typography } from '@material-tailwind/react'
 import { memo, useEffect, useState } from 'react'
-import QuestionTransfer, {
-  QuestionChoice,
-  QuestionDifficulty,
-  QuestionType,
-} from '../../schema/question/QuestionTransfer'
+import CreateQuestion, { QuestionChoice, QuestionDifficulty, QuestionType } from '../../schema/question/CreateQuestion'
 import Question from '../../schema/question/Question'
 import Category from '../../schema/category/Category'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
-import updateQuestionMutation from '../../api/question/updateQuestionMutation'
-import createQuestionMutation from '../../api/question/createQuestionMutation'
-import categoriesSelectQuery from '../../api/category/categoriesSelectQuery'
+import getCategoriesForSelect from '../../api/category/getCategoriesForSelect'
+import createQuestion from '../../api/question/createQuestion'
+import updateQuestion from '../../api/question/updateQuestion'
 import Spinner from '../Spinner'
 import Error from '../Error'
 import * as yup from 'yup'
 import { FieldArray, Form, Formik, FormikHelpers } from 'formik'
-import QuestionUpdateTransfer from '../../schema/question/QuestionUpdateTransfer'
+import UpdateQuestion from '../../schema/question/UpdateQuestion'
 import FormikTextarea from '../formik/FormikTextarea'
 import FormikSelect from '../formik/FormikSelect'
 import FormikInput from '../formik/FormikInput'
 import FormikCheckbox from '../formik/FormikCheckbox'
+import { CreateIcon, DeleteIcon, EditIcon } from '../../registry/icons'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
 
 interface Props {
   category?: Category
@@ -46,31 +44,26 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
 
   useEffect(() => {
     if (!category && !question) {
-      apiQuery<{ categories: Category[] }>(
-        categoriesSelectQuery(),
-        data => setCategories(data.categories),
+      apiQuery(
+        getCategoriesForSelect(),
+        (data: { categories: Category[] }) => setCategories(data.categories),
         setError,
         setLoading,
       )
     }
   }, [])
 
-  const icon = question ? <UpdateIcon className="inline-block h-4 w-4"/> :
-    <CreateIcon className="inline-block h-4 w-4"/>
-  const label = question ? 'Update question' : 'Add question'
+  const icon = question ? EditIcon : CreateIcon
+  const label = question ? 'Update Question' : 'Add Question'
 
   return <>
     { iconButton
-      ? <Tooltip content={ label }>
-        <IconButton onClick={ handleOpen }>{ icon }</IconButton>
-      </Tooltip>
-      : <Button onClick={ handleOpen }>{ icon } { label }</Button> }
+      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen }/>
+      : <Button icon={ icon } label={ label } onClick={ handleOpen }/> }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4">
-            { question ? 'Update question' : 'Add question' }
-          </Typography>
+          <Typography variant="h4">{ label }</Typography>
           <Formik
             initialValues={ {
               title: question?.title || '',
@@ -147,16 +140,16 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
               }
 
               if (question) {
-                apiMutate<{ updateQuestion: Question }>(
-                  updateQuestionMutation(question.id!, transfer as QuestionUpdateTransfer),
-                  data => callback(data.updateQuestion),
+                apiMutate(
+                  updateQuestion(question.id!, transfer as UpdateQuestion),
+                  (data: { updateQuestion: Question }) => callback(data.updateQuestion),
                   setError,
                   setSubmitting,
                 )
               } else {
-                apiMutate<{ createQuestion: Question }>(
-                  createQuestionMutation(transfer as QuestionTransfer),
-                  data => callback(data.createQuestion),
+                apiMutate(
+                  createQuestion(transfer as CreateQuestion),
+                  (data: { createQuestion: Question }) => callback(data.createQuestion),
                   setError,
                   setSubmitting,
                 )
@@ -165,25 +158,19 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
             { ({ values, isSubmitting }) => (
               <Form className="flex flex-col gap-6">
                 { !category && !question && (!categories ? <Spinner type="button"/> : (
-                  <div className="flex flex-col gap-2">
-                    <FormikSelect
-                      name="categoryId"
-                      label="Category"
-                      options={ categories.map(category => ({ value: category.id, label: category.name })) }
-                    />
-                  </div>
+                  <FormikSelect
+                    name="categoryId"
+                    label="Category"
+                    options={ categories.map(category => ({ value: category.id, label: category.name })) }
+                  />
                 )) }
 
-                <div className="flex flex-col gap-2">
-                  <FormikTextarea name="title"/>
-                </div>
+                <FormikTextarea name="title"/>
 
-                <div className="flex flex-col gap-2 hidden">
-                  <FormikSelect
-                    name="type"
-                    options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }
-                  />
-                </div>
+                <FormikSelect
+                  name="type"
+                  options={ Object.values(QuestionType).map(type => ({ value: type, label: type })) }
+                />
 
                 { values.type === QuestionType.CHOICE && (
                   <FieldArray name="choices">
@@ -191,55 +178,60 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
                       <div className="flex flex-col gap-6">
                         { values.choices.map((choice, index) => (
                           <div key={ `choices.${ index }` } className="flex flex-col gap-3">
-                            <div className="flex flex-col gap-1">
-                              <FormikInput name={ `choices.${ index }.title` }>
-                                [{ index + 1 }] Choice title
-                              </FormikInput>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <FormikTextarea name={ `choices.${ index }.explanation` }>
-                                [{ index + 1 }] Choice explanation
-                              </FormikTextarea>
-                            </div>
-                            <div className="flex flex-col gap-1 -mt-3">
-                              <FormikCheckbox name={ `choices.${ index }.correct` }>
-                                [{ index + 1 }] Choice correct
-                              </FormikCheckbox>
-                            </div>
+
+                            <FormikInput name={ `choices.${ index }.title` }>
+                              [{ index + 1 }] Choice title
+                            </FormikInput>
+
+                            <FormikTextarea name={ `choices.${ index }.explanation` }>
+                              [{ index + 1 }] Choice explanation
+                            </FormikTextarea>
+
+                            <FormikCheckbox name={ `choices.${ index }.correct` }>
+                              [{ index + 1 }] Choice correct
+                            </FormikCheckbox>
+
                             { values.choices.length > 1 && (
-                              <Button type="button" className="-mt-3" onClick={ () => remove(index) }>
-                                <XMarkIcon className="inline-block h-4 w-4"/> Remove
-                              </Button>
+                              <Button
+                                icon={ DeleteIcon }
+                                label="Remove"
+                                className="-mt-3"
+                                onClick={ () => remove(index) }
+                              />
                             ) }
                           </div>
                         )) }
-                        <Button type="button" className="-mt-3" onClick={ () => push(new QuestionChoice()) }>
-                          <CreateIcon className="inline-block h-4 w-4"/> Add
-                        </Button>
+                        <Button
+                          icon={ CreateIcon }
+                          label="Add"
+                          type="button"
+                          className="-mt-3"
+                          onClick={ () => push(new QuestionChoice()) }
+                        />
                       </div>
                     ) }
                   </FieldArray>
                 ) }
 
-                <div className="flex flex-col gap-2">
-                  <FormikSelect
-                    name="difficulty"
-                    options={ Object.values(QuestionDifficulty).map(difficulty => ({
-                      value: difficulty,
-                      label: difficulty,
-                    })) }
-                  />
-                </div>
+                <FormikSelect
+                  name="difficulty"
+                  options={ Object.values(QuestionDifficulty).map(difficulty => ({
+                    value: difficulty,
+                    label: difficulty,
+                  })) }
+                />
 
                 { error && <Error text={ error }/> }
 
                 <div>
-                  <Button type="reset" onClick={ handleOpen }>
-                    Cancel
-                  </Button>
-                  <Button size="md" className="ml-1" type="submit" disabled={ isSubmitting }>
-                    { question ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
-                  </Button>
+                  <Button label="Cancel" type="reset" onClick={ handleOpen }/>{ ' ' }
+                  <Button
+                    icon={ icon }
+                    label={ question ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add') }
+                    size="md"
+                    type="submit"
+                    disabled={ isSubmitting }
+                  />
                 </div>
               </Form>
             ) }

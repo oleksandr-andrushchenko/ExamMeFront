@@ -23,3 +23,7 @@
 * Subscriptions
 * Keep single choices for the beginning (create/update forms/backend)
 * User management page
+* Approve/decline questions created by users
+* Auto next on create question answer
+* Real ratings
+* Question create validation: only one choice (=1)

@@ -26,14 +26,16 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Paginated from '../schema/pagination/Paginated'
 import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
-import categoriesPageCategoriesQuery from '../api/category/categoriesPageCategoriesQuery'
-import CategoryQuery from '../schema/category/CategoryQuery'
+import getCategoriesForCategoriesPage from '../api/category/getCategoriesForCategoriesPage'
+import GetCategories from '../schema/category/GetCategories'
 import urlSearchParamsToPlainObject from '../utils/urlSearchParamsToPlainObject'
 import Error from '../components/Error'
 import ExamPermission from '../enum/exam/ExamPermission'
 import AddExam from '../components/exam/AddExam'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
+import H1 from '../components/typography/H1'
+import { ListIcon } from '../registry/icons'
 
 const Categories = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -41,7 +43,7 @@ const Categories = () => {
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ categories, setCategories ] = useState<Paginated<Category>>()
   const [ error, setError ] = useState<string>('')
-  const { checkAuth } = useAuth()
+  const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
   const onCategoryCreated = (category: Category) => navigate(Route.CATEGORY.replace(':categoryId', category.id!))
@@ -50,17 +52,17 @@ const Categories = () => {
   const onQuestionCreated = () => refresh()
 
   const refresh = (): true => {
-    const filter: CategoryQuery = urlSearchParamsToPlainObject(searchParams)
-    apiQuery<{ paginatedCategories: Paginated<Category> }>(
-      categoriesPageCategoriesQuery(filter),
-      data => setCategories(data.paginatedCategories),
+    const filter: GetCategories = urlSearchParamsToPlainObject(searchParams)
+    apiQuery(
+      getCategoriesForCategoriesPage(filter),
+      (data: { paginatedCategories: Paginated<Category> }) => setCategories(data.paginatedCategories),
       setError,
       setLoading,
     )
 
     return true
   }
-  const applySearchParams = (partialQueryParams: CategoryQuery = {}) => {
+  const applySearchParams = (partialQueryParams: GetCategories = {}) => {
     setCategories(undefined)
 
     searchParams.delete('prevCursor')
@@ -108,14 +110,14 @@ const Categories = () => {
       <Link to={ Route.CATEGORIES }>Categories</Link>
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">Categories</Typography>
+    <H1 icon={ ListIcon }>Categories</H1>
 
     <Typography variant="small" className="mt-1">Categories info</Typography>
 
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuth(CategoryPermission.CREATE) && <AddCategory onSubmit={ onCategoryCreated }/> }
+      { checkAuthorization(CategoryPermission.CREATE) && <AddCategory onSubmit={ onCategoryCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -215,16 +217,16 @@ const Categories = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuth(QuestionPermission.CREATE) &&
+            { checkAuthorization(QuestionPermission.CREATE) &&
               <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
-            { checkAuth(CategoryPermission.UPDATE, category) &&
+            { checkAuthorization(CategoryPermission.UPDATE, category) &&
               <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
-            { checkAuth(CategoryPermission.DELETE, category) &&
+            { checkAuthorization(CategoryPermission.DELETE, category) &&
               <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
 
-            { !!category.questionCount && checkAuth(ExamPermission.CREATE) &&
+            { !!category.questionCount && checkAuthorization(ExamPermission.CREATE) &&
               <AddExam category={ category } iconButton/> }
           </td>
         </tr>

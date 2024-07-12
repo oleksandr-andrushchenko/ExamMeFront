@@ -1,26 +1,20 @@
-import {
-  ArrowRightStartOnRectangleIcon,
-  Bars3Icon,
-  CodeBracketIcon as Logo,
-  UserCircleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/solid'
-import { Link, useMatch, useResolvedPath } from 'react-router-dom'
-import classNames from '../utils/classNames'
+import { ArrowRightStartOnRectangleIcon, Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { Link } from 'react-router-dom'
 import { memo, useEffect, useState } from 'react'
 import { Button, Collapse, IconButton, Navbar, Typography } from '@material-tailwind/react'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Auth from './Auth'
+import { FolderPlus as LogoIcon } from 'react-bootstrap-icons'
 
 const NavBar = () => {
-  const navigation = [
-    { name: 'Categories', href: Route.CATEGORIES },
-    { name: 'Questions', href: Route.QUESTIONS },
-  ]
+  const [ links, setLinks ] = useState({
+    categories: { name: 'Categories', href: Route.CATEGORIES },
+    questions: { name: 'Questions', href: Route.QUESTIONS },
+  })
   const [ openNav, setOpenNav ] = useState<boolean>(false)
-  const { auth, me, setAuth } = useAuth()
+  const { authenticationToken, me, setAuthenticationToken, checkAuthorization } = useAuth()
 
   useEffect(() => {
     window.addEventListener(
@@ -30,25 +24,14 @@ const NavBar = () => {
   }, [])
 
   const navList = <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-    { navigation.map((item) => {
-      const resolvedPath = useResolvedPath(item.href)
-      const current = useMatch({ path: resolvedPath.pathname, end: true })
-
-      return <Typography as="li" key={ item.href } variant="small" color="blue-gray" className="p-1 font-normal">
-        <Link
-          key={ item.name }
-          to={ item.href }
-          className={ classNames(
-            current ? 'underline' : '',
-            'flex items-center',
-          ) }
-          aria-current={ current ? 'page' : undefined }
-        >
-          { item.name }
+    { Object.values(links).map(({ name, href }) => {
+      return <Typography as="li" key={ href } variant="small" color="blue-gray" className="p-1 font-normal">
+        <Link key={ name } to={ href } className="flex items-center">
+          { name }
         </Link>
       </Typography>
     }) }
-    { auth && !me
+    { authenticationToken && !me
       ? <Typography as="li" variant="small" className="p-1 font-normal">
         <Spinner type="text"/>
       </Typography>
@@ -60,7 +43,7 @@ const NavBar = () => {
               { me.email }
             </Typography>
             <Typography as="li" variant="small" className="p-1 font-normal">
-              <Button onClick={ () => setAuth(undefined) }>
+              <Button onClick={ () => setAuthenticationToken(undefined) }>
                 <ArrowRightStartOnRectangleIcon className="inline-block h-4 w-4"/> Logout
               </Button>
             </Typography>
@@ -80,7 +63,7 @@ const NavBar = () => {
     <Navbar className="h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4" fullWidth={ true }>
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link to={ Route.HOME } className="inline-flex items-center gap-1 w-2/12">
-          <Logo className="h-12 w-12"/> Exam Me
+          <LogoIcon className="h-10 w-10"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">
           <div className="hidden lg:block">{ navList }</div>

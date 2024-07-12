@@ -1,10 +1,12 @@
-import { Button, Card, CardBody, CardFooter, Dialog, IconButton, Tooltip, Typography } from '@material-tailwind/react'
+import { Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
 import { CheckIcon } from '@heroicons/react/24/solid'
 import { memo, useState } from 'react'
 import Exam from '../../schema/exam/Exam'
 import { apiMutate } from '../../api/apolloClient'
-import completeExamMutation from '../../api/exam/completeExamMutation'
+import createExamCompletion from '../../api/exam/createExamCompletion'
 import Error from '../Error'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
 
 interface Props {
   exam: Exam
@@ -19,27 +21,24 @@ const CompleteExam = ({ exam, onSubmit, iconButton }: Props) => {
   const [ error, setError ] = useState<string>('')
 
   const onClick = () => {
-    apiMutate<{ completeExam: Exam }>(
-      completeExamMutation(exam.id!),
-      data => {
+    apiMutate(
+      createExamCompletion(exam.id!),
+      (data: { createExamCompletion: Exam }) => {
         setOpen(false)
-        onSubmit && onSubmit(data.completeExam)
+        onSubmit && onSubmit(data.createExamCompletion)
       },
       setError,
       setProcessing,
     )
   }
 
+  const icon = CheckIcon
+  const label = processing ? 'Completing Exam...' : 'Complete Exam'
+
   return <>
     { iconButton
-      ? <Tooltip content="Complete exam">
-        <IconButton onClick={ handleOpen } disabled={ processing }>
-          <CheckIcon className="h-4 w-4"/>
-        </IconButton>
-      </Tooltip>
-      : <Button onClick={ handleOpen } disabled={ processing }>
-        <CheckIcon className="inline-block h-4 w-4"/> { processing ? 'Completing Exam...' : 'Complete Exam' }
-      </Button> }
+      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen } disabled={ processing }/>
+      : <Button icon={ icon } label={ label } onClick={ handleOpen } disabled={ processing }/> }
     <Dialog open={ open } handler={ handleOpen }>
       <Card>
         <CardBody className="flex flex-col gap-4">
@@ -55,12 +54,8 @@ const CompleteExam = ({ exam, onSubmit, iconButton }: Props) => {
           { error && <Error text={ error } simple/> }
         </CardBody>
         <CardFooter className="pt-0">
-          <Button onClick={ handleOpen }>
-            Cancel
-          </Button>
-          <Button size="md" className="ml-1" onClick={ onClick } disabled={ processing }>
-            <CheckIcon className="inline-block h-4 w-4"/> { processing ? 'Completing...' : 'Complete' }
-          </Button>
+          <Button label="Cancel" onClick={ handleOpen }/>{ ' ' }
+          <Button icon={ icon } label={ label } size="md" onClick={ onClick } disabled={ processing }/>
         </CardFooter>
       </Card>
     </Dialog>

@@ -8,13 +8,13 @@ import Spinner from '../components/Spinner'
 import ExamPermission from '../enum/exam/ExamPermission'
 import DeleteExam from '../components/exam/DeleteExam'
 import ExamQuestion from '../schema/exam/ExamQuestion'
-import { QuestionChoice, QuestionType } from '../schema/question/QuestionTransfer'
+import { QuestionChoice, QuestionType } from '../schema/question/CreateQuestion'
 import CompleteExam from '../components/exam/CompleteExam'
 import { apiMutate, apiQuery } from '../api/apolloClient'
-import answerExamQuestionMutation from '../api/exam/answerExamQuestionMutation'
-import examPageExamQuestionQuery from '../api/exam/examPageExamQuestionQuery'
-import examPageCurrentExamQuestionQuery from '../api/exam/examPageCurrentExamQuestionQuery'
-import clearExamQuestionAnswerMutation from '../api/exam/clearExamQuestionAnswerMutation'
+import createExamQuestionAnswer from '../api/exam/createExamQuestionAnswer'
+import getExamQuestion from '../api/exam/getExamQuestion'
+import getCurrentExamQuestion from '../api/exam/getCurrentExamQuestion'
+import deleteExamQuestionAnswer from '../api/exam/deleteExamQuestionAnswer'
 import Error from '../components/Error'
 import Unauthenticated from './Unauthenticated'
 import Unauthorized from './Unauthorized'
@@ -28,7 +28,7 @@ const Exam = () => {
   const [ clearing, setClearing ] = useState<boolean>(false)
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
-  const { auth, me, checkAuth } = useAuth()
+  const { authenticationToken, me, checkAuthorization } = useAuth()
   const navigate = useNavigate()
   const exam = examQuestion?.exam
   const category = exam?.category
@@ -81,18 +81,18 @@ const Exam = () => {
       ? { choice: answer as number }
       : { answer: answer as string }
 
-    apiMutate<{ answerExamQuestion: ExamQuestion }>(
-      answerExamQuestionMutation(examId, getQuestionNumber()!, transfer),
-      data => setExamQuestion(data.answerExamQuestion),
+    apiMutate(
+      createExamQuestionAnswer(examId, getQuestionNumber()!, transfer),
+      (data: { createExamQuestionAnswer: ExamQuestion }) => setExamQuestion(data.createExamQuestionAnswer),
       setError,
       setAnswering,
     )
   }
 
   const clearAnswer = () => {
-    apiMutate<{ clearExamQuestionAnswer: ExamQuestion }>(
-      clearExamQuestionAnswerMutation(examId, getQuestionNumber()!),
-      data => setExamQuestion(data.clearExamQuestionAnswer),
+    apiMutate(
+      deleteExamQuestionAnswer(examId, getQuestionNumber()!),
+      (data: { deleteExamQuestionAnswer: ExamQuestion }) => setExamQuestion(data.deleteExamQuestionAnswer),
       setError,
       setClearing,
     )
@@ -100,16 +100,16 @@ const Exam = () => {
 
   useEffect(() => {
     if (questionNumber === undefined) {
-      apiQuery<{ currentExamQuestion: ExamQuestion }>(
-        examPageCurrentExamQuestionQuery(examId),
-        data => setExamQuestion(data.currentExamQuestion),
+      apiQuery(
+        getCurrentExamQuestion(examId),
+        (data: { currentExamQuestion: ExamQuestion }) => setExamQuestion(data.currentExamQuestion),
         setError,
         setLoading,
       )
     } else {
-      apiQuery<{ examQuestion: ExamQuestion }>(
-        examPageExamQuestionQuery(examId, questionNumber!),
-        data => setExamQuestion(data.examQuestion),
+      apiQuery(
+        getExamQuestion(examId, questionNumber!),
+        (data: { examQuestion: ExamQuestion }) => setExamQuestion(data.examQuestion),
         setError,
         setLoading,
       )
@@ -120,7 +120,7 @@ const Exam = () => {
     document.title = `Exam: ${ examQuestion?.exam?.category?.name || 'ExamMe' }`
   }, [ examQuestion?.exam?.category?.name ])
 
-  if (!auth) {
+  if (!authenticationToken) {
     return <Unauthenticated/>
   }
 
@@ -128,7 +128,7 @@ const Exam = () => {
     return <Spinner/>
   }
 
-  if (examQuestion && !checkAuth(ExamPermission.GET, examQuestion?.exam)) {
+  if (examQuestion && !checkAuthorization(ExamPermission.GET, examQuestion?.exam)) {
     return <Unauthorized/>
   }
 
@@ -197,10 +197,10 @@ const Exam = () => {
           </Button>
         </ButtonGroup> }
 
-      { examQuestion && checkAuth(ExamPermission.CREATE_COMPLETION, examQuestion.exam) &&
+      { examQuestion && checkAuthorization(ExamPermission.CREATE_COMPLETION, examQuestion.exam) &&
         <CompleteExam exam={ examQuestion.exam! } onSubmit={ onExamCompleted }/> }
 
-      { examQuestion && checkAuth(ExamPermission.DELETE, examQuestion.exam) &&
+      { examQuestion && checkAuthorization(ExamPermission.DELETE, examQuestion.exam) &&
         <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
     </div>
 

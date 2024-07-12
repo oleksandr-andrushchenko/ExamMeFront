@@ -5,13 +5,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
 import Exam from '../../schema/exam/Exam'
-import ExamTransfer from '../../schema/exam/ExamTransfer'
+import CreateExam from '../../schema/exam/CreateExam'
 import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import Auth from '../Auth'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
-import createExamMutation from '../../api/exam/createExamMutation'
-import oneNonCompletedCategoryExamsQuery from '../../api/exam/oneNonCompletedCategoryExamsQuery'
+import createExam from '../../api/exam/createExam'
+import getOneNonCompletedCategoryExams from '../../api/exam/getOneNonCompletedCategoryExams'
 import Error from '../Error'
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const AddExam = ({ category, iconButton }: Props) => {
-  const { auth } = useAuth()
+  const { authenticationToken } = useAuth()
   const [ exam, setExam ] = useState<Exam>()
   const [ showAuth, setShowAuth ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
@@ -29,45 +29,45 @@ const AddExam = ({ category, iconButton }: Props) => {
   const navigate = useNavigate()
 
   const onClick = async (): Promise<void> => {
-    if (!auth) {
+    if (!authenticationToken) {
       return setShowAuth(true)
     }
 
     setProcessing(true)
 
-    const transfer: ExamTransfer = {
+    const transfer: CreateExam = {
       categoryId: category.id!,
     }
     const callback = (exam: Exam) => {
       navigate(Route.EXAM.replace(':categoryId', category.id!).replace(':examId', exam.id!))
     }
 
-    apiMutate<{ createExam: Exam }>(
-      createExamMutation(transfer),
-      data => callback(data.createExam),
+    apiMutate(
+      createExam(transfer),
+      (data: { createExam: Exam }) => callback(data.createExam),
       setError,
       setProcessing,
     )
   }
 
   useEffect(() => {
-    if (auth) {
+    if (authenticationToken) {
       apiQuery<{ exams: Exam[] }>(
-        oneNonCompletedCategoryExamsQuery(category.id!),
+        getOneNonCompletedCategoryExams(category.id!),
         data => setExam(data.exams[0] || null),
         setError,
         setLoading,
       )
     }
-  }, [ auth ])
+  }, [ authenticationToken ])
 
-  if (auth && exam === undefined) {
+  if (authenticationToken && exam === undefined) {
     return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
   }
 
   const icon = <PlayIcon className="inline-block h-4 w-4"/>
 
-  if (auth && exam) {
+  if (authenticationToken && exam) {
     const url = Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
 

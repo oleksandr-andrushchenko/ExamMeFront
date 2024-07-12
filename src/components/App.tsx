@@ -6,7 +6,7 @@ import ThemeProvider from './ThemeProvider'
 import Category from '../pages/Category'
 import NotFound from '../pages/NotFound'
 import Terms from '../pages/Terms'
-import { AuthProvider } from '../hooks/useAuth'
+import { AuthenticationProvider } from '../hooks/useAuth'
 import { default as Path } from '../enum/Route'
 import Question from '../pages/Question'
 import Questions from '../pages/Questions'
@@ -33,7 +33,7 @@ const routes = <Routes>
 
 export default function App() {
   return (
-    <AuthProvider>
+    <AuthenticationProvider>
       <ThemeProvider>
         <ApolloProvider client={ apolloClient }>
           <BrowserRouter>
@@ -41,6 +41,6 @@ export default function App() {
           </BrowserRouter>
         </ApolloProvider>
       </ThemeProvider>
-    </AuthProvider>
+    </AuthenticationProvider>
   )
 }
