@@ -1,60 +1,10 @@
 import { gql } from '@apollo/client'
-import GetQuestions from '../../schema/question/GetQuestions'
 
-export default function getCategoryAndQuestionsForCategoryPage(categoryId: string, filter: GetQuestions = {}): any {
-  filter.categoryId = categoryId
-
-  if ('size' in filter) {
-    filter.size = +filter.size
-  }
-
+export default function getCategoryForCategoryPage(categoryId: string): any {
   return {
     query: gql`
-        query GetCategoryAndQuestionsForCategoryPage(
-            $categoryId: ID!,
-            $prevCursor: String,
-            $nextCursor: String,
-            $cursor: String,
-            $size: Int,
-            $order: String,
-            $price: String,
-            $search: String,
-            $difficulty: String,
-            $type: String
-        ) {
-            paginatedQuestions(
-                categoryId: $categoryId,
-                prevCursor: $prevCursor,
-                nextCursor: $nextCursor,
-                cursor: $cursor,
-                size: $size,
-                order: $order,
-                price: $price,
-                search: $search,
-                difficulty: $difficulty,
-                type: $type
-            ) {
-                data {
-                    difficulty
-                    id
-                    title
-                    type
-                    categoryId
-                    choices {
-                        title
-                        correct
-                        explanation
-                    }
-                    ownerId
-                }
-                meta {
-                    nextCursor
-                    prevCursor
-                }
-            }
-            category(
-                categoryId: $categoryId
-            ) {
+        query GetCategoryForCategoryPage($categoryId: ID!) {
+            category(categoryId: $categoryId) {
                 id
                 name
                 questionCount
@@ -63,6 +13,6 @@ export default function getCategoryAndQuestionsForCategoryPage(categoryId: strin
             }
         }
     `,
-    variables: filter,
+    variables: { categoryId },
   }
 }
