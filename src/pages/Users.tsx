@@ -27,6 +27,7 @@ import UserPermission from '../enum/users/UserPermission'
 import AddUser from '../components/users/AddUser'
 import { ListIcon } from '../registry/icons'
 import H1 from '../components/typography/H1'
+import DeleteUser from '../components/users/DeleteUser'
 
 const Users = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -37,6 +38,7 @@ const Users = () => {
   const { checkAuthorization } = useAuth()
 
   const onUserUpdated = () => refresh()
+  const onUserDeleted = () => refresh()
 
   const refresh = (): true => {
     const filter: GetUsers = urlSearchParamsToPlainObject(searchParams)
@@ -184,6 +186,9 @@ const Users = () => {
           <td className="flex justify-end gap-1">
             { checkAuthorization(UserPermission.Update, user) &&
               <AddUser user={ user } onSubmit={ onUserUpdated } iconButton/> }
+
+            { checkAuthorization(UserPermission.Delete, user) &&
+              <DeleteUser user={ user } onSubmit={ onUserDeleted } iconButton/> }
           </td>
         </tr>
       )) }
