@@ -41,7 +41,7 @@ export function AuthenticationProvider({ children }: { children: ReactNode }) {
 
     permissions = permissions ?? me.permissions
 
-    if (permissions.indexOf(Permission.ALL) !== -1) {
+    if (permissions.indexOf(Permission.All) !== -1) {
       return true
     }
 

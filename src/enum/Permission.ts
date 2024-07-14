@@ -1,7 +1,7 @@
 enum Permission {
-  REGULAR = 'regular',
-  ROOT = 'root',
-  ALL = '*',
+  Regular = 'regular',
+  Root = 'root',
+  All = '*',
 }
 
 export default Permission
