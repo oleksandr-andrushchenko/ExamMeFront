@@ -19,8 +19,8 @@ const Rating = ({ value = Math.ceil(Math.random() * 5), number = false, total, r
       <MlRating
         value={ value }
         onChange={ (value) => setRated(value) }
-        ratedIcon={ <RatedIcon className="h-5 w-5 mr-1"/> }
-        unratedIcon={ <UnratedIcon className="h-5 w-5 mr-1"/> }
+        ratedIcon={ <RatedIcon className="h-5 w-5"/> }
+        unratedIcon={ <UnratedIcon className="h-5 w-5"/> }
         readonly={ readonly }
       />
       { (total > 0) && <Typography type="small">Based on { total } Reviews</Typography> }
