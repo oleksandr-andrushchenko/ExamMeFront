@@ -1,8 +1,9 @@
 import { Breadcrumbs, Typography } from '@material-tailwind/react'
 import { HomeIcon } from '@heroicons/react/24/solid'
-import { Link } from 'react-router-dom'
 import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
+import H1 from '../components/typography/H1'
+import Link from '../components/elements/Link'
 
 const Home = () => {
   useEffect(() => {
@@ -11,10 +12,10 @@ const Home = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">Home</Typography>
+    <H1>Home</H1>
 
     <Typography variant="small" className="mt-1">Latest activities</Typography>
   </>

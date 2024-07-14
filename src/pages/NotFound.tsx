@@ -1,8 +1,11 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { Breadcrumbs, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { Breadcrumbs, Button, Typography } from '@material-tailwind/react'
-import { ArrowUturnLeftIcon, HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect } from 'react'
+import H1 from '../components/typography/H1'
+import Button from '../components/elements/Button'
+import Link from '../components/elements/Link'
+import { GoBackIcon, HomeIcon } from '../registry/icons'
 
 const NotFound = () => {
   const navigate = useNavigate()
@@ -14,16 +17,16 @@ const NotFound = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">Not Found</Typography>
+    <H1>Not Found</H1>
 
     <Typography variant="small" className="mt-1">Page not found</Typography>
 
     <div className="inline-flex items-center gap-1 mt-3">
-      <Button onClick={ goBack }><ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back</Button>
-      <Link to={ Route.Home }><Button size="md"><HomeIcon className="inline-block h-4 w-4"/> Go Home</Button></Link>
+      <Button icon={ GoBackIcon } label="Go Back" onClick={ goBack }/>
+      <Link label={ <Button icon={ HomeIcon } label="Go Home" size="md"/> } to={ Route.Home }/>
     </div>
   </>
 }

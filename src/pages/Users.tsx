@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Breadcrumbs, Chip, Tooltip, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -15,6 +14,7 @@ import DeleteUser from '../components/users/DeleteUser'
 import Permission from '../enum/Permission'
 import Rating from '../components/Rating'
 import Table from '../components/elements/Table'
+import Link from '../components/elements/Link'
 
 const Users = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -27,8 +27,8 @@ const Users = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.Users }>Users</Link>
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+      <Link label="Users" to={ Route.Users }/>
     </Breadcrumbs>
 
     <H1 icon={ ListIcon }>Users</H1>
@@ -47,9 +47,7 @@ const Users = () => {
         user.id,
         index + 1,
         <Tooltip content={ user.name }>
-          <Link key={ user.id } to={ Route.Users.replace(':userId', user.id!) }>
-            { user.name }
-          </Link>
+          <Link label={ user.name } to={ Route.Users.replace(':userId', user.id!) }/>
         </Tooltip>,
         user.email,
         user.permissions?.map(permission => (

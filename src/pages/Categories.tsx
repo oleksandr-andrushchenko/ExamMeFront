@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Breadcrumbs, Tooltip, Typography } from '@material-tailwind/react'
 import Category from '../schema/category/Category'
 import Route from '../enum/Route'
@@ -18,6 +18,7 @@ import QuestionPermission from '../enum/question/QuestionPermission'
 import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
+import Link from '../components/elements/Link'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -31,8 +32,8 @@ const Categories = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.Categories }>Categories</Link>
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+      <Link label="Categories" to={ Route.Categories }/>
     </Breadcrumbs>
 
     <H1 icon={ ListIcon }>Categories</H1>
@@ -54,11 +55,7 @@ const Categories = () => {
         category.id,
         index + 1,
         <Tooltip content={ category.name }>
-          <Link
-            key={ category.id }
-            to={ Route.Category.replace(':categoryId', category.id!) }>
-            { category.name }
-          </Link>
+          <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/>
         </Tooltip>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,

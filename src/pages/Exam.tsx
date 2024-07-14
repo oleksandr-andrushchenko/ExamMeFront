@@ -1,5 +1,5 @@
-import { Link, Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Button, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
+import { Params, useNavigate, useParams } from 'react-router-dom'
+import { Breadcrumbs, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -19,6 +19,10 @@ import Error from '../components/Error'
 import Unauthenticated from './Unauthenticated'
 import Unauthorized from './Unauthorized'
 import Exam from '../schema/exam/Exam'
+import H1 from '../components/typography/H1'
+import Link from '../components/elements/Link'
+import H2 from '../components/typography/H2'
+import Button from '../components/elements/Button'
 
 const Exam = () => {
   const { examId } = useParams<Params>() as { examId: string }
@@ -135,18 +139,13 @@ const Exam = () => {
   const layout = (header: string, body) => {
     return <>
       <Breadcrumbs>
-        <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-        <Link to={ Route.Categories }>Categories</Link>
-        { !examQuestion ? <Spinner type="text"/> :
-          <Link to={ Route.Category.replace(':categoryId', examQuestion.exam!.categoryId!) }>
-            { examQuestion.exam!.category!.name }
-          </Link> }
-        <Link to={ Route.Exam.replace(':examId', examId) }>Exam</Link>
+        <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+        <Link label="Categories" to={ Route.Categories }/>
+        { !examQuestion ? <Spinner type="text"/> : <Link label={ examQuestion.exam!.category!.name } to={ Route.Category.replace(':categoryId', examQuestion.exam!.categoryId!) }/> }
+        <Link label="Exam" to={ Route.Exam.replace(':examId', examId) }/>
       </Breadcrumbs>
 
-      <Typography as="h1" variant="h2" className="mt-1">
-        Exam: { examQuestion ? examQuestion.exam!.category!.name : <Spinner type="text"/> }
-      </Typography>
+      <H1>Exam: { examQuestion ? examQuestion.exam!.category!.name : <Spinner type="text"/> }</H1>
 
       <Typography variant="small" className="mt-1">{ header }</Typography>
 
@@ -189,12 +188,8 @@ const Exam = () => {
     <div className="flex gap-1 items-center mt-4">
       { examQuestion &&
         <ButtonGroup variant="outlined">
-          <Button onClick={ onPrevQuestionClick } disabled={ !showPrev() }>
-            <ArrowLeftIcon className="inline-block w-4 h-4"/> Prev
-          </Button>
-          <Button onClick={ onNextQuestionClick } disabled={ !showNext() }>
-            Next <ArrowRightIcon className="inline-block w-4 h-4"/>
-          </Button>
+          <Button icon={ ArrowLeftIcon } label="Prev" onClick={ onPrevQuestionClick } disabled={ !showPrev() }/>
+          <Button icon={ ArrowRightIcon } label="Next" onClick={ onNextQuestionClick } disabled={ !showNext() }/>
         </ButtonGroup> }
 
       { examQuestion && checkAuthorization(ExamPermission.CreateCompletion, examQuestion.exam) &&
@@ -221,9 +216,7 @@ const Exam = () => {
       /> }
 
     { !examQuestion ? <Spinner type="text"/> :
-      <Typography as="h2" variant="h6" className="mt-4">
-        Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }
-      </Typography> }
+      <H2>Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }</H2> }
 
     <div className="flex flex-col gap-8 mt-4">
       { !examQuestion ? <Spinner/> : (

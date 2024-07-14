@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Breadcrumbs, Option, Select, Tooltip, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -15,11 +14,12 @@ import { apiQuery } from '../api/apolloClient'
 import getQuestionsForQuestionsPage from '../api/question/getQuestionsForQuestionsPage'
 import QuestionPermission from '../enum/question/QuestionPermission'
 import { ListIcon } from '../registry/icons'
-import H1 from '../components/typography/H1'
 import Table from '../components/elements/Table'
 import getCategoriesForSelect from '../api/category/getCategoriesForSelect'
 import Error from '../components/Error'
 import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
+import H1 from '../components/typography/H1'
+import Link from '../components/elements/Link'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -46,8 +46,8 @@ const Questions = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.Categories }>Questions</Link>
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+      <Link label="Questions" to={ Route.Questions }/>
     </Breadcrumbs>
 
     <H1 icon={ ListIcon }>Questions</H1>
@@ -62,6 +62,9 @@ const Questions = () => {
         create: checkAuthorization(QuestionPermission.Create) && <AddQuestion onSubmit={ refresh }/>,
       } }
       tabs={ [ 'all', 'free', 'subscription' ] }
+      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Type', 'Rating', '' ] }
+      queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
+      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       filters={ {
         category: (searchParams, applySearchParams) => !categories ? <Spinner type="button"/> : (
           <Select
@@ -117,19 +120,11 @@ const Questions = () => {
           )) }
         </Select>,
       } }
-      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Type', 'Rating', '' ] }
-      queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
-      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
         <Tooltip content={ question.title }>
-          <Link
-            key={ question.id }
-            to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
-          >
-            { question.title }
-          </Link>
+          <Link label={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>
         </Tooltip>,
         !categories ? <Spinner/> : (
           <Tooltip content={ getCategory(question.categoryId!).name }>

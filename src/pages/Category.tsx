@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Option, Select, Tooltip, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -23,6 +23,8 @@ import QuestionPermission from '../enum/question/QuestionPermission'
 import Paginated from '../schema/pagination/Paginated'
 import Table from '../components/elements/Table'
 import getQuestionsForCategoryPage from '../api/category/getQuestionsForCategoryPage'
+import Link from '../components/elements/Link'
+import H1 from '../components/typography/H1'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -49,14 +51,12 @@ const Category = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.Categories }>Categories</Link>
-      { !category ? <Spinner type="text"/> :
-        <Link to={ Route.Category.replace(':categoryId', category.id!) }>{ category.name }</Link> }
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+      <Link label="Categories" to={ Route.Categories }/>
+      { !category ? <Spinner type="text"/> : <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/> }
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">{ !category ?
-      <Spinner type="text"/> : category.name }</Typography>
+    <H1>{ !category ? <Spinner type="text"/> : category.name }</H1>
 
     <Rating/>
 
@@ -91,6 +91,9 @@ const Category = () => {
           <AddExam category={ category }/>,
       } }
       tabs={ [ 'all', 'free', 'subscription' ] }
+      columns={ [ '#', 'Title', 'Difficulty', 'Type', 'Rating', '' ] }
+      queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
+      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       filters={ {
         difficulty: (searchParams, applySearchParams) => <Select
           label="Difficulty"
@@ -127,19 +130,11 @@ const Category = () => {
           )) }
         </Select>,
       } }
-      columns={ [ '#', 'Title', 'Difficulty', 'Type', 'Rating', '' ] }
-      queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
-      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
         <Tooltip content={ question.title }>
-          <Link
-            key={ question.id }
-            to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
-          >
-            { question.title }
-          </Link>
+          <Link label={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>
         </Tooltip>,
         question.difficulty,
         question.type,

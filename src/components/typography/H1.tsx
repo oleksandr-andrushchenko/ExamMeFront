@@ -3,8 +3,9 @@ import React, { memo } from 'react'
 
 const H1 = ({ icon, label, children }) => {
   return <Typography as="h1" variant="h2" className="mt-1">
-    { React.createElement(icon, { className: 'h-8 w-8 inline-block' }) }{' '}
-    <span className="align-middle">{ label ?? children }</span>
+    { icon && React.createElement(icon, { className: 'h-8 w-8 inline-block' }) }
+    { icon && ' ' }
+    { label || children }
   </Typography>
 }
 

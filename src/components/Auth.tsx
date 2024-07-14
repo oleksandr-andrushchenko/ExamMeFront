@@ -1,9 +1,11 @@
-import { Button, Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
+import { Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
+import Button from './elements/Button'
+import Text from './typography/Text'
 
 interface Props {
   register?: boolean
@@ -18,27 +20,17 @@ const Auth = ({ register, dialogOnly, onClose }: Props) => {
   const navigate = useNavigate()
 
   const [ activeTab, setActiveTab ] = useState<string>(register ? 'register' : 'login')
-  const onLogin = () => {
-    navigate(0)
-  }
-  const onRegister = () => {
-    navigate(0)
-  }
-  const onCancel = () => {
-    handleOpen()
-  }
-  const cancelButton = <Button type="reset" onClick={ onCancel }>Cancel</Button>
+  const cancelButton = <Button label="Cancel" type="reset" onClick={ handleOpen }/>
   const tabs = [
     {
       key: 'login',
-      header: <div className="flex items-center gap-2"><ArrowRightEndOnRectangleIcon className="w-4 h-4"/> Login</div>,
-      content: <Login onSubmit={ onLogin } buttons={ cancelButton }
-                      onRegisterClick={ () => setActiveTab('register') }/>,
+      header: <Text icon={ ArrowRightEndOnRectangleIcon } label="Login"/>,
+      content: <Login onSubmit={ () => navigate(0) } buttons={ cancelButton } onRegisterClick={ () => setActiveTab('register') }/>,
     },
     {
       key: 'register',
-      header: <div className="flex items-center gap-2"><UserPlusIcon className="w-4 h-4"/> Register</div>,
-      content: <Register onSubmit={ onRegister } buttons={ cancelButton }/>,
+      header: <Text icon={ UserPlusIcon } label="Register"/>,
+      content: <Register onSubmit={ () => navigate(0) } buttons={ cancelButton }/>,
     },
   ]
 
@@ -55,12 +47,8 @@ const Auth = ({ register, dialogOnly, onClose }: Props) => {
 
   return <>
     { !dialogOnly && (register
-      ? <Button onClick={ handleOpen }>
-        <UserPlusIcon className="inline-block h-4 w-4"/> Register
-      </Button>
-      : <Button size="md" onClick={ handleOpen }>
-        <ArrowRightEndOnRectangleIcon className="inline-block h-4 w-4"/> Login
-      </Button>) }
+      ? <Button icon={ UserPlusIcon } label="Register" onClick={ handleOpen }/>
+      : <Button icon={ ArrowRightEndOnRectangleIcon } label="Login" size="md" onClick={ handleOpen }/>) }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">

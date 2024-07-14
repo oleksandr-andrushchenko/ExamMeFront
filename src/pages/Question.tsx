@@ -1,4 +1,4 @@
-import { Link, Params, useNavigate, useParams } from 'react-router-dom'
+import { Params, useNavigate, useParams } from 'react-router-dom'
 import { Breadcrumbs, Checkbox, Input, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -14,6 +14,8 @@ import { apiQuery } from '../api/apolloClient'
 import getQuestionForQuestionPage from '../api/question/getQuestionForQuestionPage'
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
+import H1 from '../components/typography/H1'
+import Link from '../components/elements/Link'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -53,16 +55,13 @@ const Question = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.Categories }>Categories</Link>
-      { !question ? <Spinner type="text"/> :
-        <Link to={ Route.Category.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
-      { !question ? <Spinner type="text"/> :
-        <Link to={ Route.Question.replace(':questionId', question.id!) }>{ question.title }</Link> }
+      <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
+      <Link label="Categories" to={ Route.Categories }/>
+      { !question ? <Spinner type="text"/> : <Link label={ question.category!.name } to={ Route.Category.replace(':categoryId', question.categoryId!) }/> }
+      { !question ? <Spinner type="text"/> : <Link label={ question.title } to={ Route.Question.replace(':questionId', question.id!) }/> }
     </Breadcrumbs>
 
-    <Typography as="h1" variant="h2" className="mt-1">{ !question ?
-      <Spinner type="text"/> : question.title }</Typography>
+    <H1>{ !question ? <Spinner type="text"/> : question.title }</H1>
 
     <Rating/>
 

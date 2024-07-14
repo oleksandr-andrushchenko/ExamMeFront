@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import { Button, ButtonGroup, Input, Option, Select, Tab, Tabs, TabsHeader } from '@material-tailwind/react'
+import { ButtonGroup, Input, Option, Select, Tab, Tabs, TabsHeader } from '@material-tailwind/react'
 import { memo, useEffect, useState } from 'react'
 import Paginated from '../../schema/pagination/Paginated'
 import IconButton from './IconButton'
@@ -12,6 +12,7 @@ import {
   ArrowRightIcon as NextIcon,
   MagnifyingGlassIcon as SearchIcon,
 } from '@heroicons/react/24/solid'
+import Button from './Button'
 
 const Table = (
   {
@@ -132,7 +133,7 @@ const Table = (
                       disabled={ !items.meta.nextCursor }/>
         </ButtonGroup>) }
 
-      { showClear() && <div><Button variant="outlined" onClick={ clearSearchParams }>Clear</Button></div> }
+      { showClear() && <div><Button label="Clear" variant="outlined" onClick={ clearSearchParams }/></div> }
     </div>
 
     <table className="w-full table-auto text-left text-sm mt-4">
