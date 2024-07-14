@@ -6,6 +6,7 @@ import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
 import Spinner from './Spinner'
 import Auth from './Auth'
+import UserPermission from '../enum/users/UserPermission'
 import { FolderPlus as LogoIcon } from 'react-bootstrap-icons'
 
 const NavBar = () => {
@@ -22,6 +23,15 @@ const NavBar = () => {
       () => window.innerWidth >= 960 && setOpenNav(false),
     )
   }, [])
+
+  useEffect(() => {
+    if (me && checkAuthorization(UserPermission.Get)) {
+      setLinks({ ...links, ...{ users: { name: 'Users', href: Route.Users } } })
+    } else {
+      delete links['users']
+      setLinks(links)
+    }
+  }, [ authenticationToken, me ])
 
   const navList = <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
     { Object.values(links).map(({ name, href }) => {
