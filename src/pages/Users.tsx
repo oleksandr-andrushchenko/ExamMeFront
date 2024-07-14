@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
+import useAuth from '../hooks/useAuth'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
 import Spinner from '../components/Spinner'
@@ -22,6 +23,8 @@ import Error from '../components/Error'
 import User from '../schema/users/User'
 import GetUsers from '../schema/users/GetUsers'
 import getUsersForUsersPage from '../api/users/getUsersForUsersPage'
+import UserPermission from '../enum/users/UserPermission'
+import AddUser from '../components/users/AddUser'
 import { ListIcon } from '../registry/icons'
 import H1 from '../components/typography/H1'
 
@@ -31,6 +34,9 @@ const Users = () => {
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
   const [ users, setUsers ] = useState<Paginated<User>>()
   const [ error, setError ] = useState<string>('')
+  const { checkAuthorization } = useAuth()
+
+  const onUserUpdated = () => refresh()
 
   const refresh = (): true => {
     const filter: GetUsers = urlSearchParamsToPlainObject(searchParams)
@@ -176,6 +182,8 @@ const Users = () => {
           <td>{ user.permissions?.join(', ') }</td>
 
           <td className="flex justify-end gap-1">
+            { checkAuthorization(UserPermission.Update, user) &&
+              <AddUser user={ user } onSubmit={ onUserUpdated } iconButton/> }
           </td>
         </tr>
       )) }
