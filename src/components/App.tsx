@@ -23,7 +23,7 @@ const routes = <Routes>
     <Route path={ Path.CATEGORY } element={ <Category/> }/>
     <Route path={ Path.QUESTIONS } element={ <Questions/> }/>
     <Route path={ Path.QUESTION } element={ <Question/> }/>
-    <Route element={ <RequireAuthentication permission={ ExamPermission.GET }/> }>
+    <Route element={ <RequireAuthentication permission={ ExamPermission.Get }/> }>
       <Route path={ Path.EXAM } element={ <Exam/> }/>
     </Route>
     <Route path={ Path.TERMS } element={ <Terms/> }/>

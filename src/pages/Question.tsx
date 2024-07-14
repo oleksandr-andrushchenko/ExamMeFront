@@ -100,10 +100,10 @@ const Question = () => {
     </table>
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuthorization(QuestionPermission.UPDATE, question) && (!question ? <Spinner type="button"/> :
+      { checkAuthorization(QuestionPermission.Update, question) && (!question ? <Spinner type="button"/> :
         <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
 
-      { checkAuthorization(QuestionPermission.DELETE, question) && (!question ? <Spinner type="button"/> :
+      { checkAuthorization(QuestionPermission.Delete, question) && (!question ? <Spinner type="button"/> :
         <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
     </div>
   </>

@@ -128,7 +128,7 @@ const Exam = () => {
     return <Spinner/>
   }
 
-  if (examQuestion && !checkAuthorization(ExamPermission.GET, examQuestion?.exam)) {
+  if (examQuestion && !checkAuthorization(ExamPermission.Get, examQuestion?.exam)) {
     return <Unauthorized/>
   }
 
@@ -197,10 +197,10 @@ const Exam = () => {
           </Button>
         </ButtonGroup> }
 
-      { examQuestion && checkAuthorization(ExamPermission.CREATE_COMPLETION, examQuestion.exam) &&
+      { examQuestion && checkAuthorization(ExamPermission.CreateCompletion, examQuestion.exam) &&
         <CompleteExam exam={ examQuestion.exam! } onSubmit={ onExamCompleted }/> }
 
-      { examQuestion && checkAuthorization(ExamPermission.DELETE, examQuestion.exam) &&
+      { examQuestion && checkAuthorization(ExamPermission.Delete, examQuestion.exam) &&
         <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
     </div>
 

@@ -133,7 +133,7 @@ const Questions = () => {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuthorization(QuestionPermission.CREATE) && <AddQuestion onSubmit={ onQuestionCreated }/> }
+      { checkAuthorization(QuestionPermission.Create) && <AddQuestion onSubmit={ onQuestionCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -298,10 +298,10 @@ const Questions = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuthorization(QuestionPermission.UPDATE, question) &&
+            { checkAuthorization(QuestionPermission.Update, question) &&
               <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-            { checkAuthorization(QuestionPermission.DELETE, question) &&
+            { checkAuthorization(QuestionPermission.Delete, question) &&
               <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>

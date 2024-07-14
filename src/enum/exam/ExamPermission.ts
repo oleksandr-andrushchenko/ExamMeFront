@@ -1,10 +1,8 @@
 enum ExamPermission {
-  CREATE = 'createExam',
-  GET = 'getExam',
-  GET_QUESTION = 'getExamQuestion',
-  CREATE_QUESTION_ANSWER = 'createExamQuestionAnswer',
-  CREATE_COMPLETION = 'createExamCompletion',
-  DELETE = 'deleteExam',
+  Create = 'createExam',
+  Get = 'getExam',
+  CreateCompletion = 'createExamCompletion',
+  Delete = 'deleteExam',
 }
 
 export default ExamPermission

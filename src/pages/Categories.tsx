@@ -117,7 +117,7 @@ const Categories = () => {
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuthorization(CategoryPermission.CREATE) && <AddCategory onSubmit={ onCategoryCreated }/> }
+      { checkAuthorization(CategoryPermission.Create) && <AddCategory onSubmit={ onCategoryCreated }/> }
     </div>
 
     <div className="flex gap-1 items-center mt-4">
@@ -217,16 +217,16 @@ const Categories = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuthorization(QuestionPermission.CREATE) &&
+            { checkAuthorization(QuestionPermission.Create) &&
               <AddQuestion category={ category } onSubmit={ onQuestionCreated } iconButton/> }
 
-            { checkAuthorization(CategoryPermission.UPDATE, category) &&
+            { checkAuthorization(CategoryPermission.Update, category) &&
               <AddCategory category={ category } onSubmit={ onCategoryUpdated } iconButton/> }
 
-            { checkAuthorization(CategoryPermission.DELETE, category) &&
+            { checkAuthorization(CategoryPermission.Delete, category) &&
               <DeleteCategory category={ category } onSubmit={ onCategoryDeleted } iconButton/> }
 
-            { !!category.questionCount && checkAuthorization(ExamPermission.CREATE) &&
+            { !!category.questionCount && checkAuthorization(ExamPermission.Create) &&
               <AddExam category={ category } iconButton/> }
           </td>
         </tr>

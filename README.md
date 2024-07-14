@@ -27,3 +27,4 @@
 * Auto next on create question answer
 * Real ratings
 * Question create validation: only one choice (=1)
+* Admin lists should include deleted items

@@ -1,8 +1,7 @@
 enum QuestionPermission {
-  CREATE = 'createQuestion',
-  REPLACE = 'replaceQuestion',
-  UPDATE = 'updateQuestion',
-  DELETE = 'deleteQuestion',
+  Create = 'createQuestion',
+  Update = 'updateQuestion',
+  Delete = 'deleteQuestion',
 }
 
 export default QuestionPermission

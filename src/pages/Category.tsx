@@ -157,16 +157,16 @@ const Category = () => {
     </table>
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuthorization(QuestionPermission.CREATE, category) && (!category ?
+      { checkAuthorization(QuestionPermission.Create, category) && (!category ?
         <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ onQuestionCreated }/>) }
 
-      { checkAuthorization(CategoryPermission.UPDATE, category) && (!category ? <Spinner type="button"/> :
+      { checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
         <AddCategory category={ category } onSubmit={ onCategoryUpdated }/>) }
 
-      { checkAuthorization(CategoryPermission.DELETE, category) && (!category ? <Spinner type="button"/> :
+      { checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
         <DeleteCategory category={ category } onSubmit={ onCategoryDeleted }/>) }
 
-      { !category ? <Spinner type="button"/> : !!category.questionCount && checkAuthorization(ExamPermission.CREATE) &&
+      { !category ? <Spinner type="button"/> : !!category.questionCount && checkAuthorization(ExamPermission.Create) &&
         <AddExam category={ category }/> }
     </div>
 
@@ -299,10 +299,10 @@ const Category = () => {
           <td><Rating readonly/></td>
 
           <td className="flex justify-end gap-1">
-            { checkAuthorization(QuestionPermission.UPDATE, question) &&
+            { checkAuthorization(QuestionPermission.Update, question) &&
               <AddQuestion question={ question } onSubmit={ onQuestionUpdated } iconButton/> }
 
-            { checkAuthorization(QuestionPermission.DELETE, question) &&
+            { checkAuthorization(QuestionPermission.Delete, question) &&
               <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted } iconButton/> }
           </td>
         </tr>

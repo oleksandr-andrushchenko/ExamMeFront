@@ -4,7 +4,6 @@ enum Route {
   CATEGORY = '/categories/:categoryId',
   QUESTIONS = '/questions',
   QUESTION = '/categories/:categoryId/questions/:questionId',
-  EXAMS = '/exams',
   EXAM = '/exams/:examId',
   LOGIN = '/login',
   REGISTER = '/register',
