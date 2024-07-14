@@ -37,6 +37,7 @@ const Users = () => {
   const [ error, setError ] = useState<string>('')
   const { checkAuthorization } = useAuth()
 
+  const onUserCreated = () => refresh()
   const onUserUpdated = () => refresh()
   const onUserDeleted = () => refresh()
 
@@ -103,6 +104,10 @@ const Users = () => {
     <Typography variant="small" className="mt-1">Users info</Typography>
 
     { error && <Error text={ error }/> }
+
+    <div className="flex gap-1 items-center mt-4">
+      { checkAuthorization(UserPermission.Create) && <AddUser onSubmit={ onUserCreated }/> }
+    </div>
 
     <div className="flex gap-1 items-center mt-4">
       <Input

@@ -1,8 +1,8 @@
 import Permission from '../../enum/Permission'
 
-export default interface UpdateUser {
+export default interface CreateUser {
   name?: string
-  email?: string
+  email: string
   password?: string
   permission?: Permission[]
 }

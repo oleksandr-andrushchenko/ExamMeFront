@@ -12,16 +12,18 @@ import FormikTags from '../formik/FormikTags'
 import { CreateIcon, EditIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
+import createUser from '../../api/users/createUser'
 
 interface Props {
-  user: User
-  onSubmit?: (question: User) => void
+  user?: User
+  onSubmit?: (user: User) => void
   iconButton?: boolean
 }
 
 interface Form {
   name: string
   email: string
+  password: string
   permissions: Permission[]
 }
 
@@ -40,14 +42,13 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4">
-            { user ? 'Update user' : 'Add user' }
-          </Typography>
+          <Typography variant="h4">{ label }</Typography>
           <Formik
             initialValues={ {
               name: user?.name || '',
               email: user?.email || '',
-              permissions: user?.permissions || [],
+              password: '',
+              permissions: user?.permissions || [ Permission.Regular ],
             } }
             validationSchema={ yup.object({
               name: yup.string()
@@ -62,26 +63,42 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
                 .required('At least one permission is required'),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
-              const transfer = {
+              const transfer: any = {
                 name: values.name,
                 email: values.email,
                 permissions: [ ...new Set(values.permissions) ],
               }
+
+              if (values.password.length > 0) {
+                transfer.password = values.password
+              }
+
               const callback = (user: User) => {
                 setOpen(false)
                 onSubmit && onSubmit(user)
               }
-              apiMutate<{ user: User }>(
-                updateUser(user.id!, transfer),
-                data => callback(data.user),
-                setError,
-                setSubmitting,
-              )
+
+              if (user) {
+                apiMutate(
+                  updateUser(user.id!, transfer),
+                  (data: { updateUser: User }) => callback(data.updateUser),
+                  setError,
+                  setSubmitting,
+                )
+              } else {
+                apiMutate(
+                  createUser(transfer),
+                  (data: { createUser: User }) => callback(data.createUser),
+                  setError,
+                  setSubmitting,
+                )
+              }
             } }>
             { ({ isSubmitting }) => (
               <Form className="flex flex-col gap-6">
                 <FormikInput name="name" label="Name"/>
                 <FormikInput name="email" label="Email"/>
+                <FormikInput name="password" label="Password" type="password"/>
                 <FormikTags name="permissions" label="Permission" whitelist={ Object.values(Permission) }/>
 
                 { error && <Error text={ error }/> }
