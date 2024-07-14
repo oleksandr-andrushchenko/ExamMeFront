@@ -1,5 +1,5 @@
 import {
-  List as ListIcon,
+  ListOl as ListIcon,
   PencilSquare as EditIcon,
   PlusCircle as CreateIcon,
   XLg as DeleteIcon,
