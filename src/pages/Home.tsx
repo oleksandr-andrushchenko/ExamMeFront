@@ -11,7 +11,7 @@ const Home = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">Home</Typography>

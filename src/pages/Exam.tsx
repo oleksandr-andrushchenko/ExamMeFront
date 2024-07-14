@@ -36,7 +36,7 @@ const Exam = () => {
   const onPrevQuestionClick = () => setQuestionNumber(getQuestionNumber() - 1)
   const onNextQuestionClick = () => setQuestionNumber(getQuestionNumber() + 1)
   const onExamCompleted = (exam: Exam) => setExamQuestion({ ...examQuestion, ...{ exam } })
-  const onExamDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
+  const onExamDeleted = () => navigate(Route.Category.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
 
   const getQuestionNumber = (): number | undefined => {
     if (questionNumber !== undefined) {
@@ -135,13 +135,13 @@ const Exam = () => {
   const layout = (header: string, body) => {
     return <>
       <Breadcrumbs>
-        <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-        <Link to={ Route.CATEGORIES }>Categories</Link>
+        <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+        <Link to={ Route.Categories }>Categories</Link>
         { !examQuestion ? <Spinner type="text"/> :
-          <Link to={ Route.CATEGORY.replace(':categoryId', examQuestion.exam!.categoryId!) }>
+          <Link to={ Route.Category.replace(':categoryId', examQuestion.exam!.categoryId!) }>
             { examQuestion.exam!.category!.name }
           </Link> }
-        <Link to={ Route.EXAM.replace(':examId', examId) }>Exam</Link>
+        <Link to={ Route.Exam.replace(':examId', examId) }>Exam</Link>
       </Breadcrumbs>
 
       <Typography as="h1" variant="h2" className="mt-1">

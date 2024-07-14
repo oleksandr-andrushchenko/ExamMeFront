@@ -5,7 +5,7 @@ describe('Login page', () => {
   config()
 
   test('Initial state', () => {
-    const { getByRole } = renderRoute(Route.LOGIN)
+    const { getByRole } = renderRoute(Route.Login)
 
     const navbar = getByRole('navigation', { name: '' })
     expect(navbar).toBeInTheDocument()

@@ -20,15 +20,15 @@ import UserPermission from '../enum/users/UserPermission'
 
 const routes = <Routes>
   <Route element={ <Layout/> }>
-    <Route path={ Path.HOME } element={ <Home/> }/>
-    <Route path={ Path.CATEGORIES } element={ <Categories/> }/>
-    <Route path={ Path.CATEGORY } element={ <Category/> }/>
-    <Route path={ Path.QUESTIONS } element={ <Questions/> }/>
-    <Route path={ Path.QUESTION } element={ <Question/> }/>
+    <Route path={ Path.Home } element={ <Home/> }/>
+    <Route path={ Path.Categories } element={ <Categories/> }/>
+    <Route path={ Path.Category } element={ <Category/> }/>
+    <Route path={ Path.Questions } element={ <Questions/> }/>
+    <Route path={ Path.Question } element={ <Question/> }/>
     <Route element={ <RequireAuthentication permission={ ExamPermission.Get }/> }>
-      <Route path={ Path.EXAM } element={ <Exam/> }/>
+      <Route path={ Path.Exam } element={ <Exam/> }/>
     </Route>
-    <Route path={ Path.TERMS } element={ <Terms/> }/>
+    <Route path={ Path.Terms } element={ <Terms/> }/>
     <Route element={ <RequireAuthentication permission={ UserPermission.Get }/> }>
       <Route path={ Path.Users } element={ <Users/> }/>
     </Route>

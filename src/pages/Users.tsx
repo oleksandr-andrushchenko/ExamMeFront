@@ -4,7 +4,6 @@ import {
   Button,
   ButtonGroup,
   Chip,
-  IconButton,
   Input,
   Option,
   Select,
@@ -13,7 +12,7 @@ import {
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
 import Spinner from '../components/Spinner'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
@@ -26,10 +25,11 @@ import GetUsers from '../schema/users/GetUsers'
 import getUsersForUsersPage from '../api/users/getUsersForUsersPage'
 import UserPermission from '../enum/users/UserPermission'
 import AddUser from '../components/users/AddUser'
-import { ListIcon } from '../registry/icons'
+import { ListIcon, NextIcon, PrevIcon } from '../registry/icons'
 import H1 from '../components/typography/H1'
 import DeleteUser from '../components/users/DeleteUser'
 import Permission from '../enum/Permission'
+import IconButton from '../components/elements/IconButton'
 
 const Users = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -97,7 +97,7 @@ const Users = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
       <Link to={ Route.Users }>Users</Link>
     </Breadcrumbs>
 
@@ -138,14 +138,10 @@ const Users = () => {
 
       { users && ((users.meta.prevCursor || users.meta.nextCursor) &&
         <ButtonGroup variant="outlined">
-          <IconButton onClick={ () => applySearchParams({ prevCursor: users?.meta.prevCursor }) }
-                      disabled={ !users.meta.prevCursor }>
-            <ArrowLeftIcon className="w-4 h-4"/>
-          </IconButton>
-          <IconButton onClick={ () => applySearchParams({ nextCursor: users?.meta.nextCursor }) }
-                      disabled={ !users.meta.nextCursor }>
-            <ArrowRightIcon className="w-4 h-4"/>
-          </IconButton>
+          <IconButton icon={ PrevIcon } onClick={ () => applySearchParams({ prevCursor: users?.meta.prevCursor }) }
+                      disabled={ !users.meta.prevCursor }/>
+          <IconButton icon={ NextIcon } onClick={ () => applySearchParams({ nextCursor: users?.meta.nextCursor }) }
+                      disabled={ !users.meta.nextCursor }/>
         </ButtonGroup>) }
 
       { showClear() && (

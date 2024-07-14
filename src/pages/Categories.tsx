@@ -3,7 +3,6 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
-  IconButton,
   Input,
   Option,
   Select,
@@ -16,7 +15,7 @@ import {
 import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
 import Spinner from '../components/Spinner'
 import AddCategory from '../components/category/AddCategory'
@@ -35,7 +34,8 @@ import AddExam from '../components/exam/AddExam'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
 import H1 from '../components/typography/H1'
-import { ListIcon } from '../registry/icons'
+import { ListIcon, NextIcon, PrevIcon } from '../registry/icons'
+import IconButton from '../components/elements/IconButton'
 
 const Categories = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -46,7 +46,7 @@ const Categories = () => {
   const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
-  const onCategoryCreated = (category: Category) => navigate(Route.CATEGORY.replace(':categoryId', category.id!))
+  const onCategoryCreated = (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!))
   const onCategoryUpdated = () => refresh()
   const onCategoryDeleted = () => refresh()
   const onQuestionCreated = () => refresh()
@@ -106,8 +106,8 @@ const Categories = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.CATEGORIES }>Categories</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Categories }>Categories</Link>
     </Breadcrumbs>
 
     <H1 icon={ ListIcon }>Categories</H1>
@@ -161,14 +161,10 @@ const Categories = () => {
 
       { categories && ((categories.meta.prevCursor || categories.meta.nextCursor) &&
         <ButtonGroup variant="outlined">
-          <IconButton onClick={ () => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
-                      disabled={ !categories.meta.prevCursor }>
-            <ArrowLeftIcon className="w-4 h-4"/>
-          </IconButton>
-          <IconButton onClick={ () => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
-                      disabled={ !categories.meta.nextCursor }>
-            <ArrowRightIcon className="w-4 h-4"/>
-          </IconButton>
+          <IconButton icon={ PrevIcon } onClick={ () => applySearchParams({ prevCursor: categories?.meta.prevCursor }) }
+                      disabled={ !categories.meta.prevCursor }/>
+          <IconButton icon={ NextIcon } onClick={ () => applySearchParams({ nextCursor: categories?.meta.nextCursor }) }
+                      disabled={ !categories.meta.nextCursor }/>
         </ButtonGroup>) }
 
       { showClear() && (
@@ -205,7 +201,7 @@ const Categories = () => {
             <Tooltip content={ category.name }>
               <Link
                 key={ category.id }
-                to={ Route.CATEGORY.replace(':categoryId', category.id!) }>
+                to={ Route.Category.replace(':categoryId', category.id!) }>
                 { category.name }
               </Link>
             </Tooltip>

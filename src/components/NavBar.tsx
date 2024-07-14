@@ -11,8 +11,8 @@ import { FolderPlus as LogoIcon } from 'react-bootstrap-icons'
 
 const NavBar = () => {
   const [ links, setLinks ] = useState({
-    categories: { name: 'Categories', href: Route.CATEGORIES },
-    questions: { name: 'Questions', href: Route.QUESTIONS },
+    categories: { name: 'Categories', href: Route.Categories },
+    questions: { name: 'Questions', href: Route.Questions },
   })
   const [ openNav, setOpenNav ] = useState<boolean>(false)
   const { authenticationToken, me, setAuthenticationToken, checkAuthorization } = useAuth()
@@ -72,7 +72,7 @@ const NavBar = () => {
   return (
     <Navbar className="h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4" fullWidth={ true }>
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
-        <Link to={ Route.HOME } className="inline-flex items-center gap-1 w-2/12">
+        <Link to={ Route.Home } className="inline-flex items-center gap-1 w-2/12">
           <LogoIcon className="h-10 w-10"/> Exam Me
         </Link>
         <div className="flex items-center gap-4">

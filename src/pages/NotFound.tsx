@@ -14,7 +14,7 @@ const NotFound = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">Not Found</Typography>
@@ -23,7 +23,7 @@ const NotFound = () => {
 
     <div className="inline-flex items-center gap-1 mt-3">
       <Button onClick={ goBack }><ArrowUturnLeftIcon className="inline-block h-4 w-4"/> Go Back</Button>
-      <Link to={ Route.HOME }><Button size="md"><HomeIcon className="inline-block h-4 w-4"/> Go Home</Button></Link>
+      <Link to={ Route.Home }><Button size="md"><HomeIcon className="inline-block h-4 w-4"/> Go Home</Button></Link>
     </div>
   </>
 }

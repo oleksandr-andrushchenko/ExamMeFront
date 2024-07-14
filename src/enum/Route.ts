@@ -1,13 +1,13 @@
 enum Route {
-  HOME = '/',
-  CATEGORIES = '/categories',
-  CATEGORY = '/categories/:categoryId',
-  QUESTIONS = '/questions',
-  QUESTION = '/categories/:categoryId/questions/:questionId',
-  EXAM = '/exams/:examId',
-  LOGIN = '/login',
-  REGISTER = '/register',
-  TERMS = '/terms-and-conditions',
+  Home = '/',
+  Categories = '/categories',
+  Category = '/categories/:categoryId',
+  Questions = '/questions',
+  Question = '/categories/:categoryId/questions/:questionId',
+  Exam = '/exams/:examId',
+  Login = '/login',
+  Register = '/register',
+  Terms = '/terms-and-conditions',
   Users = '/users',
 }
 

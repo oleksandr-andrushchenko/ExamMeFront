@@ -39,7 +39,7 @@ const AddExam = ({ category, iconButton }: Props) => {
       categoryId: category.id!,
     }
     const callback = (exam: Exam) => {
-      navigate(Route.EXAM.replace(':categoryId', category.id!).replace(':examId', exam.id!))
+      navigate(Route.Exam.replace(':categoryId', category.id!).replace(':examId', exam.id!))
     }
 
     apiMutate(
@@ -68,7 +68,7 @@ const AddExam = ({ category, iconButton }: Props) => {
   const icon = <PlayIcon className="inline-block h-4 w-4"/>
 
   if (authenticationToken && exam) {
-    const url = Route.EXAM.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
+    const url = Route.Exam.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
 
     if (iconButton) {

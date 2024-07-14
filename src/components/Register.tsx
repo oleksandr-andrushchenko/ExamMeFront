@@ -72,7 +72,7 @@ const Register = ({ buttons, onSubmit }: Props) => {
           <FormikInput name="confirmPassword" type="password" label="Confirm password"/>
 
           <FormikCheckbox name="terms">
-            I agree to the <Link to={ Route.TERMS }>Terms and Conditions</Link>
+            I agree to the <Link to={ Route.Terms }>Terms and Conditions</Link>
           </FormikCheckbox>
 
           { error && <Error text={ error }/> }

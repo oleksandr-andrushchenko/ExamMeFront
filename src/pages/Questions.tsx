@@ -3,7 +3,6 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
-  IconButton,
   Input,
   Option,
   Select,
@@ -14,7 +13,7 @@ import {
   Typography,
 } from '@material-tailwind/react'
 import Route from '../enum/Route'
-import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
+import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import Spinner from '../components/Spinner'
@@ -33,8 +32,9 @@ import getQuestionsForQuestionsPage from '../api/question/getQuestionsForQuestio
 import getQuestionsAndCategoriesForQuestionsPage from '../api/question/getQuestionsAndCategoriesForQuestionsPage'
 import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
-import { ListIcon } from '../registry/icons'
+import { ListIcon, NextIcon, PrevIcon } from '../registry/icons'
 import H1 from '../components/typography/H1'
+import IconButton from '../components/elements/IconButton'
 
 const Questions = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -122,8 +122,8 @@ const Questions = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.CATEGORIES }>Questions</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Categories }>Questions</Link>
     </Breadcrumbs>
 
     <H1 icon={ ListIcon }>Questions</H1>
@@ -234,14 +234,10 @@ const Questions = () => {
 
       { questions && ((questions.meta.prevCursor || questions.meta.nextCursor) &&
         <ButtonGroup variant="outlined">
-          <IconButton onClick={ () => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
-                      disabled={ !questions.meta.prevCursor }>
-            <ArrowLeftIcon className="w-4 h-4"/>
-          </IconButton>
-          <IconButton onClick={ () => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
-                      disabled={ !questions.meta.nextCursor }>
-            <ArrowRightIcon className="w-4 h-4"/>
-          </IconButton>
+          <IconButton icon={ PrevIcon } onClick={ () => applySearchParams({ prevCursor: questions?.meta.prevCursor }) }
+                      disabled={ !questions.meta.prevCursor }/>
+          <IconButton icon={ NextIcon } onClick={ () => applySearchParams({ nextCursor: questions?.meta.nextCursor }) }
+                      disabled={ !questions.meta.nextCursor }/>
         </ButtonGroup>) }
 
       { showClear() && <div>
@@ -276,7 +272,7 @@ const Questions = () => {
             <Tooltip content={ question.title }>
               <Link
                 key={ question.id }
-                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+                to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
               >
                 { question.title }
               </Link>

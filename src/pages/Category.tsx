@@ -52,7 +52,7 @@ const Category = () => {
   const navigate = useNavigate()
 
   const onCategoryUpdated = (category: Category) => setCategory(category)
-  const onCategoryDeleted = () => navigate(Route.CATEGORIES, { replace: true })
+  const onCategoryDeleted = () => navigate(Route.Categories, { replace: true })
   const onQuestionCreated = () => refresh()
   const onQuestionUpdated = () => refresh()
   const onQuestionDeleted = () => refresh()
@@ -128,10 +128,10 @@ const Category = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.CATEGORIES }>Categories</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Categories }>Categories</Link>
       { !category ? <Spinner type="text"/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', category.id!) }>{ category.name }</Link> }
+        <Link to={ Route.Category.replace(':categoryId', category.id!) }>{ category.name }</Link> }
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">{ !category ?
@@ -285,7 +285,7 @@ const Category = () => {
             <Tooltip content={ question.title }>
               <Link
                 key={ question.id }
-                to={ Route.QUESTION.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+                to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
               >
                 { question.title }
               </Link>

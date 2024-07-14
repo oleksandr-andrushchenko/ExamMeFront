@@ -5,7 +5,7 @@ describe('Register page', () => {
   config()
 
   test('Initial state', () => {
-    const { getByRole } = renderRoute(Route.REGISTER)
+    const { getByRole } = renderRoute(Route.Register)
 
     const navbar = getByRole('navigation', { name: '' })
     expect(navbar).toBeInTheDocument()

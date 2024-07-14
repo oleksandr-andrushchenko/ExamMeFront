@@ -24,7 +24,7 @@ const Question = () => {
   const navigate = useNavigate()
 
   const onQuestionUpdated = (question: Question) => setQuestion(question)
-  const onQuestionDeleted = () => navigate(Route.CATEGORY.replace(':categoryId', question!.categoryId!), { replace: true })
+  const onQuestionDeleted = () => navigate(Route.Category.replace(':categoryId', question!.categoryId!), { replace: true })
 
   useEffect(() => {
     apiQuery<{ question: Question }>(
@@ -53,12 +53,12 @@ const Question = () => {
 
   return <>
     <Breadcrumbs>
-      <Link to={ Route.HOME } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
-      <Link to={ Route.CATEGORIES }>Categories</Link>
+      <Link to={ Route.Home } className="flex items-center"><HomeIcon className="w-4 h-4 mr-1"/> Home</Link>
+      <Link to={ Route.Categories }>Categories</Link>
       { !question ? <Spinner type="text"/> :
-        <Link to={ Route.CATEGORY.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
+        <Link to={ Route.Category.replace(':categoryId', question.categoryId!) }>{ question.category!.name }</Link> }
       { !question ? <Spinner type="text"/> :
-        <Link to={ Route.QUESTION.replace(':questionId', question.id!) }>{ question.title }</Link> }
+        <Link to={ Route.Question.replace(':questionId', question.id!) }>{ question.title }</Link> }
     </Breadcrumbs>
 
     <Typography as="h1" variant="h2" className="mt-1">{ !question ?
