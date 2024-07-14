@@ -3,6 +3,7 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
+  Chip,
   IconButton,
   Input,
   Option,
@@ -28,6 +29,7 @@ import AddUser from '../components/users/AddUser'
 import { ListIcon } from '../registry/icons'
 import H1 from '../components/typography/H1'
 import DeleteUser from '../components/users/DeleteUser'
+import Permission from '../enum/Permission'
 
 const Users = () => {
   const [ _, setLoading ] = useState<boolean>(true)
@@ -76,7 +78,7 @@ const Users = () => {
     setSearchParams(defaultSearchParams)
   }
 
-  const tableColumns = [ '#', 'ID', 'Name', 'Email', 'Permissions', '' ]
+  const tableColumns = [ '#', 'Name', 'Email', 'Permissions', '' ]
   const showClear = (): boolean => {
     const def = new URLSearchParams(defaultSearchParams)
     def.sort()
@@ -175,7 +177,6 @@ const Users = () => {
       { users && users.data && users.data.map((user: User, index) => (
         <tr key={ user.id }>
           <td>{ index + 1 }</td>
-          <td>{ user.id }</td>
 
           <td className="truncate max-w-[500px]">
             <Tooltip content={ user.name }>
@@ -186,7 +187,13 @@ const Users = () => {
           </td>
 
           <td>{ user.email }</td>
-          <td>{ user.permissions?.join(', ') }</td>
+          <td>{ user.permissions?.map(permission => (
+            <Chip
+              value={ permission }
+              color={ [ Permission.All, Permission.Root ].includes(permission as any) ? 'green' : 'blue' }
+              className="mr-1 mb-1"
+            />
+          )) }</td>
 
           <td className="flex justify-end gap-1">
             { checkAuthorization(UserPermission.Update, user) &&
