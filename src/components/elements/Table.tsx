@@ -71,7 +71,7 @@ const Table = (
       setError,
       setLoading,
     )
-  }, [ searchParams ])
+  }, [ searchParams, key2 ])
 
   return <div className={ key2 }>
     { error && <Error text={ error }/> }
