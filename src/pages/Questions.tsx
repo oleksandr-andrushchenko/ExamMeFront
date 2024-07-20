@@ -59,7 +59,7 @@ const Questions = () => {
     <Table
       key2={ tableKey }
       buttons={ {
-        create: checkAuthorization(QuestionPermission.Create) && <AddQuestion onSubmit={ refresh }/>,
+        create: <AddQuestion onSubmit={ refresh }/>,
       } }
       tabs={ [ 'all', 'free', 'subscription' ] }
       columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Type', 'Rating', '' ] }
@@ -123,9 +123,7 @@ const Questions = () => {
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Tooltip content={ question.title }>
-          <Link label={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>
-        </Tooltip>,
+        <Link label={ question.title } tooltip={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         !categories ? <Spinner/> : (
           <Tooltip content={ getCategory(question.categoryId!).name }>
             { getCategory(question.categoryId!).name }

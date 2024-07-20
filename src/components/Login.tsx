@@ -10,7 +10,7 @@ import Token from '../schema/auth/Token'
 import createAuthenticationToken from '../api/authenticate/createAuthenticationToken'
 
 interface Props {
-  onSubmit: () => void
+  onSubmit?: () => void
   buttons?: ReactNode
   onRegisterClick?: () => void
 }
@@ -47,7 +47,10 @@ const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
         }
         apiMutate(
           createAuthenticationToken(transfer),
-          (data: { createAuthenticationToken: Token }) => setAuthenticationToken(data.createAuthenticationToken) && onSubmit(),
+          (data: { createAuthenticationToken: Token }) => {
+            setAuthenticationToken(data.createAuthenticationToken)
+            onSubmit && onSubmit()
+          },
           setError,
           setSubmitting,
         )

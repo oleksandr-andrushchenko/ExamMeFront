@@ -12,7 +12,6 @@ import Question from '../pages/Question'
 import Questions from '../pages/Questions'
 import Exam from '../pages/Exam'
 import RequireAuthentication from './RequireAuthentication'
-import ExamPermission from '../enum/exam/ExamPermission'
 import { ApolloProvider } from '@apollo/client'
 import apolloClient from '../api/apolloClient'
 import Users from '../pages/Users'
@@ -25,7 +24,7 @@ const routes = <Routes>
     <Route path={ Path.Category } element={ <Category/> }/>
     <Route path={ Path.Questions } element={ <Questions/> }/>
     <Route path={ Path.Question } element={ <Question/> }/>
-    <Route element={ <RequireAuthentication permission={ ExamPermission.Get }/> }>
+    <Route element={ <RequireAuthentication/> }>
       <Route path={ Path.Exam } element={ <Exam/> }/>
     </Route>
     <Route path={ Path.Terms } element={ <Terms/> }/>

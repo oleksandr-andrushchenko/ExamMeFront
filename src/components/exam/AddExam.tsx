@@ -1,18 +1,19 @@
-import { Button, IconButton, Tooltip } from '@material-tailwind/react'
 import { PlayIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
 import Exam from '../../schema/exam/Exam'
-import CreateExam from '../../schema/exam/CreateExam'
 import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
-import Auth from '../Auth'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
 import createExam from '../../api/exam/createExam'
 import getOneNonCompletedCategoryExams from '../../api/exam/getOneNonCompletedCategoryExams'
 import Error from '../Error'
+import Link from '../elements/Link'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
+import Auth from '../Auth'
 
 interface Props {
   category: Category
@@ -22,33 +23,11 @@ interface Props {
 const AddExam = ({ category, iconButton }: Props) => {
   const { authenticationToken } = useAuth()
   const [ exam, setExam ] = useState<Exam>()
-  const [ showAuth, setShowAuth ] = useState<boolean>(false)
   const [ processing, setProcessing ] = useState<boolean>(false)
+  const [ create, setCreate ] = useState<boolean>(false)
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
-
-  const onClick = async (): Promise<void> => {
-    if (!authenticationToken) {
-      return setShowAuth(true)
-    }
-
-    setProcessing(true)
-
-    const transfer: CreateExam = {
-      categoryId: category.id!,
-    }
-    const callback = (exam: Exam) => {
-      navigate(Route.Exam.replace(':categoryId', category.id!).replace(':examId', exam.id!))
-    }
-
-    apiMutate(
-      createExam(transfer),
-      (data: { createExam: Exam }) => callback(data.createExam),
-      setError,
-      setProcessing,
-    )
-  }
 
   useEffect(() => {
     if (authenticationToken) {
@@ -61,46 +40,54 @@ const AddExam = ({ category, iconButton }: Props) => {
     }
   }, [ authenticationToken ])
 
+  useEffect(() => {
+    if (create) {
+      apiMutate(
+        createExam({ categoryId: category.id! }),
+        (data: {
+          createExam: Exam
+        }) => navigate(Route.Exam.replace(':categoryId', category.id!).replace(':examId', data.createExam.id!)),
+        setError,
+        setProcessing,
+      )
+    }
+  }, [ create ])
+
+  const onClick = () => setCreate(true)
+
+  const icon = PlayIcon
+  const label = 'Start exam'
+  const color = 'green'
+
+  if (!authenticationToken) {
+    return <Auth
+      button={ { icon, label, size: 'sm', iconOnly: iconButton, color } }
+      dialog={ { label: 'You need to be authenticated' } }
+      onSubmit={ onClick }
+    />
+  }
+
   if (authenticationToken && exam === undefined) {
     return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
   }
-
-  const icon = <PlayIcon className="inline-block h-4 w-4"/>
 
   if (authenticationToken && exam) {
     const url = Route.Exam.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
 
     if (iconButton) {
-      return (
-        <Tooltip content={ label }>
-          <Link to={ url }>
-            <IconButton color="orange">{ icon }</IconButton>
-          </Link>
-        </Tooltip>
-      )
+      return <Link to={ url } label={ <IconButton icon={ icon } color="orange"/> } tooltip={ label }/>
     }
 
-    return (
-      <Link to={ url }>
-        <Button color="orange">{ icon } { label }</Button>
-      </Link>
-    )
+    return <Link to={ url } label={ <Button icon={ icon } label={ label } color="orange"/> }/>
   }
-
-  const label = 'Start exam'
-  const disabled = processing || showAuth
 
   return <>
     { error && <Error text={ error }/> }
 
-    { showAuth && <Auth dialogOnly onClose={ () => setShowAuth(false) }/> }
-
     { iconButton
-      ? <Tooltip content={ label }>
-        <IconButton color="green" onClick={ onClick } disabled={ disabled }>{ icon }</IconButton>
-      </Tooltip>
-      : <Button color="green" onClick={ onClick } disabled={ disabled }>{ icon } { label }</Button> }
+      ? <IconButton icon={ icon } tooltip={ label } color={ color } onClick={ onClick } disabled={ processing }/>
+      : <Button icon={ icon } label={ label } color={ color } onClick={ onClick } disabled={ processing }/> }
   </>
 }
 

@@ -77,7 +77,8 @@ const Table = (
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { Object.entries(buttons).map(([ key, button ]) => <span key={ key }>{ button }</span>) }
+      { Object.entries(buttons).filter(([ key, button ]) => !!button)
+        .map(([ key, button ]) => <span key={ key }>{ button }</span>) }
     </div>
 
     <div className="flex gap-1 items-center mt-4">

@@ -23,10 +23,8 @@ export default function getCurrentExamQuestion(examId: string): any {
                     id
                     title
                     type
-                    choices {
-                        title
-                    }
                 }
+                choices
                 number
                 choice
                 answer

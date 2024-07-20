@@ -13,7 +13,7 @@ import Token from '../schema/auth/Token'
 import createMeAndAuthenticationToken from '../api/me/createMeAndAuthenticationToken'
 
 interface Props {
-  onSubmit: () => void
+  onSubmit?: () => void
   buttons?: ReactNode
 }
 
@@ -58,7 +58,10 @@ const Register = ({ buttons, onSubmit }: Props) => {
         }
         apiMutate<{ createAuthenticationToken: Token }>(
           createMeAndAuthenticationToken(transfer),
-          data => setAuthenticationToken(data.createAuthenticationToken) && onSubmit(),
+          data => {
+            setAuthenticationToken(data.createAuthenticationToken)
+            onSubmit && onSubmit()
+          },
           setError,
           setSubmitting,
         )

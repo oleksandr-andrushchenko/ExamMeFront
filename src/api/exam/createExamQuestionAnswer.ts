@@ -29,10 +29,8 @@ export default function createExamQuestionAnswer(
                     id
                     title
                     type
-                    choices {
-                        title
-                    }
                 }
+                choices
                 number
                 choice
                 answer

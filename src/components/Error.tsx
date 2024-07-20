@@ -1,6 +1,7 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import { Typography } from '@material-tailwind/react'
 import { memo } from 'react'
+import Text from './typography/Text'
 
 interface Props {
   text: string
@@ -17,10 +18,13 @@ const Error = ({ text, simple }: Props) => {
   }
 
   return (
-    <Typography variant="small" color="red" className="flex items-center gap-1 font-normal">
-      <ExclamationCircleIcon className="w-1/12"/>
-      <span className="w-11/12">{ text }</span>
-    </Typography>
+    <Text
+      icon={ ExclamationCircleIcon }
+      label={ text }
+      variant="small"
+      color="red"
+      className="flex items-center gap-1 font-normal"
+    />
   )
 }
 

@@ -1,4 +1,4 @@
-import { Breadcrumbs, Chip, Tooltip, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Chip, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -46,9 +46,7 @@ const Users = () => {
       mapper={ (user: User, index: number) => [
         user.id,
         index + 1,
-        <Tooltip content={ user.name }>
-          <Link label={ user.name } to={ Route.Users.replace(':userId', user.id!) }/>
-        </Tooltip>,
+        <Link label={ user.name } tooltip={ user.name } to={ Route.Users.replace(':userId', user.id!) }/>,
         user.email,
         user.permissions?.map(permission => (
           <Chip

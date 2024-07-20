@@ -20,10 +20,8 @@ export default function getExamQuestion(examId: string, question: number): any {
                     id
                     title
                     type
-                    choices {
-                        title
-                    }
                 }
+                choices
                 number
                 choice
                 answer

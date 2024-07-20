@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Option, Select, Tooltip, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Option, Select, Typography } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -17,7 +17,6 @@ import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import getCategoryForCategoryPage from '../api/category/getCategoryAndQuestionsForCategoryPage'
 import Error from '../components/Error'
-import ExamPermission from '../enum/exam/ExamPermission'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
 import Paginated from '../schema/pagination/Paginated'
@@ -53,7 +52,8 @@ const Category = () => {
     <Breadcrumbs>
       <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
       <Link label="Categories" to={ Route.Categories }/>
-      { !category ? <Spinner type="text"/> : <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/> }
+      { !category ? <Spinner type="text"/> :
+        <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/> }
     </Breadcrumbs>
 
     <H1>{ !category ? <Spinner type="text"/> : category.name }</H1>
@@ -80,15 +80,12 @@ const Category = () => {
     <Table
       key2={ tableKey }
       buttons={ {
-        create: checkAuthorization(QuestionPermission.Create, category) && (!category ?
-          <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>),
+        create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
           <AddCategory category={ category } onSubmit={ (category: Category) => setCategory(category) }/>),
         delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
           <DeleteCategory category={ category } onSubmit={ () => navigate(Route.Categories, { replace: true }) }/>),
-        exam: !category ?
-          <Spinner type="button"/> : !!category.questionCount && checkAuthorization(ExamPermission.Create) &&
-          <AddExam category={ category }/>,
+        exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
       } }
       tabs={ [ 'all', 'free', 'subscription' ] }
       columns={ [ '#', 'Title', 'Difficulty', 'Type', 'Rating', '' ] }
@@ -133,9 +130,7 @@ const Category = () => {
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Tooltip content={ question.title }>
-          <Link label={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>
-        </Tooltip>,
+        <Link label={ question.title } tooltip={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         question.difficulty,
         question.type,
         <Rating readonly/>,

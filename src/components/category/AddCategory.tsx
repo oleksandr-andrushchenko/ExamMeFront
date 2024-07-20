@@ -12,6 +12,9 @@ import FormikInput from '../formik/FormikInput'
 import { CreateIcon, EditIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
+import useAuth from '../../hooks/useAuth'
+import Auth from '../Auth'
+import CategoryPermission from '../../enum/category/CategoryPermission'
 
 interface Props {
   category?: Category
@@ -28,14 +31,35 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
+  const { authenticationToken, me, checkAuthorization } = useAuth()
 
   const icon = category ? EditIcon : CreateIcon
   const label = category ? 'Update Category' : 'Add Category'
 
+  if (!authenticationToken) {
+    return <Auth
+      button={ { icon, label, size: 'sm', iconOnly: iconButton } }
+      dialog={ { label: 'You need to be authenticated' } }
+      onSubmit={ () => setOpen(true) }
+    />
+  }
+
+  const buildButton = (props = {}) => {
+    if (iconButton) {
+      return <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen } { ...props }/>
+    }
+
+    return <Button icon={ icon } label={ label } onClick={ handleOpen } { ...props }/>
+  }
+
+  const permission = category ? CategoryPermission.Update : CategoryPermission.Create
+
+  if (!checkAuthorization(permission, category)) {
+    return buildButton({ disabled: true, tooltip: 'You are not allowed to do this' })
+  }
+
   return <>
-    { iconButton
-      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen }/>
-      : <Button icon={ icon } label={ label } onClick={ handleOpen }/> }
+    { buildButton() }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">

@@ -18,7 +18,7 @@ export default function FormikTags({ name, label, whitelist }: Props) {
   const options = whitelist.map(item => ({ value: item, label: item }))
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1">
       <FieldArray name={ name }>
         { ({ remove, push }) => (
           <div className="flex flex-col gap-3">

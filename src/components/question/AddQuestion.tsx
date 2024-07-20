@@ -19,6 +19,9 @@ import FormikCheckbox from '../formik/FormikCheckbox'
 import { CreateIcon, DeleteIcon, EditIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
+import useAuth from '../../hooks/useAuth'
+import Auth from '../Auth'
+import QuestionPermission from '../../enum/question/QuestionPermission'
 
 interface Props {
   category?: Category
@@ -41,6 +44,7 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
   const handleOpen = () => setOpen(!open)
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
+  const { authenticationToken, checkAuthorization } = useAuth()
 
   useEffect(() => {
     if (!category && !question) {
@@ -56,10 +60,30 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
   const icon = question ? EditIcon : CreateIcon
   const label = question ? 'Update Question' : 'Add Question'
 
+  if (!authenticationToken) {
+    return <Auth
+      button={ { icon, label, size: 'sm', iconOnly: iconButton } }
+      dialog={ { label: 'You need to be authenticated' } }
+      onSubmit={ () => setOpen(true) }
+    />
+  }
+
+  const buildButton = (props = {}) => {
+    if (iconButton) {
+      return <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen } { ...props }/>
+    }
+
+    return <Button icon={ icon } label={ label } onClick={ handleOpen } { ...props }/>
+  }
+
+  const permission = question ? QuestionPermission.Update : QuestionPermission.Create
+
+  if (!checkAuthorization(permission, question)) {
+    return buildButton({ disabled: true, tooltip: 'You are not allowed to do this' })
+  }
+
   return <>
-    { iconButton
-      ? <IconButton icon={ icon } tooltip={ label } onClick={ handleOpen }/>
-      : <Button icon={ icon } label={ label } onClick={ handleOpen }/> }
+    { buildButton() }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">

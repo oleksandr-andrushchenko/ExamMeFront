@@ -5,7 +5,7 @@ import Unauthorized from '../pages/Unauthorized'
 import Unauthenticated from '../pages/Unauthenticated'
 
 interface Props {
-  permission: any
+  permission?: any
 }
 
 export default function RequireAuthentication({ permission }: Props) {
@@ -19,7 +19,7 @@ export default function RequireAuthentication({ permission }: Props) {
     return <Spinner/>
   }
 
-  if (!checkAuthorization(permission)) {
+  if (permission && !checkAuthorization(permission)) {
     return <Unauthorized/>
   }
 

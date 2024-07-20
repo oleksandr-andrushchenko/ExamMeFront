@@ -1,57 +1,69 @@
 import { Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { memo, useEffect, useState } from 'react'
+import { memo, ReactNode, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
 import Button from './elements/Button'
 import Text from './typography/Text'
+import IconButton from './elements/IconButton'
 
 interface Props {
+  button?: {
+    icon?: any
+    label?: any
+    size?: any
+    color?: string
+    iconOnly?: boolean
+  }
+  dialog?: {
+    label?: string | ReactNode
+  }
   register?: boolean
-  dialogOnly?: boolean
-  onClose?: () => void
+  onSubmit?: () => void
 }
 
-const Auth = ({ register, dialogOnly, onClose }: Props) => {
+const Auth = ({ button, dialog, register, onSubmit }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
-  const [ listenClose, setListenClose ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const navigate = useNavigate()
 
   const [ activeTab, setActiveTab ] = useState<string>(register ? 'register' : 'login')
-  const cancelButton = <Button label="Cancel" type="reset" onClick={ handleOpen }/>
+  const buttons = [ <Button label="Cancel" type="reset" onClick={ handleOpen }/> ]
+  const _onSubmit = onSubmit || (() => navigate(0))
   const tabs = [
     {
       key: 'login',
       header: <Text icon={ ArrowRightEndOnRectangleIcon } label="Login"/>,
-      content: <Login onSubmit={ () => navigate(0) } buttons={ cancelButton } onRegisterClick={ () => setActiveTab('register') }/>,
+      content: <Login onSubmit={ _onSubmit } buttons={ buttons } onRegisterClick={ () => setActiveTab('register') }/>,
     },
     {
       key: 'register',
       header: <Text icon={ UserPlusIcon } label="Register"/>,
-      content: <Register onSubmit={ () => navigate(0) } buttons={ cancelButton }/>,
+      content: <Register onSubmit={ _onSubmit } buttons={ buttons }/>,
     },
   ]
 
-  useEffect(() => {
-    dialogOnly && setTimeout(() => {
-      setOpen(true)
-      setListenClose(true)
-    }, 1)
-  }, [])
+  const icon = button?.icon || (register ? UserPlusIcon : ArrowRightEndOnRectangleIcon)
+  const label = button?.label || (register ? 'Register' : 'Login')
+  const size = button?.size || (register ? 'sm' : 'md')
+  const color = button?.color
+  const iconOnly = button?.iconOnly
 
-  useEffect(() => {
-    !open && listenClose && onClose && setTimeout(onClose, 500)
-  }, [ open ])
+  const buildButton = (props = {}) => {
+    if (iconOnly) {
+      return <IconButton icon={ icon } tooltip={ label } size={ size } color={ color } onClick={ handleOpen } { ...props }/>
+    }
+
+    return <Button icon={ icon } label={ label } size={ size } color={ color } onClick={ handleOpen } { ...props }/>
+  }
 
   return <>
-    { !dialogOnly && (register
-      ? <Button icon={ UserPlusIcon } label="Register" onClick={ handleOpen }/>
-      : <Button icon={ ArrowRightEndOnRectangleIcon } label="Login" size="md" onClick={ handleOpen }/>) }
+    { buildButton() }
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
+          { dialog?.label || '' }
           <Tabs value={ activeTab }>
             <TabsHeader
               className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"

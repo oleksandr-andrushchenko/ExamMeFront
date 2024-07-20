@@ -221,13 +221,13 @@ const Exam = () => {
     <div className="flex flex-col gap-8 mt-4">
       { !examQuestion ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
-          ? examQuestion.question!.choices!.map((choice: QuestionChoice, index) => (
+          ? examQuestion!.choices!.map((choice: string, index) => (
             <Checkbox
               key={ `${ examQuestion.question!.id }-${ index }-${ examQuestion.choice }` }
               name="choice"
               defaultChecked={ index === examQuestion.choice }
               onChange={ (e) => e.target.checked ? createAnswer(index) : clearAnswer() }
-              label={ choice.title }
+              label={ choice }
               disabled={ answering }
             />
           ))
