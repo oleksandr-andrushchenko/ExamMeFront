@@ -58,6 +58,10 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
               email: yup.string()
                 .email('Invalid email address')
                 .required('Email is required'),
+              password: yup.string()
+                .min(8, 'Password must be at least 8 characters')
+                .max(24, 'Password cannot exceed 24 characters')
+                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()])/, 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
               permissions: yup.array()
                 .of(yup.string().oneOf(Object.values(Permission), 'Invalid permission'))
                 .required('At least one permission is required'),
@@ -69,7 +73,7 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
                 permissions: [ ...new Set(values.permissions) ],
               }
 
-              if (values.password.length > 0) {
+              if (values.password) {
                 transfer.password = values.password
               }
 
