@@ -7,6 +7,7 @@ import Error from '../Error'
 import { DeleteIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
+import H3 from '../typography/H3'
 
 interface Props {
   category: Category
@@ -42,10 +43,9 @@ const DeleteCategory = ({ category, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen }>
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4" color="blue-gray">
-            Are you sure you want to delete "{ category.name }" category?
-          </Typography>
-          <Typography className="mb-3" variant="paragraph" color="gray">
+          <H3>Are you sure you want to delete "{ category.name }" category?</H3>
+
+          <Typography className="mb-3" variant="paragraph">
             This will delete "{ category.name }" category and all its questions [ { category.questionCount ?? 0 } ]
             permanently.
             <br/>

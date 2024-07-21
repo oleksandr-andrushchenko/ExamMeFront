@@ -7,6 +7,7 @@ import Error from '../Error'
 import { DeleteIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
+import H3 from '../typography/H3'
 
 interface Props {
   exam: Exam
@@ -42,9 +43,7 @@ const DeleteExam = ({ exam, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen }>
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4" color="blue-gray">
-            { `Are you sure you want to delete "${ exam.category!.name }" exam?` }
-          </Typography>
+          <H3>{ `Are you sure you want to delete "${ exam.category!.name }" exam?` }</H3>
           <Typography className="mb-3" variant="paragraph" color="gray">
             { `This will delete "${ exam.category!.name }" exam permanently.` }
             <br/>

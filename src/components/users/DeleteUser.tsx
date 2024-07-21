@@ -7,6 +7,7 @@ import { DeleteIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import User from '../../schema/users/User'
+import H3 from '../typography/H3'
 
 interface Props {
   user: User
@@ -42,9 +43,7 @@ const DeleteUser = ({ user, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen }>
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4" color="blue-gray">
-            Are you sure you want to delete "{ user.name }" user?
-          </Typography>
+          <H3>Are you sure you want to delete "{ user.name }" user?</H3>
           <Typography className="mb-3" variant="paragraph" color="gray">
             This will delete "{ user.name }" user permanently.
             <br/>

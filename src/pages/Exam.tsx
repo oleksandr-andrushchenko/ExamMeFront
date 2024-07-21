@@ -184,19 +184,8 @@ const Exam = () => {
   }
 
   return layout('Exam questions', <>
-    <div className="flex gap-1 items-center mt-4">
-      { examQuestion &&
-        <ButtonGroup variant="outlined">
-          <Button icon={ ArrowLeftIcon } label="Prev" onClick={ onPrevQuestionClick } disabled={ !showPrev() }/>
-          <Button icon={ ArrowRightIcon } label="Next" onClick={ onNextQuestionClick } disabled={ !showNext() }/>
-        </ButtonGroup> }
-
-      { examQuestion && checkAuthorization(ExamPermission.CreateCompletion, examQuestion.exam) &&
-        <CompleteExam exam={ examQuestion.exam! } onSubmit={ onExamCompleted }/> }
-
-      { examQuestion && checkAuthorization(ExamPermission.Delete, examQuestion.exam) &&
-        <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
-    </div>
+    { !examQuestion ? <Spinner type="text"/> :
+      <H2>Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }</H2> }
 
     { !examQuestion ? <Spinner type="text" height="h-3"/> :
       <Progress
@@ -214,10 +203,7 @@ const Exam = () => {
         className="mt-4"
       /> }
 
-    { !examQuestion ? <Spinner type="text"/> :
-      <H2>Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }</H2> }
-
-    <div className="flex flex-col gap-8 mt-4">
+    <div className="flex flex-col gap-2 mt-4">
       { !examQuestion ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
           ? examQuestion!.choices!.map((choice: string, index) => (
@@ -239,6 +225,20 @@ const Exam = () => {
             disabled={ answering }
           />
       ) }
+    </div>
+
+    <div className="flex gap-1 items-center mt-4">
+      { examQuestion &&
+        <ButtonGroup variant="outlined">
+          <Button icon={ ArrowLeftIcon } label="Prev" onClick={ onPrevQuestionClick } disabled={ !showPrev() }/>
+          <Button icon={ ArrowRightIcon } label="Next" onClick={ onNextQuestionClick } disabled={ !showNext() }/>
+        </ButtonGroup> }
+
+      { examQuestion && checkAuthorization(ExamPermission.CreateCompletion, examQuestion.exam) &&
+        <CompleteExam exam={ examQuestion.exam! } onSubmit={ onExamCompleted }/> }
+
+      { examQuestion && checkAuthorization(ExamPermission.Delete, examQuestion.exam) &&
+        <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
     </div>
   </>)
 }
