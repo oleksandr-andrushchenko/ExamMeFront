@@ -147,6 +147,10 @@ const Table = (
           <Spinner type="text" width="w-full"/>
           <Spinner type="text" width="w-full"/>
           <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
+          <Spinner type="text" width="w-full"/>
         </td>
       </tr> }
       { !isLoading && items && items.data.length === 0 && <tr>
