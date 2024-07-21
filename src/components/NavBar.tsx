@@ -72,7 +72,7 @@ const NavBar = () => {
   return (
     <Navbar className="h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4" fullWidth={ true }>
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
-        <Link icon={ LogoIcon } iconSize="10" label="Exam Me" to={ Route.Home } className="inline-flex items-center gap-1 w-2/12"/>
+        <Link icon={ LogoIcon } iconSize="10" label="Exam Me" to={ Route.Home } className="inline-flex items-center gap-1 w-2/12 font-secondary text-xl"/>
         <div className="flex items-center gap-4">
           <div className="hidden lg:block">{ navList }</div>
           <IconButton

@@ -12,16 +12,16 @@ export default withMT({
   theme: {
     extend: {
       fontFamily: {
-        // sans: ['Lato', ...defaultTheme.fontFamily.sans],
+        // secondary: ['Lato', ...defaultTheme.fontFamily.sans],
         primary: ['Oswald', ...defaultTheme.fontFamily.serif],
-        // sans: ['Oswald', ...defaultTheme.fontFamily.sans],
+        secondary: ['Oswald', ...defaultTheme.fontFamily.sans],
         // sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
         sans: ['Poppins', ...defaultTheme.fontFamily.sans],
-        // sans: ['Raleway', ...defaultTheme.fontFamily.sans],
+        // secondary: ['Raleway', ...defaultTheme.fontFamily.sans],
         // sans: ['Reddit Sans', ...defaultTheme.fontFamily.sans],
         // sans: ['Roboto Condensed', ...defaultTheme.fontFamily.sans],
         // sans: ['Ubuntu Sans', ...defaultTheme.fontFamily.sans],
-        // sans: ['Alata', ...defaultTheme.fontFamily.sans],
+        // secondary: ['Alata', ...defaultTheme.fontFamily.sans],
         // sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
         // sans: ['Sawarabi Mincho', ...defaultTheme.fontFamily.sans],
         // sans: [...defaultTheme.fontFamily.sans],
