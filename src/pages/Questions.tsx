@@ -1,4 +1,4 @@
-import { Breadcrumbs, Option, Select, Tooltip } from '@material-tailwind/react'
+import { Breadcrumbs, Tooltip } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -17,12 +17,16 @@ import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import getCategoriesForSelect from '../api/category/getCategoriesForSelect'
 import Error from '../components/Error'
-import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
+import { QuestionDifficulty } from '../schema/question/CreateQuestion'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
+import isQuestionApproved from '../services/questions/isQuestionApproved'
+import YesNo from '../components/elements/YesNo'
+import createListFromObjects from '../utils/createListFromObjects'
+import createListFromEnum from '../utils/createListFromEnum'
 
 const Questions = () => {
-  const [ tableKey, setTableKey ] = useState<number>(1)
+  const [ tableKey, setTableKey ] = useState<number>(2)
   const refresh = () => setTableKey(Math.random())
   const { checkAuthorization } = useAuth()
   const [ categories, setCategories ] = useState<Category[]>()
@@ -59,64 +63,16 @@ const Questions = () => {
       buttons={ {
         create: <AddQuestion onSubmit={ refresh }/>,
       } }
-      tabs={ [ 'all', 'free', 'subscription' ] }
-      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Type', 'Rating', '' ] }
+      tabs={ {
+        subscription: [ 'yes', 'no' ],
+        approved: [ 'yes', 'no' ],
+      } }
+      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Rating', 'Approved', '' ] }
       queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       filters={ {
-        category: (searchParams, applySearchParams) => !categories ? <Spinner type="button"/> : (
-          <Select
-            label="Category"
-            onChange={ (categoryId) => applySearchParams({ categoryId }) }
-            value={ searchParams.get('categoryId') || '' }
-            className="capitalize"
-          >
-            { categories.map((category: Category) => (
-              <Option
-                key={ category.id }
-                value={ category.id }
-                disabled={ category.id === searchParams.get('categoryId') }
-                className="capitalize truncate max-w-[170px]"
-              >
-                { category.name }
-              </Option>
-            )) }
-          </Select>
-        ),
-        difficulty: (searchParams, applySearchParams) => <Select
-          label="Difficulty"
-          onChange={ (difficulty) => applySearchParams({ difficulty }) }
-          value={ searchParams.get('difficulty') || '' }
-          className="capitalize"
-        >
-          { Object.values(QuestionDifficulty).map((difficulty) => (
-            <Option
-              key={ difficulty }
-              value={ difficulty }
-              disabled={ difficulty === searchParams.get('difficulty') }
-              className="capitalize"
-            >
-              { difficulty }
-            </Option>
-          )) }
-        </Select>,
-        type: (searchParams, applySearchParams) => <Select
-          label="Type"
-          onChange={ (type) => applySearchParams({ type }) }
-          value={ searchParams.get('type') || '' }
-          className="capitalize"
-        >
-          { Object.values(QuestionType).map((type: string) => (
-            <Option
-              key={ type }
-              value={ type }
-              disabled={ type === searchParams.get('type') }
-              className="capitalize"
-            >
-              { type }
-            </Option>
-          )) }
-        </Select>,
+        category: createListFromObjects(categories || [], 'id', 'name'),
+        difficulty: createListFromEnum(QuestionDifficulty),
       } }
       mapper={ (question: Question, index: number) => [
         question.id,
@@ -129,8 +85,8 @@ const Questions = () => {
           </Tooltip>
         ),
         question.difficulty,
-        question.type,
         <Rating readonly/>,
+        <YesNo yes={ isQuestionApproved(question) }/>,
         <span className="flex justify-end gap-1">
           { checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }

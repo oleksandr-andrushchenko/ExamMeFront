@@ -1,5 +1,5 @@
 import { Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Checkbox, Input, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Checkbox } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -16,6 +16,9 @@ import Error from '../components/Error'
 import QuestionPermission from '../enum/question/QuestionPermission'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
+import InfoTable from '../components/elements/InfoTable'
+import YesNo from '../components/elements/YesNo'
+import isQuestionApproved from '../services/questions/isQuestionApproved'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -41,62 +44,37 @@ const Question = () => {
     document.title = question?.title || 'ExamMe'
   }, [])
 
-  const choices = (question: Question) => {
-    if (question.type === QuestionType.CHOICE) {
-      return (question.choices || []).map((choice: QuestionChoice, index) => (
-        <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
-      ))
-    }
-
-    return (
-      <Input type="text" name="answer" size="lg" label="Answer" disabled={ true }/>
-    )
-  }
-
   return <>
     <Breadcrumbs>
       <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
       <Link label="Categories" to={ Route.Categories }/>
-      { !question ? <Spinner type="text"/> : <Link label={ question.category!.name } to={ Route.Category.replace(':categoryId', question.categoryId!) }/> }
-      { !question ? <Spinner type="text"/> : <Link label={ question.title } to={ Route.Question.replace(':questionId', question.id!) }/> }
+      { !question ? <Spinner type="text"/> :
+        <Link label={ question.category!.name } to={ Route.Category.replace(':categoryId', question.categoryId!) }/> }
+      { !question ? <Spinner type="text"/> :
+        <Link label={ question.title } to={ Route.Question.replace(':questionId', question.id!) }/> }
     </Breadcrumbs>
 
-    <H1>{ !question ? <Spinner type="text"/> : question.title }</H1>
+    <H1 sub="Question info">{ !question ? <Spinner type="text"/> : question.title }</H1>
 
     <Rating/>
 
     { error && <Error text={ error }/> }
 
-    <Typography variant="small" className="mt-4">Question info</Typography>
-
-    <table className="w-full table-auto text-left text-sm">
-      <tbody>
-      <tr>
-        <th className="w-2/12">Title</th>
-        <td>{ question ? question.title : <Spinner type="text"/> }</td>
-      </tr>
-      <tr>
-        <th>Category</th>
-        <td>{ question ? question.category!.name : <Spinner type="text"/> }</td>
-      </tr>
-      <tr>
-        <th>Type</th>
-        <td>{ question ? question.type : <Spinner type="text"/> }</td>
-      </tr>
-      <tr>
-        <th>
-          { !question ? <Spinner type="text"/> : (question.type === QuestionType.CHOICE ? 'Choices' : 'Answers') }
-        </th>
-        <td>
-          { !question ? <Spinner type="text"/> : choices(question) }
-        </td>
-      </tr>
-      <tr>
-        <th>Difficulty</th>
-        <td>{ question ? question.difficulty : <Spinner type="text"/> }</td>
-      </tr>
-      </tbody>
-    </table>
+    <InfoTable
+      columns={ [ 'Title', 'Category', 'Type', 'Choices', 'Difficulty', 'Rating', 'Approved' ] }
+      source={ question }
+      mapper={ (question: Question) => [
+        question.title,
+        question.category!.name,
+        question.type,
+        question.type === QuestionType.CHOICE ? (question.choices || []).map((choice: QuestionChoice, index) => (
+          <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
+        )) : 'N/A',
+        question.difficulty,
+        <Rating readonly/>,
+        <YesNo yes={ isQuestionApproved(question) }/>,
+      ] }
+    />
 
     <div className="flex gap-1 items-center mt-4">
       { checkAuthorization(QuestionPermission.Update, question) && (!question ? <Spinner type="button"/> :

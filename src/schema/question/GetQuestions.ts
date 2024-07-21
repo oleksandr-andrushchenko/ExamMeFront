@@ -1,7 +1,7 @@
 import Pagination from '../pagination/Pagination'
 
 export default interface GetQuestions extends Pagination {
-  categoryId?: string
+  category?: string
   price?: string
   search?: string
   difficulty?: string

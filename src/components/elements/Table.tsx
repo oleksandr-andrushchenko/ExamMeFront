@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import { ButtonGroup, Input, Option, Select, Tab, Tabs, TabsHeader } from '@material-tailwind/react'
+import { ButtonGroup, Input, Option, Select, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
 import { memo, useEffect, useState } from 'react'
 import Paginated from '../../schema/pagination/Paginated'
 import IconButton from './IconButton'
@@ -14,6 +14,18 @@ import {
 } from '@heroicons/react/24/solid'
 import Button from './Button'
 
+interface Props {
+  key2: string | number | undefined
+  buttons: object
+  tabs: object
+  filters?: object
+  defaultSearchParams: object
+  queryOptions: Function
+  queryData: Function
+  mapper: Function
+  columns: string[]
+}
+
 const Table = (
   {
     key2,
@@ -21,11 +33,11 @@ const Table = (
     queryOptions,
     queryData,
     buttons = [],
-    tabs = [],
-    filters = [],
+    tabs = {},
+    filters = {},
     columns = [],
     mapper,
-  },
+  }: Props,
 ) => {
   const [ isLoading, setLoading ] = useState<boolean>(true)
   const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
@@ -77,31 +89,59 @@ const Table = (
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
-      { Object.entries(buttons).filter(([ key, button ]) => !!button)
+      { Object.entries(buttons).filter(([ _, button ]) => !!button)
         .map(([ key, button ]) => <span key={ key }>{ button }</span>) }
     </div>
 
-    <div className="flex gap-1 items-center mt-4">
-      { (tabs.length > 0) && (
-        <Tabs value="all" className="min-w-[170px]">
-          <TabsHeader>
-            { tabs.map(value => (
-              <Tab
-                key={ value }
-                value={ value }
-                className="text-xs small text-small"
-                onClick={ () => applySearchParams({ price: value === 'all' ? undefined : value }) }
-              >
-                { value }
-              </Tab>
-            )) }
-          </TabsHeader>
-        </Tabs>
-      ) }
+    { (Object.keys(tabs).length > 0) && (
+      <div className="flex gap-5 items-center mt-4">
+        { Object.entries(tabs).map(([ filter, values ]) => (
+          <div key={ filter } className="flex gap-2 items-center">
+            <Typography variant="small">{ filter }:</Typography>
+            <Tabs value="all" className="min-w-[170px]">
+              <TabsHeader>
+                { [ 'all', ...values ].map(value => (
+                  <Tab
+                    key={ value }
+                    value={ value }
+                    className="text-xs small text-small"
+                    onClick={ () => applySearchParams({ [filter]: value === 'all' ? undefined : value }) }
+                  >
+                    { value }
+                  </Tab>
+                )) }
+              </TabsHeader>
+            </Tabs>
+          </div>
+        )) }
+      </div>
+    ) }
 
-      { Object.entries(filters).map(([ key, filter ]) => (
-        <span key={ key }>{ typeof filter === 'function' ? filter(searchParams, applySearchParams) : filter }</span>
-      )) }
+    <div className="flex gap-1 items-center mt-4">
+      { Object.entries(filters).map(([ filter, values ]) => {
+        return (
+          <Select
+            key={ `${ filter }-${ Object.keys(values).join('') }` }
+            label={ filter }
+            onChange={ value => applySearchParams({ [filter]: value === 'all' ? undefined : value }) }
+            value={ searchParams.get(filter) || '' }
+            className="capitalize"
+          >
+            { Object.entries({ '': 'all', ...values }).map(([ value, label ]) => {
+              return (
+                <Option
+                  key={ `${ filter }-${ value }` }
+                  value={ value }
+                  disabled={ value === searchParams.get(filter) }
+                  className="capitalize"
+                >
+                  { label }
+                </Option>
+              )
+            }) }
+          </Select>
+        )
+      }) }
 
       <Input
         label="Search"

@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import GetQuestions from '../../schema/question/GetQuestions'
 
 export default function getQuestionsForCategoryPage(categoryId: string, filter: GetQuestions = {}): any {
-  filter.categoryId = categoryId
+  filter.category = categoryId
 
   if ('size' in filter) {
     filter.size = +filter.size
@@ -17,7 +17,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
             $size: Int,
             $order: String,
             $price: String,
-            $categoryId: ID,
+            $category: ID,
             $search: String,
             $difficulty: String,
             $type: String
@@ -29,7 +29,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
                 size: $size,
                 order: $order,
                 price: $price,
-                categoryId: $categoryId,
+                category: $category,
                 search: $search,
                 difficulty: $difficulty,
                 type: $type

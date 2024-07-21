@@ -15,7 +15,7 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
             $size: Int,
             $order: String,
             $price: String,
-            $categoryId: ID,
+            $category: ID,
             $search: String,
             $difficulty: String,
             $type: String
@@ -27,7 +27,7 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
                 size: $size,
                 order: $order,
                 price: $price,
-                categoryId: $categoryId,
+                category: $category,
                 search: $search,
                 difficulty: $difficulty,
                 type: $type

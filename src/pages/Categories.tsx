@@ -17,6 +17,8 @@ import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
+import isCategoryApproved from '../services/categories/isCategoryApproved'
+import YesNo from '../components/elements/YesNo'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -42,18 +44,23 @@ const Categories = () => {
         create: <AddCategory
           onSubmit={ (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!)) }/>,
       } }
-      tabs={ [ 'all', 'free', 'subscription' ] }
-      columns={ [ '#', 'Title', 'Questions', 'Required score', 'Rating', '' ] }
+      tabs={ {
+        subscription: [ 'yes', 'no' ],
+        approved: [ 'yes', 'no' ],
+      } }
+      columns={ [ '#', 'Name', 'Questions', 'Required score', 'Rating', 'Approved', '' ] }
       // todo: add current exam info (get rid off getOneNonCompletedCategoryExams calls)
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }
       queryData={ (data: { paginatedCategories: Paginated<Category> }) => data.paginatedCategories }
       mapper={ (category: Category, index: number) => [
         category.id,
         index + 1,
-        <Link label={ category.name } tooltip={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/>,
+        <Link label={ category.name } tooltip={ category.name }
+              to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
         <Rating readonly/>,
+        <YesNo yes={ isCategoryApproved(category) }/>,
         <span className="flex justify-end gap-1">
           <AddQuestion category={ category } onSubmit={ refresh } iconButton/>
 

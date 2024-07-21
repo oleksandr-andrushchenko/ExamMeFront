@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, Option, Select, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -24,6 +24,10 @@ import Table from '../components/elements/Table'
 import getQuestionsForCategoryPage from '../api/category/getQuestionsForCategoryPage'
 import Link from '../components/elements/Link'
 import H1 from '../components/typography/H1'
+import isQuestionApproved from '../services/questions/isQuestionApproved'
+import InfoTable from '../components/elements/InfoTable'
+import isCategoryApproved from '../services/categories/isCategoryApproved'
+import YesNo from '../components/elements/YesNo'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -56,26 +60,23 @@ const Category = () => {
         <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/> }
     </Breadcrumbs>
 
-    <H1>{ !category ? <Spinner type="text"/> : category.name }</H1>
+    <H1 sub="Category info">{ !category ? <Spinner type="text"/> : category.name }</H1>
 
     <Rating/>
 
     { error && <Error text={ error }/> }
 
-    <Typography variant="small" className="mt-4">Category info</Typography>
-
-    <table className="w-full table-auto text-left text-sm">
-      <tbody>
-      <tr>
-        <th className="w-2/12">Name</th>
-        <td>{ category ? category.name : <Spinner type="text"/> }</td>
-      </tr>
-      <tr>
-        <th>Required score</th>
-        <td>{ category ? (category.requiredScore ?? 0) : <Spinner type="text"/> }</td>
-      </tr>
-      </tbody>
-    </table>
+    <InfoTable
+      source={ category }
+      columns={ [ 'Name', 'Questions', 'Required score', 'Rating', 'Approved' ] }
+      mapper={ (category: Category) => [
+        category.name,
+        category.questionCount ?? 0,
+        category.requiredScore ?? 0,
+        <Rating readonly/>,
+        <YesNo yes={ isCategoryApproved(category) }/>,
+      ] }
+    />
 
     <Table
       key2={ tableKey }
@@ -87,53 +88,25 @@ const Category = () => {
           <DeleteCategory category={ category } onSubmit={ () => navigate(Route.Categories, { replace: true }) }/>),
         exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
       } }
-      tabs={ [ 'all', 'free', 'subscription' ] }
-      columns={ [ '#', 'Title', 'Difficulty', 'Type', 'Rating', '' ] }
+      tabs={ {
+        subscription: [ 'yes', 'no' ],
+        type: Object.values(QuestionType),
+        difficulty: Object.values(QuestionDifficulty),
+        approved: [ 'yes', 'no' ],
+      } }
+      columns={ [ '#', 'Title', 'Type', 'Choices', 'Difficulty', 'Rating', 'Approved', '' ] }
       queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
-      filters={ {
-        difficulty: (searchParams, applySearchParams) => <Select
-          label="Difficulty"
-          onChange={ (difficulty) => applySearchParams({ difficulty }) }
-          value={ searchParams.get('difficulty') || '' }
-          className="capitalize"
-        >
-          { Object.values(QuestionDifficulty).map((difficulty) => (
-            <Option
-              key={ difficulty }
-              value={ difficulty }
-              disabled={ difficulty === searchParams.get('difficulty') }
-              className="capitalize"
-            >
-              { difficulty }
-            </Option>
-          )) }
-        </Select>,
-        type: (searchParams, applySearchParams) => <Select
-          label="Type"
-          onChange={ (type) => applySearchParams({ type }) }
-          value={ searchParams.get('type') || '' }
-          className="capitalize"
-        >
-          { Object.values(QuestionType).map((type: string) => (
-            <Option
-              key={ type }
-              value={ type }
-              disabled={ type === searchParams.get('type') }
-              className="capitalize"
-            >
-              { type }
-            </Option>
-          )) }
-        </Select>,
-      } }
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Link label={ question.title } tooltip={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
-        question.difficulty,
+        <Link label={ question.title } tooltip={ question.title }
+              to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         question.type,
+        question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
+        question.difficulty,
         <Rating readonly/>,
+        <YesNo yes={ isQuestionApproved(question) }/>,
         <span className="flex justify-end gap-1">
           { checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }

@@ -32,7 +32,7 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
-  const { authenticationToken, me, checkAuthorization } = useAuth()
+  const { authenticationToken, checkAuthorization } = useAuth()
 
   const icon = category ? EditIcon : CreateIcon
   const label = category ? 'Update Category' : 'Add Category'
