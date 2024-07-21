@@ -1,4 +1,4 @@
-import { Breadcrumbs, Chip, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Chip } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
 import { HomeIcon } from '@heroicons/react/24/solid'
@@ -31,9 +31,7 @@ const Users = () => {
       <Link label="Users" to={ Route.Users }/>
     </Breadcrumbs>
 
-    <H1 icon={ ListIcon }>Users</H1>
-
-    <Typography variant="small" className="mt-1">Users info</Typography>
+    <H1 icon={ ListIcon } label="Users" sub="Users info"/>
 
     <Table
       key2={ tableKey }

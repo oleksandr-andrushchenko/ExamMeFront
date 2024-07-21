@@ -1,5 +1,5 @@
 import { Params, useNavigate, useParams } from 'react-router-dom'
-import { Breadcrumbs, ButtonGroup, Checkbox, Input, Progress, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, ButtonGroup, Checkbox, Input, Progress } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -8,7 +8,7 @@ import Spinner from '../components/Spinner'
 import ExamPermission from '../enum/exam/ExamPermission'
 import DeleteExam from '../components/exam/DeleteExam'
 import ExamQuestion from '../schema/exam/ExamQuestion'
-import { QuestionChoice, QuestionType } from '../schema/question/CreateQuestion'
+import { QuestionType } from '../schema/question/CreateQuestion'
 import CompleteExam from '../components/exam/CompleteExam'
 import { apiMutate, apiQuery } from '../api/apolloClient'
 import createExamQuestionAnswer from '../api/exam/createExamQuestionAnswer'
@@ -141,13 +141,12 @@ const Exam = () => {
       <Breadcrumbs>
         <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
         <Link label="Categories" to={ Route.Categories }/>
-        { !examQuestion ? <Spinner type="text"/> : <Link label={ examQuestion.exam!.category!.name } to={ Route.Category.replace(':categoryId', examQuestion.exam!.categoryId!) }/> }
+        { !examQuestion ? <Spinner type="text"/> : <Link label={ examQuestion.exam!.category!.name }
+                                                         to={ Route.Category.replace(':categoryId', examQuestion.exam!.categoryId!) }/> }
         <Link label="Exam" to={ Route.Exam.replace(':examId', examId) }/>
       </Breadcrumbs>
 
-      <H1>Exam: { examQuestion ? examQuestion.exam!.category!.name : <Spinner type="text"/> }</H1>
-
-      <Typography variant="small" className="mt-1">{ header }</Typography>
+      <H1 sub={ header }>Exam: { examQuestion ? examQuestion.exam!.category!.name : <Spinner type="text"/> }</H1>
 
       { error && <Error text={ error }/> }
 

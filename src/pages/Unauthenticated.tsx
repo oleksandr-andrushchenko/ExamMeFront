@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
 import Auth from '../components/Auth'
@@ -21,9 +21,7 @@ const Unauthenticated = () => {
       <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
     </Breadcrumbs>
 
-    <H1>Unauthenticated</H1>
-
-    <Typography variant="small" className="mt-1">You do not logged in</Typography>
+    <H1 label="Unauthenticated" sub="You do not logged in"/>
 
     <div className="inline-flex items-center gap-1 mt-3">
       <Auth/>

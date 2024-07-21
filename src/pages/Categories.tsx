@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import Category from '../schema/category/Category'
 import Route from '../enum/Route'
 import useAuth from '../hooks/useAuth'
@@ -17,6 +17,7 @@ import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
+import Subtitle from '../components/typography/Subtitle'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -34,14 +35,13 @@ const Categories = () => {
       <Link label="Categories" to={ Route.Categories }/>
     </Breadcrumbs>
 
-    <H1 icon={ ListIcon }>Categories</H1>
-
-    <Typography variant="small" className="mt-1">Categories info</Typography>
+    <H1 icon={ ListIcon } label="Categories" sub="Categories info"/>
 
     <Table
       key2={ tableKey }
       buttons={ {
-        create: <AddCategory onSubmit={ (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!)) }/>,
+        create: <AddCategory
+          onSubmit={ (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!)) }/>,
       } }
       tabs={ [ 'all', 'free', 'subscription' ] }
       columns={ [ '#', 'Title', 'Questions', 'Required score', 'Rating', '' ] }
@@ -51,7 +51,8 @@ const Categories = () => {
       mapper={ (category: Category, index: number) => [
         category.id,
         index + 1,
-        <Link label={ category.name } tooltip={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/>,
+        <Link label={ category.name } tooltip={ category.name }
+              to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
         <Rating readonly/>,

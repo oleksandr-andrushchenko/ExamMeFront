@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
 import H1 from '../components/typography/H1'
@@ -20,9 +20,7 @@ const NotFound = () => {
       <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
     </Breadcrumbs>
 
-    <H1>Not Found</H1>
-
-    <Typography variant="small" className="mt-1">Page not found</Typography>
+    <H1 label="Not Found" sub="Page not found"/>
 
     <div className="inline-flex items-center gap-1 mt-3">
       <Button icon={ GoBackIcon } label="Go Back" onClick={ goBack }/>

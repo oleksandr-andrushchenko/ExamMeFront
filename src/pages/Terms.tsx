@@ -1,4 +1,4 @@
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
@@ -16,9 +16,7 @@ const Terms = () => {
       <Link label="Terms and conditions" to={ Route.Terms }/>
     </Breadcrumbs>
 
-    <H1>Terms and conditions</H1>
-
-    <Typography variant="small" className="mt-1">Our rules and policies</Typography>
+    <H1 label="Terms and conditions" sub="Our rules and policies"/>
   </>
 }
 

@@ -1,4 +1,4 @@
-import { Breadcrumbs, Typography } from '@material-tailwind/react'
+import { Breadcrumbs } from '@material-tailwind/react'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
@@ -15,9 +15,7 @@ const Home = () => {
       <Link icon={ HomeIcon } label="Home" to={ Route.Home }/>
     </Breadcrumbs>
 
-    <H1>Home</H1>
-
-    <Typography variant="small" className="mt-1">Latest activities</Typography>
+    <H1 label="Home" sub="Latest activities"/>
   </>
 }
 

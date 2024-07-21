@@ -1,4 +1,4 @@
-import { Breadcrumbs, Option, Select, Tooltip, Typography } from '@material-tailwind/react'
+import { Breadcrumbs, Option, Select, Tooltip } from '@material-tailwind/react'
 import Route from '../enum/Route'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { memo, useEffect, useState } from 'react'
@@ -50,9 +50,7 @@ const Questions = () => {
       <Link label="Questions" to={ Route.Questions }/>
     </Breadcrumbs>
 
-    <H1 icon={ ListIcon }>Questions</H1>
-
-    <Typography variant="small" className="mt-1">Questions info</Typography>
+    <H1 icon={ ListIcon } label="Questions" sub="Questions info"/>
 
     { error && <Error text={ error }/> }
 
@@ -123,7 +121,8 @@ const Questions = () => {
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Link label={ question.title } tooltip={ question.title } to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
+        <Link label={ question.title } tooltip={ question.title }
+              to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         !categories ? <Spinner/> : (
           <Tooltip content={ getCategory(question.categoryId!).name }>
             { getCategory(question.categoryId!).name }
