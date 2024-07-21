@@ -12,10 +12,11 @@ export default withMT({
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Lato', ...defaultTheme.fontFamily.sans],
+        // sans: ['Lato', ...defaultTheme.fontFamily.sans],
+        primary: ['Oswald', ...defaultTheme.fontFamily.serif],
         // sans: ['Oswald', ...defaultTheme.fontFamily.sans],
         // sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
-        // sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+        sans: ['Poppins', ...defaultTheme.fontFamily.sans],
         // sans: ['Raleway', ...defaultTheme.fontFamily.sans],
         // sans: ['Reddit Sans', ...defaultTheme.fontFamily.sans],
         // sans: ['Roboto Condensed', ...defaultTheme.fontFamily.sans],
