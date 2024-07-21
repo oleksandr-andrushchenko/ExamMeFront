@@ -29,3 +29,5 @@
 * Question create validation: only one choice (=1)
 * Admin lists should include deleted items
 * Api: [ ...new Set(values.permissions) ]
+* Approve categories, questions...
+* Exclude un-approved items from lists
