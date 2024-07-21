@@ -28,6 +28,7 @@ import isQuestionApproved from '../services/questions/isQuestionApproved'
 import InfoTable from '../components/elements/InfoTable'
 import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
+import createListFromEnum from '../utils/createListFromEnum'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -68,7 +69,7 @@ const Category = () => {
 
     <InfoTable
       source={ category }
-      columns={ [ 'Name', 'Questions', 'Required score', 'Rating', 'Approved' ] }
+      columns={ [ 'Name', 'Questions', 'Required score', 'Approved', 'Rating' ] }
       mapper={ (category: Category) => [
         category.name,
         category.questionCount ?? 0,
@@ -90,11 +91,12 @@ const Category = () => {
       } }
       tabs={ {
         subscription: [ 'yes', 'no' ],
-        type: Object.values(QuestionType),
-        difficulty: Object.values(QuestionDifficulty),
         approved: [ 'yes', 'no' ],
       } }
-      columns={ [ '#', 'Title', 'Type', 'Choices', 'Difficulty', 'Rating', 'Approved', '' ] }
+      filters={ {
+        difficulty: createListFromEnum(QuestionDifficulty),
+      } }
+      columns={ [ '#', 'Title', 'Type', 'Choices', 'Difficulty', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [

@@ -48,7 +48,7 @@ const Categories = () => {
         subscription: [ 'yes', 'no' ],
         approved: [ 'yes', 'no' ],
       } }
-      columns={ [ '#', 'Name', 'Questions', 'Required score', 'Rating', 'Approved', '' ] }
+      columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
       // todo: add current exam info (get rid off getOneNonCompletedCategoryExams calls)
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }
       queryData={ (data: { paginatedCategories: Paginated<Category> }) => data.paginatedCategories }
@@ -59,8 +59,8 @@ const Categories = () => {
               to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
-        <Rating readonly/>,
         <YesNo yes={ isCategoryApproved(category) }/>,
+        <Rating readonly/>,
         <span className="flex justify-end gap-1">
           <AddQuestion category={ category } onSubmit={ refresh } iconButton/>
 

@@ -57,7 +57,7 @@ const AddExam = ({ category, iconButton }: Props) => {
 
   const icon = PlayIcon
   const label = 'Start exam'
-  const color = 'green'
+  const color = 'indigo'
 
   if (!authenticationToken) {
     return <Auth
@@ -74,12 +74,13 @@ const AddExam = ({ category, iconButton }: Props) => {
   if (authenticationToken && exam) {
     const url = Route.Exam.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
     const label = 'Continue exam'
+    const color = 'blue'
 
     if (iconButton) {
-      return <Link to={ url } label={ <IconButton icon={ icon } color="orange"/> } tooltip={ label }/>
+      return <Link to={ url } label={ <IconButton icon={ icon } color={ color }/> } tooltip={ label }/>
     }
 
-    return <Link to={ url } label={ <Button icon={ icon } label={ label } color="orange"/> }/>
+    return <Link to={ url } label={ <Button icon={ icon } label={ label } color={ color }/> }/>
   }
 
   return <>

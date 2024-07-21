@@ -67,13 +67,13 @@ const Questions = () => {
         subscription: [ 'yes', 'no' ],
         approved: [ 'yes', 'no' ],
       } }
-      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Rating', 'Approved', '' ] }
-      queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
-      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       filters={ {
         category: createListFromObjects(categories || [], 'id', 'name'),
         difficulty: createListFromEnum(QuestionDifficulty),
       } }
+      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Approved', 'Rating', '' ] }
+      queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
+      queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
@@ -85,8 +85,8 @@ const Questions = () => {
           </Tooltip>
         ),
         question.difficulty,
-        <Rating readonly/>,
         <YesNo yes={ isQuestionApproved(question) }/>,
+        <Rating readonly/>,
         <span className="flex justify-end gap-1">
           { checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
