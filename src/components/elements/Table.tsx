@@ -98,7 +98,7 @@ const Table = (
         { Object.entries(tabs).map(([ filter, values ]) => (
           <div key={ filter } className="flex gap-2 items-center">
             <Typography variant="small">{ filter }:</Typography>
-            <Tabs value="all" className="min-w-[170px]">
+            <Tabs value="all">
               <TabsHeader>
                 { [ 'all', ...values ].map(value => (
                   <Tab
@@ -125,7 +125,8 @@ const Table = (
             label={ filter }
             onChange={ value => applySearchParams({ [filter]: value === 'all' ? undefined : value }) }
             value={ searchParams.get(filter) || '' }
-            className="capitalize"
+            className="min-w-[200px] capitalize"
+            containerProps={ { className: 'min-w-[200px]' } }
           >
             { Object.entries({ '': 'all', ...values }).map(([ value, label ]) => {
               return (
