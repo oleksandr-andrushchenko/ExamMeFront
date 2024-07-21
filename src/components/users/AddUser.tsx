@@ -1,4 +1,4 @@
-import { Card, CardBody, Dialog, Typography } from '@material-tailwind/react'
+import { Card, CardBody, Dialog } from '@material-tailwind/react'
 import { memo, useState } from 'react'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
@@ -13,6 +13,7 @@ import { CreateIcon, EditIcon } from '../../registry/icons'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import createUser from '../../api/users/createUser'
+import H3 from '../typography/H3'
 
 interface Props {
   user?: User
@@ -42,7 +43,7 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4">{ label }</Typography>
+          <H3 icon={ icon } label={ label }/>
           <Formik
             initialValues={ {
               name: user?.name || '',

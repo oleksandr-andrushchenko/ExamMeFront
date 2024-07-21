@@ -1,4 +1,4 @@
-import { Card, CardBody, Dialog, Typography } from '@material-tailwind/react'
+import { Card, CardBody, Dialog } from '@material-tailwind/react'
 import { memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
@@ -15,6 +15,7 @@ import Button from '../elements/Button'
 import useAuth from '../../hooks/useAuth'
 import Auth from '../Auth'
 import CategoryPermission from '../../enum/category/CategoryPermission'
+import H3 from '../typography/H3'
 
 interface Props {
   category?: Category
@@ -63,9 +64,7 @@ const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4">
-            { category ? 'Update category' : 'Add category' }
-          </Typography>
+          <H3 icon={ icon } label={ label }/>
           <Formik
             initialValues={ {
               name: category?.name || '',

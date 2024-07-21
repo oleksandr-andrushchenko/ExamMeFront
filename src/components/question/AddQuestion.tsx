@@ -1,4 +1,4 @@
-import { Card, CardBody, Dialog, Typography } from '@material-tailwind/react'
+import { Card, CardBody, Dialog } from '@material-tailwind/react'
 import { memo, useEffect, useState } from 'react'
 import CreateQuestion, { QuestionChoice, QuestionDifficulty, QuestionType } from '../../schema/question/CreateQuestion'
 import Question from '../../schema/question/Question'
@@ -22,6 +22,7 @@ import Button from '../elements/Button'
 import useAuth from '../../hooks/useAuth'
 import Auth from '../Auth'
 import QuestionPermission from '../../enum/question/QuestionPermission'
+import H3 from '../typography/H3'
 
 interface Props {
   category?: Category
@@ -87,7 +88,7 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
     <Dialog open={ open } handler={ handleOpen } className="text-left">
       <Card>
         <CardBody className="flex flex-col gap-4">
-          <Typography variant="h4">{ label }</Typography>
+          <H3 icon={ icon } label={ label }/>
           <Formik
             initialValues={ {
               title: question?.title || '',

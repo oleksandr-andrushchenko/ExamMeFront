@@ -2,9 +2,9 @@ import { Typography } from '@material-tailwind/react'
 import React, { memo } from 'react'
 import Subtitle from './Subtitle'
 
-const H1 = ({ icon, label, sub, children, ...props }) => {
-  const h1 = (
-    <Typography as="h1" variant="h2" className="mt-1 font-primary font-normal" { ...props }>
+const H3 = ({ icon, label, sub, children, ...props }) => {
+  const h3 = (
+    <Typography as="h3" variant="h4" className="font-primary font-normal" { ...props }>
       { icon && React.createElement(icon, { className: 'h-8 w-8 inline-block' }) }
       { icon && ' ' }
       { label || children }
@@ -12,10 +12,10 @@ const H1 = ({ icon, label, sub, children, ...props }) => {
   )
 
   if (sub) {
-    return <>{ h1 } <Subtitle>{ sub }</Subtitle></>
+    return <>{ h3 } <Subtitle>{ sub }</Subtitle></>
   }
 
-  return h1
+  return h3
 }
 
-export default memo(H1)
+export default memo(H3)

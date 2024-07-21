@@ -17,7 +17,6 @@ import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
-import Subtitle from '../components/typography/Subtitle'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -51,8 +50,7 @@ const Categories = () => {
       mapper={ (category: Category, index: number) => [
         category.id,
         index + 1,
-        <Link label={ category.name } tooltip={ category.name }
-              to={ Route.Category.replace(':categoryId', category.id!) }/>,
+        <Link label={ category.name } tooltip={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
         <Rating readonly/>,
