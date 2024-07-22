@@ -19,7 +19,7 @@ interface Props {
   buttons: object
   tabs: object
   filters?: object
-  defaultSearchParams: object
+  defaultSearchParams: URLSearchParams
   queryOptions: Function
   queryData: Function
   mapper: Function
@@ -29,7 +29,7 @@ interface Props {
 const Table = (
   {
     key2,
-    defaultSearchParams = { size: '20' },
+    defaultSearchParams = new URLSearchParams({ size: '20' }),
     queryOptions,
     queryData,
     buttons = {},
@@ -40,7 +40,7 @@ const Table = (
   }: Props,
 ) => {
   const [ isLoading, setLoading ] = useState<boolean>(true)
-  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>(new URLSearchParams(defaultSearchParams))
+  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>(defaultSearchParams)
   const [ items, setItems ] = useState<Paginated>()
   const [ error, setError ] = useState<string>('')
 
@@ -65,11 +65,11 @@ const Table = (
   const clearSearchParams = () => {
     setItems(undefined)
 
-    setSearchParams(new URLSearchParams(defaultSearchParams))
+    setSearchParams(defaultSearchParams)
   }
 
   const showClear = (): boolean => {
-    const def = new URLSearchParams(defaultSearchParams)
+    const def = defaultSearchParams
     def.sort()
     searchParams.sort()
 
