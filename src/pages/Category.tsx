@@ -99,7 +99,7 @@ const Category = () => {
       filters={ {
         difficulty: createListFromEnum(QuestionDifficulty),
       } }
-      columns={ [ '#', 'Title', 'Type', 'Choices', 'Difficulty', 'Approved', 'Rating', '' ] }
+      columns={ [ '#', 'Title', 'Choices', 'Difficulty', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
@@ -107,7 +107,6 @@ const Category = () => {
         index + 1,
         <Link label={ question.title } tooltip={ question.title }
               to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
-        question.type,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
         <Rating readonly/>,

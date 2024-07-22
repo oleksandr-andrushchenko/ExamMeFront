@@ -17,7 +17,7 @@ import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import getCategoriesForSelect from '../api/category/getCategoriesForSelect'
 import Error from '../components/Error'
-import { QuestionDifficulty } from '../schema/question/CreateQuestion'
+import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
 import isQuestionApproved from '../services/questions/isQuestionApproved'
@@ -71,7 +71,7 @@ const Questions = () => {
         category: createListFromObjects(categories || [], 'id', 'name'),
         difficulty: createListFromEnum(QuestionDifficulty),
       } }
-      columns={ [ '#', 'Title', 'Category', 'Difficulty', 'Approved', 'Rating', '' ] }
+      columns={ [ '#', 'Title', 'Category', 'Choices', 'Difficulty', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getQuestionsForQuestionsPage(filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
@@ -81,6 +81,7 @@ const Questions = () => {
               to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         !categories ? <Spinner/> : <Tooltip
           content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
+        question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
         <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
