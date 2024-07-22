@@ -83,10 +83,13 @@ const Category = () => {
       key2={ tableKey }
       buttons={ {
         create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
+
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
           <AddCategory category={ category } onSubmit={ (category: Category) => setCategory(category) }/>),
+
         delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
           <DeleteCategory category={ category } onSubmit={ () => navigate(Route.Categories, { replace: true }) }/>),
+
         exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
       } }
       tabs={ {
@@ -109,12 +112,13 @@ const Category = () => {
         question.difficulty,
         <Rating readonly/>,
         <YesNo yes={ isQuestionApproved(question) }/>,
-        <span className="flex justify-end gap-1">
-          { checkAuthorization(QuestionPermission.Update, question) &&
-            <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
-          { checkAuthorization(QuestionPermission.Delete, question) &&
-            <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
-        </span>,
+        {
+          add: checkAuthorization(QuestionPermission.Update, question) &&
+            <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
+
+          delete: checkAuthorization(QuestionPermission.Delete, question) &&
+            <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/>,
+        },
       ] }
     />
   </>

@@ -32,7 +32,7 @@ const Table = (
     defaultSearchParams = { size: '20' },
     queryOptions,
     queryData,
-    buttons = [],
+    buttons = {},
     tabs = {},
     filters = {},
     columns = [],
@@ -40,7 +40,7 @@ const Table = (
   }: Props,
 ) => {
   const [ isLoading, setLoading ] = useState<boolean>(true)
-  const [ searchParams, setSearchParams ] = useSearchParams(defaultSearchParams)
+  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>(new URLSearchParams(defaultSearchParams))
   const [ items, setItems ] = useState<Paginated>()
   const [ error, setError ] = useState<string>('')
 
@@ -65,7 +65,7 @@ const Table = (
   const clearSearchParams = () => {
     setItems(undefined)
 
-    setSearchParams(defaultSearchParams)
+    setSearchParams(new URLSearchParams(defaultSearchParams))
   }
 
   const showClear = (): boolean => {
@@ -85,7 +85,7 @@ const Table = (
     )
   }, [ searchParams, key2 ])
 
-  return <div className={ key2 }>
+  return <>
     { error && <Error text={ error }/> }
 
     <div className="flex gap-1 items-center mt-4">
@@ -118,7 +118,7 @@ const Table = (
     ) }
 
     <div className="flex gap-1 items-center mt-4">
-      { Object.entries(filters).map(([ filter, values ]) => {
+      { filters && Object.entries(filters).map(([ filter, values ]) => {
         return (
           <Select
             key={ `${ filter }-${ Object.keys(values).join('') }` }
@@ -198,22 +198,23 @@ const Table = (
         <td colSpan={ columns.length } className="p-5 text-center">No data</td>
       </tr> }
       { !isLoading && items && items.data && items.data.map((item, index) => {
-        try {
-          const values = mapper(item, index)
-          const key = values.shift()
+        const values: [] = mapper(item, index)
+        const key = values.shift()
+        const controls = values.pop() as object
 
-          return (
-            <tr key={ `${ key }-${ index }` }>
-              { values.map((value, index2) => <td key={ `${ index }-${ index2 }` }>{ value }</td>) }
-            </tr>
-          )
-        } catch (error) {
-          return <tr key={ Math.random() }></tr>
-        }
+        return (
+          <tr key={ `${ key }-${ index }` }>
+            { values.map((value, index2) => <td key={ `${ index }-${ index2 }` }>{ value }</td>) }
+            <td className="flex justify-end gap-1">
+              { Object.entries(controls).filter(([ _, control ]) => !!control)
+                .map(([ key, control ]) => <span key={ key }>{ control }</span>) }
+            </td>
+          </tr>
+        )
       }) }
       </tbody>
     </table>
-  </div>
+  </>
 }
 
 export default memo(Table)

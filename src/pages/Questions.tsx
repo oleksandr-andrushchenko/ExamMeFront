@@ -79,21 +79,18 @@ const Questions = () => {
         index + 1,
         <Link label={ question.title } tooltip={ question.title }
               to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
-        !categories ? <Spinner/> : (
-          <Tooltip content={ getCategory(question.categoryId!).name }>
-            { getCategory(question.categoryId!).name }
-          </Tooltip>
-        ),
+        !categories ? <Spinner/> : <Tooltip
+          content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
         question.difficulty,
         <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
-        <span className="flex justify-end gap-1">
-          { checkAuthorization(QuestionPermission.Update, question) &&
-            <AddQuestion question={ question } onSubmit={ refresh } iconButton/> }
+        {
+          update: checkAuthorization(QuestionPermission.Update, question) &&
+            <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
 
-          { checkAuthorization(QuestionPermission.Delete, question) &&
-            <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/> }
-        </span>,
+          delete: checkAuthorization(QuestionPermission.Delete, question) &&
+            <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/>,
+        },
       ] }
     />
   </>

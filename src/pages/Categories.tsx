@@ -61,17 +61,17 @@ const Categories = () => {
         category.requiredScore ?? 0,
         <YesNo yes={ isCategoryApproved(category) }/>,
         <Rating readonly/>,
-        <span className="flex justify-end gap-1">
-          <AddQuestion category={ category } onSubmit={ refresh } iconButton/>
+        {
+          addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,
 
-          { checkAuthorization(CategoryPermission.Update, category) &&
-            <AddCategory category={ category } onSubmit={ refresh } iconButton/> }
+          update: checkAuthorization(CategoryPermission.Update, category) &&
+            <AddCategory category={ category } onSubmit={ refresh } iconButton/>,
 
-          { checkAuthorization(CategoryPermission.Delete, category) &&
-            <DeleteCategory category={ category } onSubmit={ refresh } iconButton/> }
+          delete: checkAuthorization(CategoryPermission.Delete, category) &&
+            <DeleteCategory category={ category } onSubmit={ refresh } iconButton/>,
 
-          { !!category.questionCount && <AddExam category={ category } iconButton/> }
-        </span>,
+          exam: !!category.questionCount && <AddExam category={ category } iconButton/>,
+        },
       ] }
     />
   </>

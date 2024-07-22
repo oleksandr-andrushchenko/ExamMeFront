@@ -48,19 +48,20 @@ const Users = () => {
         user.email,
         user.permissions?.map(permission => (
           <Chip
+            key={ permission }
             value={ permission }
             color={ [ Permission.All, Permission.Root ].includes(permission as any) ? 'green' : 'blue' }
             className="mr-1 mb-1"
           />
         )),
         <Rating readonly/>,
-        <span className="flex justify-end gap-1">
-          { checkAuthorization(UserPermission.Update, user) &&
-            <AddUser user={ user } onSubmit={ refresh } iconButton/> }
+        {
+          update: checkAuthorization(UserPermission.Update, user) &&
+            <AddUser user={ user } onSubmit={ refresh } iconButton/>,
 
-          { checkAuthorization(UserPermission.Delete, user) &&
-            <DeleteUser user={ user } onSubmit={ refresh } iconButton/> }
-        </span>,
+          delete: checkAuthorization(UserPermission.Delete, user) &&
+            <DeleteUser user={ user } onSubmit={ refresh } iconButton/>,
+        },
       ] }
     />
   </>
