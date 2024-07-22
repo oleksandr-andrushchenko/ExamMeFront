@@ -13,7 +13,11 @@ export default function createExamQuestionAnswer(
             $examId: ID!,
             $question: Int!
         ) {
-            createExamQuestionAnswer(examId: $examId, question: $question, createExamQuestionAnswer: $createExamQuestionAnswer) {
+            createExamQuestionAnswer(
+                examId: $examId,
+                question: $question,
+                createExamQuestionAnswer: $createExamQuestionAnswer
+            ) {
                 exam {
                     id
                     questionNumber

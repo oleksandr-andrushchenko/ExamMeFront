@@ -29,6 +29,7 @@ import InfoTable from '../components/elements/InfoTable'
 import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
+import ApproveQuestion from '../components/question/ApproveQuestion'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -112,7 +113,10 @@ const Category = () => {
         <Rating readonly/>,
         <YesNo yes={ isQuestionApproved(question) }/>,
         {
-          add: checkAuthorization(QuestionPermission.Update, question) &&
+          approve: checkAuthorization(QuestionPermission.Approve, question) &&
+            <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>,
+
+          update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
 
           delete: checkAuthorization(QuestionPermission.Delete, question) &&

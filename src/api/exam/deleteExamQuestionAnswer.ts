@@ -20,10 +20,8 @@ export default function deleteExamQuestionAnswer(examId: string, question: numbe
                     id
                     title
                     type
-                    choices {
-                        title
-                    }
                 }
+                choices
                 number
                 choice
                 answer

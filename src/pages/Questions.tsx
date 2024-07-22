@@ -24,6 +24,7 @@ import isQuestionApproved from '../services/questions/isQuestionApproved'
 import YesNo from '../components/elements/YesNo'
 import createListFromObjects from '../utils/createListFromObjects'
 import createListFromEnum from '../utils/createListFromEnum'
+import ApproveQuestion from '../components/question/ApproveQuestion'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -85,7 +86,11 @@ const Questions = () => {
         question.difficulty,
         <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
+        // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {
+          approve: checkAuthorization(QuestionPermission.Approve, question) &&
+            <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>,
+
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
 

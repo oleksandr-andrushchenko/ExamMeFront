@@ -23,6 +23,8 @@ import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
 import H2 from '../components/typography/H2'
 import Button from '../components/elements/Button'
+import InfoTable from '../components/elements/InfoTable'
+import YesNo from '../components/elements/YesNo'
 
 const Exam = () => {
   const { examId } = useParams<Params>() as { examId: string }
@@ -39,8 +41,11 @@ const Exam = () => {
 
   const onPrevQuestionClick = () => setQuestionNumber(getQuestionNumber() - 1)
   const onNextQuestionClick = () => setQuestionNumber(getQuestionNumber() + 1)
-  const onExamCompleted = (exam: Exam) => setExamQuestion({ ...examQuestion, ...{ exam } })
-  const onExamDeleted = () => navigate(Route.Category.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
+  const onCompleted = (data: { createExamCompletion: Exam }) => setExamQuestion({
+    ...examQuestion,
+    ...{ exam: data.createExamCompletion },
+  })
+  const onDeleted = () => navigate(Route.Category.replace(':categoryId', examQuestion!.exam!.categoryId!), { replace: true })
 
   const getQuestionNumber = (): number | undefined => {
     if (questionNumber !== undefined) {
@@ -159,28 +164,18 @@ const Exam = () => {
     const requiredScore = category?.requiredScore ?? 0
     const passed = score > requiredScore
 
-    return layout('Exam completed', <>
-      <table className="w-full table-auto text-left text-sm mt-4">
-        <tbody>
-        <tr>
-          <th className="w-2/12">Completion date</th>
-          <td>{ new Date(exam.completedAt).toDateString() }</td>
-        </tr>
-        <tr>
-          <th>Correct answers</th>
-          <td>{ exam.correctAnswerCount }/{ exam?.questionCount } ({ score }%)</td>
-        </tr>
-        <tr>
-          <th>Required score</th>
-          <td>{ requiredScore }%</td>
-        </tr>
-        <tr>
-          <th>Passed</th>
-          <td className={ `font-bold text-${ passed ? 'green' : 'red' }-700` }>{ passed ? 'Yes' : 'No' }</td>
-        </tr>
-        </tbody>
-      </table>
-    </>)
+    return layout('Exam completed', (
+      <InfoTable
+        columns={ [ 'Completion date', 'Correct answers', 'Required score', 'Passed' ] }
+        source={ exam }
+        mapper={ (exam: Exam) => [
+          new Date(exam.completedAt!).toDateString(),
+          <>{ exam.correctAnswerCount }/{ exam?.questionCount } ({ score }%)</>,
+          <>{ requiredScore }%</>,
+          <YesNo yes={ passed }/>,
+        ] }
+      />
+    ))
   }
 
   return layout('Exam questions', <>
@@ -235,10 +230,10 @@ const Exam = () => {
         </ButtonGroup> }
 
       { examQuestion && checkAuthorization(ExamPermission.CreateCompletion, examQuestion.exam) &&
-        <CompleteExam exam={ examQuestion.exam! } onSubmit={ onExamCompleted }/> }
+        <CompleteExam exam={ examQuestion.exam! } onSubmit={ onCompleted }/> }
 
       { examQuestion && checkAuthorization(ExamPermission.Delete, examQuestion.exam) &&
-        <DeleteExam exam={ examQuestion.exam! } onSubmit={ onExamDeleted }/> }
+        <DeleteExam exam={ examQuestion.exam! } onSubmit={ onDeleted }/> }
     </div>
   </>)
 }

@@ -26,9 +26,9 @@ const ConfirmDialog = ({ mutateOptionsFn, iconFn, labelFn, title, body, onSubmit
   const onClick = () => {
     apiMutate(
       mutateOptionsFn(),
-      _ => {
+      data => {
         setOpened(false)
-        onSubmit && onSubmit()
+        onSubmit && onSubmit(data)
       },
       setError,
       setSubmitting,

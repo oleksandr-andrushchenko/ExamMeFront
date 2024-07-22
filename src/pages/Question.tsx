@@ -19,6 +19,7 @@ import Link from '../components/elements/Link'
 import InfoTable from '../components/elements/InfoTable'
 import YesNo from '../components/elements/YesNo'
 import isQuestionApproved from '../services/questions/isQuestionApproved'
+import ApproveQuestion from '../components/question/ApproveQuestion'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -28,20 +29,19 @@ const Question = () => {
   const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
-  const onQuestionUpdated = (question: Question) => setQuestion(question)
-  const onQuestionDeleted = () => navigate(Route.Category.replace(':categoryId', question!.categoryId!), { replace: true })
+  const onApprove = (question: Question) => setQuestion(question)
+  const onUpdate = (question: Question) => setQuestion(question)
+  const onDelete = () => navigate(Route.Category.replace(':categoryId', question!.categoryId!), { replace: true })
 
   useEffect(() => {
+    document.title = question?.title || 'ExamMe'
+
     apiQuery<{ question: Question }>(
       getQuestionForQuestionPage(questionId),
       data => setQuestion(data.question),
       setError,
       setLoading,
     )
-  }, [])
-
-  useEffect(() => {
-    document.title = question?.title || 'ExamMe'
   }, [])
 
   return <>
@@ -77,11 +77,14 @@ const Question = () => {
     />
 
     <div className="flex gap-1 items-center mt-4">
-      { checkAuthorization(QuestionPermission.Update, question) && (!question ? <Spinner type="button"/> :
-        <AddQuestion question={ question } onSubmit={ onQuestionUpdated }/>) }
+      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Approve, question) &&
+        <ApproveQuestion question={ question } onSubmit={ onApprove }/>) }
 
-      { checkAuthorization(QuestionPermission.Delete, question) && (!question ? <Spinner type="button"/> :
-        <DeleteQuestion question={ question } onSubmit={ onQuestionDeleted }/>) }
+      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Update, question) &&
+        <AddQuestion question={ question } onSubmit={ onUpdate }/>) }
+
+      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Delete, question) &&
+        <DeleteQuestion question={ question } onSubmit={ onDelete }/>) }
     </div>
   </>
 }
