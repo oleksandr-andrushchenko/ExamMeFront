@@ -84,7 +84,7 @@ const Questions = () => {
           content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        checkAuthorization(QuestionPermission.Approve, question)
+        checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,

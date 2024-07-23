@@ -60,7 +60,7 @@ const Categories = () => {
               to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
-        checkAuthorization(CategoryPermission.Approve, category)
+        checkAuthorization(CategoryPermission.Approve)
           ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ isCategoryApproved(category) }/>,
         <Rating readonly/>,

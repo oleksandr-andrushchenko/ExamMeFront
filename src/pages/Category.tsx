@@ -90,7 +90,7 @@ const Category = () => {
       buttons={ {
         create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
 
-        approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve, category) &&
+        approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve) &&
           <ApproveCategory category={ category } onSubmit={ onApprove }/>),
 
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
@@ -118,7 +118,7 @@ const Category = () => {
               to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        checkAuthorization(QuestionPermission.Approve, question)
+        checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
