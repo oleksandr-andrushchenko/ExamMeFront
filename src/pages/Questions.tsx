@@ -84,13 +84,12 @@ const Questions = () => {
           content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        <YesNo yes={ isQuestionApproved(question) }/>,
+        checkAuthorization(QuestionPermission.Approve, question)
+          ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
+          : <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
         // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {
-          approve: checkAuthorization(QuestionPermission.Approve, question) &&
-            <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>,
-
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
 

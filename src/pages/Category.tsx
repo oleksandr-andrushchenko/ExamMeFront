@@ -110,12 +110,11 @@ const Category = () => {
               to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
+        checkAuthorization(QuestionPermission.Approve, question)
+          ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
+          : <YesNo yes={ isQuestionApproved(question) }/>,
         <Rating readonly/>,
-        <YesNo yes={ isQuestionApproved(question) }/>,
         {
-          approve: checkAuthorization(QuestionPermission.Approve, question) &&
-            <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>,
-
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
 
