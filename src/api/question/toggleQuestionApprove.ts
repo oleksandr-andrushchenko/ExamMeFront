@@ -6,7 +6,22 @@ export default function toggleQuestionApprove(questionId: string): any {
         mutation ToggleQuestionApprove($questionId: ID!) {
             toggleQuestionApprove(
                 questionId: $questionId
-            )
+            ) {
+                id
+                categoryId
+                title
+                category {
+                    name
+                }
+                type
+                choices {
+                    title
+                    correct
+                    explanation
+                }
+                difficulty
+                ownerId
+            }
         }
     `,
     variables: {

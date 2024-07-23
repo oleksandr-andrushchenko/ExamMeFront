@@ -1,32 +1,32 @@
 import { memo, useState } from 'react'
-import Question from '../../schema/question/Question'
+import Category from '../../schema/category/Category'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
-import toggleQuestionApprove from '../../api/question/toggleQuestionApprove'
-import isQuestionApproved from '../../services/questions/isQuestionApproved'
+import toggleCategoryApprove from '../../api/category/toggleCategoryApprove'
+import isCategoryApproved from '../../services/categories/isCategoryApproved'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
 
 interface Props {
-  question: Question
+  category: Category
   onSubmit?: Function
   iconButton?: boolean
 }
 
-const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
+const ApproveCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
 
-  const icon = isQuestionApproved(question) ? EnabledIcon : DisabledIcon
-  const label = isQuestionApproved(question)
-    ? (isSubmitting ? 'Un-approving Question...' : 'Un-approve Question')
-    : (isSubmitting ? 'Approving Question...' : 'Approve Question')
+  const icon = isCategoryApproved(category) ? EnabledIcon : DisabledIcon
+  const label = isCategoryApproved(category)
+    ? (isSubmitting ? 'Un-approving Category...' : 'Un-approve Category')
+    : (isSubmitting ? 'Approving Category...' : 'Approve Category')
 
   const onClick = () => {
     apiMutate(
-      toggleQuestionApprove(question.id!),
-      (data: { toggleQuestionApprove: Question }) => onSubmit && onSubmit(data.toggleQuestionApprove),
+      toggleCategoryApprove(category.id!),
+      (data: { toggleCategoryApprove: Category }) => onSubmit && onSubmit(data.toggleCategoryApprove),
       setError,
       setSubmitting,
     )
@@ -42,4 +42,4 @@ const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
   )
 }
 
-export default memo(ApproveQuestion)
+export default memo(ApproveCategory)

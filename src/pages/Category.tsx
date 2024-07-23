@@ -15,7 +15,7 @@ import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuest
 import AddExam from '../components/exam/AddExam'
 import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
-import getCategoryForCategoryPage from '../api/category/getCategoryAndQuestionsForCategoryPage'
+import getCategoryForCategoryPage from '../api/category/getCategoryForCategoryPage'
 import Error from '../components/Error'
 import CategoryPermission from '../enum/category/CategoryPermission'
 import QuestionPermission from '../enum/question/QuestionPermission'
@@ -30,6 +30,7 @@ import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
+import ApproveCategory from '../components/category/ApproveCategory'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -40,6 +41,10 @@ const Category = () => {
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
+
+  const onApprove = (category: Category) => setCategory(category)
+  const onUpdate = (category: Category) => setCategory(category)
+  const onDelete = () => navigate(Route.Categories, { replace: true })
 
   useEffect(() => {
     apiQuery(
@@ -85,11 +90,14 @@ const Category = () => {
       buttons={ {
         create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
 
+        approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve, category) &&
+          <ApproveCategory category={ category } onSubmit={ onApprove }/>),
+
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
-          <AddCategory category={ category } onSubmit={ (category: Category) => setCategory(category) }/>),
+          <AddCategory category={ category } onSubmit={ onUpdate }/>),
 
         delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
-          <DeleteCategory category={ category } onSubmit={ () => navigate(Route.Categories, { replace: true }) }/>),
+          <DeleteCategory category={ category } onSubmit={ onDelete }/>),
 
         exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
       } }

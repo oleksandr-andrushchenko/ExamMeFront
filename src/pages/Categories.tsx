@@ -19,6 +19,7 @@ import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
 import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
+import ApproveCategory from '../components/category/ApproveCategory'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -59,7 +60,9 @@ const Categories = () => {
               to={ Route.Category.replace(':categoryId', category.id!) }/>,
         category.questionCount ?? 0,
         category.requiredScore ?? 0,
-        <YesNo yes={ isCategoryApproved(category) }/>,
+        checkAuthorization(CategoryPermission.Approve, category)
+          ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>
+          : <YesNo yes={ isCategoryApproved(category) }/>,
         <Rating readonly/>,
         {
           addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,
