@@ -1,9 +1,12 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import Question from '../../schema/question/Question'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
 import toggleQuestionApprove from '../../api/question/toggleQuestionApprove'
 import isQuestionApproved from '../../services/questions/isQuestionApproved'
-import ConfirmDialog from '../dialogs/ConfirmDialog'
+import IconButton from '../elements/IconButton'
+import Button from '../elements/Button'
+import { apiMutate } from '../../api/apolloClient'
+import Error from '../Error'
 
 interface Props {
   question: Question
@@ -12,18 +15,30 @@ interface Props {
 }
 
 const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
-  const action = isQuestionApproved(question) ? 'Un-approve' : 'approve'
+  const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
+  const [ error, setError ] = useState<string>('')
+
+  const icon = isQuestionApproved(question) ? EnabledIcon : DisabledIcon
+  const label = isQuestionApproved(question)
+    ? (isSubmitting ? 'Un-approving Question...' : 'Un-approve Question')
+    : (isSubmitting ? 'Approving Question...' : 'Approve Question')
+
+  const onClick = () => {
+    apiMutate(
+      toggleQuestionApprove(question.id!),
+      data => onSubmit && onSubmit(data),
+      setError,
+      setSubmitting,
+    )
+  }
 
   return (
-    <ConfirmDialog
-      mutateOptionsFn={ () => toggleQuestionApprove(question.id!) }
-      iconFn={ _ => isQuestionApproved(question) ? EnabledIcon : DisabledIcon }
-      labelFn={ isSubmitting => isQuestionApproved(question) ? (isSubmitting ? 'Un-approving Question...' : 'Un-approve Question') : (isSubmitting ? 'Approving Question...' : 'Approve Question') }
-      title={ `Are you sure you want to ${ action } "${ question.title }" question?` }
-      body={ <>This will { action } "{ question.title }" question.<br/>It will effect question visibility.</> }
-      onSubmit={ onSubmit }
-      iconButton={ iconButton }
-    />
+    <>
+      { error && <Error text={ error } simple/> }
+      { iconButton
+        ? <IconButton icon={ icon } tooltip={ label } onClick={ onClick } disabled={ isSubmitting }/>
+        : <Button icon={ icon } label={ label } onClick={ onClick } disabled={ isSubmitting }/> }
+    </>
   )
 }
 
