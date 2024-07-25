@@ -34,7 +34,6 @@ import ApproveCategory from '../components/category/ApproveCategory'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
-  const refresh = () => setTableKey(Math.random())
   const { checkAuthorization } = useAuth()
   const { categoryId }: { categoryId: string } = useParams()
   const [ category, setCategory ] = useState<Category>()
@@ -46,13 +45,21 @@ const Category = () => {
   const onUpdate = (category: Category) => setCategory(category)
   const onDelete = () => navigate(Route.Categories, { replace: true })
 
-  useEffect(() => {
+  const loadCategory = () => {
     apiQuery(
       getCategoryForCategoryPage(categoryId),
       (data: { category: Category }) => setCategory(data.category),
       setError,
       setLoading,
     )
+  }
+  const refresh = () => {
+    loadCategory()
+    setTableKey(Math.random())
+  }
+
+  useEffect(() => {
+    loadCategory()
   }, [])
 
   useEffect(() => {
@@ -78,7 +85,7 @@ const Category = () => {
       columns={ [ 'Name', 'Questions', 'Required score', 'Approved', 'Rating' ] }
       mapper={ (category: Category) => [
         category.name,
-        category.questionCount ?? 0,
+        `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         <Rating readonly/>,
         <YesNo yes={ isCategoryApproved(category) }/>,

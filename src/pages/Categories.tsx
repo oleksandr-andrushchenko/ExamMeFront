@@ -58,7 +58,7 @@ const Categories = () => {
         index + 1,
         <Link label={ category.name } tooltip={ category.name }
               to={ Route.Category.replace(':categoryId', category.id!) }/>,
-        category.questionCount ?? 0,
+        `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         checkAuthorization(CategoryPermission.Approve)
           ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>

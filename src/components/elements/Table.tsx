@@ -98,7 +98,7 @@ const Table = (
         { Object.entries(tabs).map(([ filter, values ]) => (
           <div key={ filter } className="flex gap-2 items-center">
             <Typography variant="small">{ filter }:</Typography>
-            <Tabs value="all">
+            <Tabs value={ searchParams.get(filter) || '' }>
               <TabsHeader>
                 { [ 'all', ...values ].map(value => (
                   <Tab

@@ -15,7 +15,8 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
             $nextCursor: String,
             $cursor: String,
             $order: String,
-            $price: String,
+            $subscription: String,
+            $approved: String,
             $search: String
         ) {
             paginatedCategories(
@@ -24,13 +25,15 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
                 nextCursor: $nextCursor,
                 cursor: $cursor,
                 order: $order,
-                price: $price,
+                subscription: $subscription,
+                approved: $approved,
                 search: $search
             ) {
                 data {
                     id
                     name
                     questionCount
+                    approvedQuestionCount
                     requiredScore
                     ownerId
                 }
