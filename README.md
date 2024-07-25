@@ -22,14 +22,12 @@
 * Completed exams page
 * Subscriptions
 * Keep single choices for the beginning (create/update forms/backend)
-* User management page
-* Approve/decline questions created by users
 * Auto next on create question answer
 * Real ratings
 * Question create validation: only one choice (=1)
 * Admin lists should include deleted items
 * Api: [ ...new Set(values.permissions) ]
-* Approve categories, questions...
 * Exclude un-approved items from lists
 * Add & implement confirm dialog: delete dialogs, approve dialogs...
-* Sow creator badge for category/question
+* Show creator badge for category/question
+* Use approved categories/questions for exams
