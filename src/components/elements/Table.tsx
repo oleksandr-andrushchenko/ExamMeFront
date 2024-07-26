@@ -19,7 +19,7 @@ interface Props {
   buttons: object
   tabs: object
   filters?: object
-  defaultSearchParams: URLSearchParams
+  defaultSearchParams: object
   queryOptions: Function
   queryData: Function
   mapper: Function
@@ -29,7 +29,7 @@ interface Props {
 const Table = (
   {
     key2,
-    defaultSearchParams = new URLSearchParams({ size: '20' }),
+    defaultSearchParams = { size: '20' },
     queryOptions,
     queryData,
     buttons = {},
@@ -40,7 +40,7 @@ const Table = (
   }: Props,
 ) => {
   const [ isLoading, setLoading ] = useState<boolean>(true)
-  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>(defaultSearchParams)
+  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>()
   const [ items, setItems ] = useState<Paginated>()
   const [ error, setError ] = useState<string>('')
 
@@ -65,16 +65,10 @@ const Table = (
   const clearSearchParams = () => {
     setItems(undefined)
 
-    setSearchParams(defaultSearchParams)
+    setSearchParams()
   }
 
-  const showClear = (): boolean => {
-    const def = defaultSearchParams
-    def.sort()
-    searchParams.sort()
-
-    return def.toString() !== searchParams.toString()
-  }
+  const showClear = (): boolean => searchParams.toString() !== ''
 
   useEffect(() => {
     apiQuery(
@@ -98,7 +92,7 @@ const Table = (
         { Object.entries(tabs).map(([ filter, values ]) => (
           <div key={ filter } className="flex gap-2 items-center">
             <Typography variant="small">{ filter }:</Typography>
-            <Tabs value={ searchParams.get(filter) || '' }>
+            <Tabs value={ searchParams.get(filter) || 'all' }>
               <TabsHeader>
                 { [ 'all', ...values ].map(value => (
                   <Tab
@@ -123,7 +117,7 @@ const Table = (
           <Select
             key={ `${ filter }-${ Object.keys(values).join('') }` }
             label={ filter }
-            onChange={ value => applySearchParams({ [filter]: value === 'all' ? undefined : value }) }
+            onChange={ value => applySearchParams({ [filter]: value === '' ? undefined : value }) }
             value={ searchParams.get(filter) || '' }
             className="min-w-[200px] capitalize"
             containerProps={ { className: 'min-w-[200px]' } }
@@ -147,14 +141,14 @@ const Table = (
       <Input
         label="Search"
         value={ searchParams.get('search') || '' }
-        onChange={ (e) => applySearchParams({ search: e.target.value }) }
+        onChange={ (e) => applySearchParams({ search: e.target.value === '' ? undefined : e.target.value }) }
         icon={ <SearchIcon className="h-4 w-4"/> }
       />
 
       <Select
         label="Size"
-        onChange={ (size: string) => applySearchParams({ size }) }
-        value={ searchParams.get('size') || '' }
+        onChange={ (size: string) => applySearchParams({ size: size === defaultSearchParams['size'] ? undefined : size }) }
+        value={ searchParams.get('size') || defaultSearchParams['size'] }
         className="capitalize"
       >
         { [ 1, 5, 10, 20, 30, 40, 50 ].map((size: number) => (
