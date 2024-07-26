@@ -21,6 +21,7 @@ import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
+import canAddExam from '../services/categories/canAddExam'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -74,7 +75,7 @@ const Categories = () => {
           delete: checkAuthorization(CategoryPermission.Delete, category) &&
             <DeleteCategory category={ category } onSubmit={ refresh } iconButton/>,
 
-          exam: !!category.questionCount && <AddExam category={ category } iconButton/>,
+          exam: canAddExam(category) && <AddExam category={ category } iconButton/>,
         },
       ] }
     />

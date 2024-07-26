@@ -32,6 +32,7 @@ import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
+import canAddExam from '../services/categories/canAddExam'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -107,7 +108,7 @@ const Category = () => {
         delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
           <DeleteCategory category={ category } onSubmit={ onDelete }/>),
 
-        exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
+        exam: !category ? <Spinner type="button"/> : canAddExam(category) && <AddExam category={ category }/>,
       } }
       tabs={ {
         subscription:  Object.values(YesNoEnum),
