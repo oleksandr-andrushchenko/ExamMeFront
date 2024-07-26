@@ -25,6 +25,7 @@ import YesNo from '../components/elements/YesNo'
 import createListFromObjects from '../utils/createListFromObjects'
 import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
+import { default as YesNoEnum } from '../enum/YesNo'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -65,8 +66,8 @@ const Questions = () => {
         create: <AddQuestion onSubmit={ refresh }/>,
       } }
       tabs={ {
-        subscription: [ 'yes', 'no' ],
-        approved: [ 'yes', 'no' ],
+        subscription: Object.values(YesNoEnum),
+        approved: Object.values(YesNoEnum),
       } }
       filters={ {
         category: createListFromObjects(categories || [], 'id', 'name'),

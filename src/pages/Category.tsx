@@ -31,6 +31,7 @@ import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import ApproveCategory from '../components/category/ApproveCategory'
+import { default as YesNoEnum } from '../enum/YesNo'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -109,8 +110,8 @@ const Category = () => {
         exam: !category ? <Spinner type="button"/> : !!category.questionCount && <AddExam category={ category }/>,
       } }
       tabs={ {
-        subscription: [ 'yes', 'no' ],
-        approved: [ 'yes', 'no' ],
+        subscription:  Object.values(YesNoEnum),
+        approved:  Object.values(YesNoEnum),
       } }
       filters={ {
         difficulty: createListFromEnum(QuestionDifficulty),

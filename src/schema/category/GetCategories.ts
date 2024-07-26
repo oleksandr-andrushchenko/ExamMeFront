@@ -1,6 +1,8 @@
 import Pagination from '../pagination/Pagination'
+import YesNo from '../../enum/YesNo'
 
 export default interface GetCategories extends Pagination {
-  price?: string
+  subscription?: YesNo
+  approved?: YesNo
   search?: string
 }

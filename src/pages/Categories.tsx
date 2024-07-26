@@ -20,6 +20,7 @@ import Link from '../components/elements/Link'
 import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
+import { default as YesNoEnum } from '../enum/YesNo'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -46,8 +47,8 @@ const Categories = () => {
           onSubmit={ (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!)) }/>,
       } }
       tabs={ {
-        subscription: [ 'yes', 'no' ],
-        approved: [ 'yes', 'no' ],
+        subscription: Object.values(YesNoEnum),
+        approved: Object.values(YesNoEnum),
       } }
       columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
       // todo: add current exam info (get rid off getOneNonCompletedCategoryExams calls)
