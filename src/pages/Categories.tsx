@@ -68,8 +68,6 @@ const Categories = () => {
 
         return { category, exam: null }
       })
-
-      console.log(queryData.data, examsRes.data.currentExams)
     } catch (error) {
       setError(error)
     } finally {
