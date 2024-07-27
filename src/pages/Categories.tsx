@@ -22,16 +22,62 @@ import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/categories/canAddExam'
+import apolloClient from '../api/apolloClient'
+import getCurrentExams from '../api/exam/getCurrentExams'
+import Exam from '../schema/exam/Exam'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
   const refresh = () => setTableKey(Math.random())
-  const { checkAuthorization } = useAuth()
+  const { authenticationToken, checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     document.title = 'Categories'
   }, [])
+
+  const queryData = async (data: { paginatedCategories: Paginated<Category> }, { setError, setLoading }) => {
+    const queryData = {
+      ...data.paginatedCategories,
+      ...{ data: data.paginatedCategories.data.map((category: Category) => ({ category })) },
+    }
+
+    if (!authenticationToken) {
+      return queryData
+    }
+
+    const categoryIds = queryData.data
+      .filter(({ category }: { category: Category }) => canAddExam(category))
+      .map(({ category }: { category: Category }) => category.id!)
+
+    setLoading(true)
+
+    try {
+      const examsRes = await apolloClient.query<{ currentExams: Exam[] }>({
+        errorPolicy: 'all',
+        fetchPolicy: 'network-only',
+        ...getCurrentExams(categoryIds),
+      })
+
+      queryData.data = queryData.data.map(({ category }: { category: Category }) => {
+        for (const exam of examsRes.data.currentExams) {
+          if (exam.categoryId === category.id) {
+            return { category, exam }
+          }
+        }
+
+        return { category, exam: null }
+      })
+
+      console.log(queryData.data, examsRes.data.currentExams)
+    } catch (error) {
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+
+    return queryData
+  }
 
   return <>
     <Breadcrumbs>
@@ -52,10 +98,9 @@ const Categories = () => {
         approved: Object.values(YesNoEnum),
       } }
       columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
-      // todo: add current exam info (get rid off getOneNonCompletedCategoryExams calls)
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }
-      queryData={ (data: { paginatedCategories: Paginated<Category> }) => data.paginatedCategories }
-      mapper={ (category: Category, index: number) => [
+      queryData={ queryData }
+      mapper={ ({ category, exam }: { category: Category, exam: Exam }, index: number) => [
         category.id,
         index + 1,
         <Link label={ category.name } tooltip={ category.name }
@@ -75,7 +120,7 @@ const Categories = () => {
           delete: checkAuthorization(CategoryPermission.Delete, category) &&
             <DeleteCategory category={ category } onSubmit={ refresh } iconButton/>,
 
-          exam: canAddExam(category) && <AddExam category={ category } iconButton/>,
+          exam: canAddExam(category) && <AddExam category={ category } exam={ exam } iconButton/>,
         },
       ] }
     />

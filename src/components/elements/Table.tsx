@@ -73,7 +73,7 @@ const Table = (
   useEffect(() => {
     apiQuery(
       queryOptions(urlSearchParamsToPlainObject(searchParams)),
-      data => setItems(queryData(data)),
+      async (data) => setItems(await queryData(data, { setError, setLoading })),
       setError,
       setLoading,
     )

@@ -8,21 +8,22 @@ import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
 import createExam from '../../api/exam/createExam'
-import getOneNonCompletedCategoryExams from '../../api/exam/getOneNonCompletedCategoryExams'
 import Error from '../Error'
 import Link from '../elements/Link'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import Auth from '../Auth'
+import getCurrentExams from '../../api/exam/getCurrentExams'
 
 interface Props {
   category: Category
+  exam?: Exam
   iconButton?: boolean
 }
 
-const AddExam = ({ category, iconButton }: Props) => {
+const AddExam = ({ category, exam, iconButton }: Props) => {
   const { authenticationToken } = useAuth()
-  const [ exam, setExam ] = useState<Exam>()
+  const [ _exam, setExam ] = useState<Exam | undefined | null>(exam)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const [ create, setCreate ] = useState<boolean>(false)
   const [ _, setLoading ] = useState<boolean>(true)
@@ -30,15 +31,15 @@ const AddExam = ({ category, iconButton }: Props) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (authenticationToken) {
-      apiQuery<{ exams: Exam[] }>(
-        getOneNonCompletedCategoryExams(category.id!),
-        data => setExam(data.exams[0] || null),
+    if (authenticationToken && _exam === undefined) {
+      apiQuery<{ currentExams: Exam[] }>(
+        getCurrentExams([ category.id! ]),
+        data => setExam(data.currentExams[0] || null),
         setError,
         setLoading,
       )
     }
-  }, [ authenticationToken ])
+  }, [ authenticationToken, _exam ])
 
   useEffect(() => {
     if (create) {
@@ -67,12 +68,12 @@ const AddExam = ({ category, iconButton }: Props) => {
     />
   }
 
-  if (authenticationToken && exam === undefined) {
+  if (authenticationToken && _exam === undefined) {
     return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
   }
 
-  if (authenticationToken && exam) {
-    const url = Route.Exam.replace(':categoryId', exam.categoryId!).replace(':examId', exam.id!)
+  if (authenticationToken && _exam) {
+    const url = Route.Exam.replace(':categoryId', _exam.categoryId!).replace(':examId', _exam.id!)
     const label = 'Continue exam'
     const color = 'blue'
 
