@@ -12,13 +12,9 @@
 
 # TODO
 
-* Login & Register as in-place (dialogs)
 * Copy category/question
-* AddCategory new props: as icon, target redirect, custom text
-* AddQuestion new props: as icon, target redirect, custom text
 * Question page UI (same as in exam without selection option + comments + question statistic)
 * Multi choice answers? Not supported yet but can be created?
-* Load butch exams for AddExam component on http://localhost:8081/categories
 * Completed exams page
 * Subscriptions
 * Keep single choices for the beginning (create/update forms/backend)
@@ -27,7 +23,6 @@
 * Question create validation: only one choice (=1)
 * Admin lists should include deleted items
 * Api: [ ...new Set(values.permissions) ]
-* Exclude un-approved items from lists
 * Add & implement confirm dialog: delete dialogs, approve dialogs...
 * Show creator badge for category/question
-* Use approved categories/questions for exams
+* Refresh item only after action made in the list (instead of refresh of the hole list)
