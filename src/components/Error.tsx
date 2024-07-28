@@ -9,10 +9,12 @@ interface Props {
 }
 
 const Error = ({ text, simple }: Props) => {
+  console.log(text)
+
   if (simple) {
     return (
       <Typography color="red">
-        <ExclamationCircleIcon className="inline-block h-5 w-5"/> { text }
+        <ExclamationCircleIcon className="inline-block h-5 w-5"/> { text.toString() }
       </Typography>
     )
   }
@@ -20,7 +22,7 @@ const Error = ({ text, simple }: Props) => {
   return (
     <Text
       icon={ ExclamationCircleIcon }
-      label={ text }
+      label={ text.toString() }
       variant="small"
       color="red"
       className="flex items-center gap-1 font-normal"
