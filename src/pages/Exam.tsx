@@ -179,9 +179,6 @@ const Exam = () => {
   }
 
   return layout('Exam questions', <>
-    { !examQuestion ? <Spinner type="text"/> :
-      <H2>Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }</H2> }
-
     { !examQuestion ? <Spinner type="text" height="h-3"/> :
       <Progress
         value={ Math.floor(100 * (getQuestionNumber() + 1) / examQuestion.exam!.questionCount) }
@@ -198,7 +195,10 @@ const Exam = () => {
         className="mt-4"
       /> }
 
-    <div className="flex flex-col gap-2 mt-4">
+    { !examQuestion ? <Spinner type="text"/> :
+      <H2 className="min-h-8">Question #{ getQuestionNumber() + 1 }: { examQuestion.question!.title }</H2> }
+
+    <div className="flex flex-col gap-2 mt-4 min-h-48">
       { !examQuestion ? <Spinner/> : (
         examQuestion.question!.type === QuestionType.CHOICE
           ? examQuestion!.choices!.map((choice: string, index) => (
