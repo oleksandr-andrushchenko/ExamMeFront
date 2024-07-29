@@ -17,6 +17,7 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
             $order: String,
             $subscription: String,
             $approved: String,
+            $creator: String,
             $search: String
         ) {
             paginatedCategories(
@@ -27,6 +28,7 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
                 order: $order,
                 subscription: $subscription,
                 approved: $approved,
+                creator: $creator,
                 search: $search
             ) {
                 data {
@@ -35,7 +37,9 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
                     questionCount
                     approvedQuestionCount
                     requiredScore
-                    ownerId
+                    isApproved
+                    isOwner
+                    isCreator
                 }
                 meta {
                     nextCursor

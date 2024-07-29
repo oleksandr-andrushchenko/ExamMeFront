@@ -10,10 +10,11 @@ interface Props extends ComponentProps<any> {
   icon?: any
   iconSize?: any
   children?: any
+  sup?: any
   key?: any
 }
 
-const Link = ({ label, to, tooltip, className, icon, iconSize = 4, children, ...props }: Props) => {
+const Link = ({ label, to, tooltip, className, icon, iconSize = 4, children, sup, ...props }: Props) => {
   const link = (
     <RrdLink
       { ...props }
@@ -23,6 +24,8 @@ const Link = ({ label, to, tooltip, className, icon, iconSize = 4, children, ...
       { icon && createElement(icon, { className: `inline-block h-${ iconSize } w-${ iconSize } align-top` }) }
       { icon && ' ' }
       { label || children }
+      { sup && ' ' }
+      { sup && <sup>{ sup }</sup> }
     </RrdLink>
   )
   if (tooltip) {

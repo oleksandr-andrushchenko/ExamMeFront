@@ -24,19 +24,19 @@ import Table from '../components/elements/Table'
 import getQuestionsForCategoryPage from '../api/category/getQuestionsForCategoryPage'
 import Link from '../components/elements/Link'
 import H1 from '../components/typography/H1'
-import isQuestionApproved from '../services/questions/isQuestionApproved'
 import InfoTable from '../components/elements/InfoTable'
-import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
+import CreatorBadge from '../components/badges/CreatorBadge'
+import Creator from '../enum/Creator'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
-  const { checkAuthorization } = useAuth()
+  const { authenticationToken, checkAuthorization } = useAuth()
   const { categoryId }: { categoryId: string } = useParams()
   const [ category, setCategory ] = useState<Category>()
   const [ _, setLoading ] = useState<boolean>(true)
@@ -47,22 +47,19 @@ const Category = () => {
   const onUpdate = (category: Category) => setCategory(category)
   const onDelete = () => navigate(Route.Categories, { replace: true })
 
-  const loadCategory = () => {
+  const refresh = () => {
     apiQuery(
       getCategoryForCategoryPage(categoryId),
       (data: { category: Category }) => setCategory(data.category),
       setError,
       setLoading,
     )
-  }
-  const refresh = () => {
-    loadCategory()
     setTableKey(Math.random())
   }
 
   useEffect(() => {
-    loadCategory()
-  }, [])
+    refresh()
+  }, [ authenticationToken ])
 
   useEffect(() => {
     document.title = category?.name || 'ExamMe'
@@ -76,7 +73,11 @@ const Category = () => {
         <Link label={ category.name } to={ Route.Category.replace(':categoryId', category.id!) }/> }
     </Breadcrumbs>
 
-    <H1 sub="Category info">{ !category ? <Spinner type="text"/> : category.name }</H1>
+    <H1
+      label={ category?.name ?? <Spinner type="text"/> }
+      sup={ category?.isCreator ? <CreatorBadge/> : '' }
+      sub="Category info"
+    />
 
     <Rating/>
 
@@ -89,8 +90,8 @@ const Category = () => {
         category.name,
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
+        <YesNo yes={ category.isApproved }/>,
         <Rating readonly/>,
-        <YesNo yes={ isCategoryApproved(category) }/>,
       ] }
     />
 
@@ -113,6 +114,7 @@ const Category = () => {
       tabs={ {
         subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
+        creator: authenticationToken ? Object.values(Creator) : '',
       } }
       filters={ {
         difficulty: createListFromEnum(QuestionDifficulty),
@@ -123,13 +125,17 @@ const Category = () => {
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Link label={ question.title } tooltip={ question.title }
-              to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
+        <Link
+          label={ question.title }
+          sup={ question.isCreator ? <CreatorBadge/> : '' }
+          tooltip={ question.title }
+          to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+        />,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ isQuestionApproved(question) }/>,
+          : <YesNo yes={ question.isApproved }/>,
         <Rating readonly/>,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&

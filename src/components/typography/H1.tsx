@@ -6,16 +6,19 @@ interface Props extends ComponentProps<any> {
   icon?: any
   label?: any
   sub?: any
+  sup?: any
   children?: any
   className?: string
 }
 
-const H1 = ({ icon, label, sub, children, className, ...props }: Props) => {
+const H1 = ({ icon, label, sub, sup, children, className, ...props }: Props) => {
   const h1 = (
     <Typography as="h1" variant="h2" className={ `mt-1 font-primary text-black ${ className }` } { ...props }>
       { icon && createElement(icon, { className: 'h-8 w-8 inline-block' }) }
       { icon && ' ' }
       { label || children }
+      { sup && ' ' }
+      { sup && <sup>{ sup }</sup> }
     </Typography>
   )
 

@@ -19,7 +19,9 @@ export default function updateQuestion(questionId: string, updateQuestion: Updat
                     explanation
                 }
                 difficulty
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

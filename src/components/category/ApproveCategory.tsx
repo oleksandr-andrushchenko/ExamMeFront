@@ -2,7 +2,6 @@ import { ComponentProps, memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
 import toggleCategoryApprove from '../../api/category/toggleCategoryApprove'
-import isCategoryApproved from '../../services/categories/isCategoryApproved'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
@@ -18,8 +17,8 @@ const ApproveCategory = ({ category, onSubmit, iconButton }: Props) => {
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
 
-  const icon = isCategoryApproved(category) ? EnabledIcon : DisabledIcon
-  const label = isCategoryApproved(category)
+  const icon = category.isApproved ? EnabledIcon : DisabledIcon
+  const label = category.isApproved
     ? (isSubmitting ? 'Un-approving Category...' : 'Un-approve Category')
     : (isSubmitting ? 'Approving Category...' : 'Approve Category')
 

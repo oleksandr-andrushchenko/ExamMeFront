@@ -68,11 +68,11 @@ const AddExam = ({ category, exam, iconButton }: Props) => {
     />
   }
 
-  if (authenticationToken && _exam === undefined) {
+  if (_exam === undefined) {
     return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
   }
 
-  if (authenticationToken && _exam) {
+  if (_exam) {
     const url = Route.Exam.replace(':categoryId', _exam.categoryId!).replace(':examId', _exam.id!)
     const label = 'Continue exam'
     const color = 'blue'

@@ -20,17 +20,18 @@ import Error from '../components/Error'
 import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
-import isQuestionApproved from '../services/questions/isQuestionApproved'
 import YesNo from '../components/elements/YesNo'
 import createListFromObjects from '../utils/createListFromObjects'
 import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import { default as YesNoEnum } from '../enum/YesNo'
+import CreatorBadge from '../components/badges/CreatorBadge'
+import Creator from '../enum/Creator'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
   const refresh = () => setTableKey(Math.random())
-  const { checkAuthorization } = useAuth()
+  const { authenticationToken, checkAuthorization } = useAuth()
   const [ categories, setCategories ] = useState<Category[]>()
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
@@ -43,6 +44,10 @@ const Questions = () => {
       setLoading,
     )
   }, [])
+
+  useEffect(() => {
+    refresh()
+  }, [ authenticationToken ])
 
   useEffect(() => {
     document.title = 'Questions'
@@ -68,6 +73,7 @@ const Questions = () => {
       tabs={ {
         subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
+        creator: authenticationToken ? Object.values(Creator) : '',
       } }
       filters={ {
         category: createListFromObjects(categories || [], 'id', 'name'),
@@ -79,15 +85,19 @@ const Questions = () => {
       mapper={ (question: Question, index: number) => [
         question.id,
         index + 1,
-        <Link label={ question.title } tooltip={ question.title }
-              to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }/>,
+        <Link
+          label={ question.title }
+          sup={ question.isCreator ? <CreatorBadge/> : '' }
+          tooltip={ question.title }
+          to={ Route.Question.replace(':categoryId', question.categoryId!).replace(':questionId', question.id!) }
+        />,
         !categories ? <Spinner/> : <Tooltip
           content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ isQuestionApproved(question) }/>,
+          : <YesNo yes={ question.isApproved }/>,
         <Rating readonly/>,
         // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {

@@ -16,6 +16,7 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
             $order: String,
             $subscription: String,
             $approved: String,
+            $creator: String,
             $category: ID,
             $search: String,
             $difficulty: String,
@@ -29,6 +30,7 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
                 order: $order,
                 subscription: $subscription,
                 approved: $approved,
+                creator: $creator,
                 category: $category,
                 search: $search,
                 difficulty: $difficulty,
@@ -45,7 +47,9 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
                         explanation
                     }
                     difficulty
-                    ownerId
+                    isApproved
+                    isOwner
+                    isCreator
                 }
                 meta {
                     nextCursor

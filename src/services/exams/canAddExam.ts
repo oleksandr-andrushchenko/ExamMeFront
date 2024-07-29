@@ -1,12 +1,11 @@
 import Category from '../../schema/category/Category'
-import isCategoryApproved from '../categories/isCategoryApproved'
 
 /**
  * @param {Category} category
  * @returns {boolean}
  */
 export default function canAddExam(category: Category): boolean {
-  if (!isCategoryApproved(category)) {
+  if (!category.isApproved) {
     return false
   }
 

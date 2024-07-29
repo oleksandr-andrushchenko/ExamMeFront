@@ -12,7 +12,9 @@ export default interface Question {
   difficulty?: QuestionDifficulty
   multiChoice?: boolean
   rating?: Rating
-  ownerId?: string
+  isApproved?: boolean
+  isOwner?: boolean
+  isCreator?: boolean
   createdAt?: number
   updatedAt?: number
 

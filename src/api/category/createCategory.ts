@@ -8,7 +8,9 @@ export default function createCategory(createCategory: CreateCategory): any {
             createCategory(createCategory: $createCategory) {
                 id
                 name
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

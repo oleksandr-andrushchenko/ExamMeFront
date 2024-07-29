@@ -2,7 +2,6 @@ import { ComponentProps, memo, useState } from 'react'
 import Question from '../../schema/question/Question'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
 import toggleQuestionApprove from '../../api/question/toggleQuestionApprove'
-import isQuestionApproved from '../../services/questions/isQuestionApproved'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
@@ -18,8 +17,8 @@ const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
 
-  const icon = isQuestionApproved(question) ? EnabledIcon : DisabledIcon
-  const label = isQuestionApproved(question)
+  const icon = question.isApproved ? EnabledIcon : DisabledIcon
+  const label = question.isApproved
     ? (isSubmitting ? 'Un-approving Question...' : 'Un-approve Question')
     : (isSubmitting ? 'Approving Question...' : 'Approve Question')
 

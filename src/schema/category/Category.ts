@@ -8,7 +8,9 @@ export default interface Category {
   requiredScore?: number
   voters?: number
   rating?: Rating
-  ownerId?: string
+  isApproved?: boolean
+  isOwner?: boolean
+  isCreator?: boolean
   createdAt?: number
   updatedAt?: number
 }

@@ -20,7 +20,9 @@ export default function toggleQuestionApprove(questionId: string): any {
                     explanation
                 }
                 difficulty
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

@@ -13,12 +13,10 @@ interface AuthenticationProviderContextValue {
   authenticationToken: Token | undefined
   setAuthenticationToken: (token: Token | undefined) => void
   me: Me | undefined
-  checkAuthorization: (permission: string, resource?: { ownerId?: string }, permissions?: string[]) => boolean
-}
-
-interface Data {
-  me?: Me | undefined
-  permissionHierarchy?: PermissionHierarchy | undefined
+  checkAuthorization: (permission: string, resource?: {
+    ownerId?: string,
+    isOwner?: boolean
+  }, permissions?: string[]) => boolean
 }
 
 export function AuthenticationProvider({ children }: { children: ReactNode }) {
@@ -27,16 +25,23 @@ export function AuthenticationProvider({ children }: { children: ReactNode }) {
     authenticationTokenString ? JSON.parse(authenticationTokenString) : undefined,
   )
   const defaultData = { me: undefined, permissionHierarchy: undefined }
-  const [ { me, permissionHierarchy }, setData ] = useState<Data>(defaultData)
-  const checkAuthorization = (permission: string, resource: {
-    ownerId: string
-  }, permissions: string[] = undefined): boolean => {
+  const [ { me, permissionHierarchy }, setData ] = useState<{
+    me?: Me | undefined
+    permissionHierarchy?: PermissionHierarchy | undefined
+  }>(defaultData)
+  const checkAuthorization = (permission, resource, permissions): boolean => {
     if (!authenticationToken || !me || !permissionHierarchy) {
       return false
     }
 
-    if (resource && resource.ownerId && resource.ownerId === me.id) {
-      return true
+    if (resource) {
+      if (('ownerId' in resource) && resource.ownerId === me.id) {
+        return true
+      }
+
+      if (('isOwner' in resource) && resource.isOwner) {
+        return true
+      }
     }
 
     permissions = permissions ?? me.permissions

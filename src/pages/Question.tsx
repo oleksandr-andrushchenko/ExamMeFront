@@ -18,8 +18,8 @@ import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
 import InfoTable from '../components/elements/InfoTable'
 import YesNo from '../components/elements/YesNo'
-import isQuestionApproved from '../services/questions/isQuestionApproved'
 import ApproveQuestion from '../components/question/ApproveQuestion'
+import CreatorBadge from '../components/badges/CreatorBadge'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -54,7 +54,11 @@ const Question = () => {
         <Link label={ question.title } to={ Route.Question.replace(':questionId', question.id!) }/> }
     </Breadcrumbs>
 
-    <H1 sub="Question info">{ !question ? <Spinner type="text"/> : question.title }</H1>
+    <H1
+      label={ question?.title ?? <Spinner type="text"/> }
+      sup={ question?.isCreator ? <CreatorBadge/> : '' }
+      sub="Question info"
+    />
 
     <Rating/>
 
@@ -72,7 +76,7 @@ const Question = () => {
         )) : 'N/A',
         question.difficulty,
         <Rating readonly/>,
-        <YesNo yes={ isQuestionApproved(question) }/>,
+        <YesNo yes={ question.isApproved }/>,
       ] }
     />
 

@@ -10,7 +10,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
 
   return {
     query: gql`
-        query CategoryPageQuestions(
+        query GetQuestionsForCategoryPage(
             $prevCursor: String,
             $nextCursor: String,
             $cursor: String,
@@ -18,6 +18,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
             $order: String,
             $subscription: String,
             $approved: String,
+            $creator: String,
             $category: ID,
             $search: String,
             $difficulty: String,
@@ -31,6 +32,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
                 order: $order,
                 subscription: $subscription,
                 approved: $approved,
+                creator: $creator,
                 category: $category,
                 search: $search,
                 difficulty: $difficulty,
@@ -47,7 +49,9 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
                         correct
                         explanation
                     }
-                    ownerId
+                    isApproved
+                    isOwner
+                    isCreator
                 }
                 meta {
                     nextCursor

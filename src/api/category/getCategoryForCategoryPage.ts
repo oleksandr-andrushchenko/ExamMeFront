@@ -10,7 +10,9 @@ export default function getCategoryForCategoryPage(categoryId: string): any {
                 questionCount
                 approvedQuestionCount
                 requiredScore
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

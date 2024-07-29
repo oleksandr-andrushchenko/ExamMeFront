@@ -8,7 +8,9 @@ export default function createQuestion(createQuestion: CreateQuestion): any {
             createQuestion(createQuestion: $createQuestion) {
                 id
                 title
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

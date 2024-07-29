@@ -10,7 +10,9 @@ export default function updateCategory(categoryId: string, updateCategory: Updat
                 name
                 questionCount
                 requiredScore
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

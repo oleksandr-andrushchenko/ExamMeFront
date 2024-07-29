@@ -17,7 +17,6 @@ import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
-import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
@@ -25,12 +24,18 @@ import canAddExam from '../services/exams/canAddExam'
 import apolloClient from '../api/apolloClient'
 import getCurrentExams from '../api/exam/getCurrentExams'
 import Exam from '../schema/exam/Exam'
+import CreatorBadge from '../components/badges/CreatorBadge'
+import Creator from '../enum/Creator'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
   const refresh = () => setTableKey(Math.random())
   const { authenticationToken, checkAuthorization } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    refresh()
+  }, [ authenticationToken ])
 
   useEffect(() => {
     document.title = 'Categories'
@@ -98,6 +103,7 @@ const Categories = () => {
       tabs={ {
         subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
+        creator: authenticationToken ? Object.values(Creator) : '',
       } }
       columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }
@@ -105,13 +111,17 @@ const Categories = () => {
       mapper={ ({ category, exam }: { category: Category, exam: Exam }, index: number) => [
         category.id,
         index + 1,
-        <Link label={ category.name } tooltip={ category.name }
-              to={ Route.Category.replace(':categoryId', category.id!) }/>,
+        <Link
+          label={ category.name }
+          sup={ category.isCreator ? <CreatorBadge/> : '' }
+          tooltip={ category.name }
+          to={ Route.Category.replace(':categoryId', category.id!) }
+        />,
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         checkAuthorization(CategoryPermission.Approve)
           ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ isCategoryApproved(category) }/>,
+          : <YesNo yes={ category.isApproved }/>,
         <Rating readonly/>,
         {
           addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,

@@ -11,7 +11,9 @@ export default function toggleCategoryApprove(categoryId: string): any {
                 name
                 questionCount
                 requiredScore
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,

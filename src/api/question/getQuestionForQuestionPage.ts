@@ -18,7 +18,9 @@ export default function getQuestionForQuestionPage(questionId: string): any {
                     explanation
                 }
                 difficulty
-                ownerId
+                isApproved
+                isOwner
+                isCreator
             }
         }
     `,
