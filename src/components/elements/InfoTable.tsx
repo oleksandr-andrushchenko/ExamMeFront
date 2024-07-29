@@ -1,7 +1,7 @@
-import { memo } from 'react'
+import { ComponentProps, memo } from 'react'
 import Spinner from '../Spinner'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   columns: string[]
   source: object | undefined
   mapper: Function

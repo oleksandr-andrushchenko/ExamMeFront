@@ -1,7 +1,7 @@
 import { Button, IconButton, Spinner as TailwindSpinner, Typography } from '@material-tailwind/react'
-import { memo, ReactNode } from 'react'
+import { ComponentProps, memo, ReactNode } from 'react'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   type?: 'button' | 'icon-button' | 'text'
   height?: number
   width?: number

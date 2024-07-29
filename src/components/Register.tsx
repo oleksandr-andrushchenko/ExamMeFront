@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-tailwind/react'
-import { memo, ReactNode, useState } from 'react'
+import { ComponentProps, memo, ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import Route from '../enum/Route'
@@ -12,7 +12,7 @@ import { apiMutate } from '../api/apolloClient'
 import Token from '../schema/auth/Token'
 import createMeAndAuthenticationToken from '../api/me/createMeAndAuthenticationToken'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   onSubmit?: () => void
   buttons?: ReactNode
 }
@@ -82,6 +82,7 @@ const Register = ({ buttons, onSubmit }: Props) => {
 
           <div>
             { buttons }
+
             <Button type="submit" className="ml-1" size="md" disabled={ isSubmitting }>
               { isSubmitting ? 'Registering...' : 'Register' }
             </Button>

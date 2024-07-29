@@ -1,10 +1,9 @@
 import { Card, CardBody, Dialog } from '@material-tailwind/react'
-import { memo, useEffect, useState } from 'react'
+import { ComponentProps, memo, useEffect, useState } from 'react'
 import CreateQuestion, { QuestionChoice, QuestionDifficulty, QuestionType } from '../../schema/question/CreateQuestion'
 import Question from '../../schema/question/Question'
 import Category from '../../schema/category/Category'
 import { apiMutate, apiQuery } from '../../api/apolloClient'
-import getCategoriesForSelect from '../../api/category/getCategoriesForSelect'
 import createQuestion from '../../api/question/createQuestion'
 import updateQuestion from '../../api/question/updateQuestion'
 import Spinner from '../Spinner'
@@ -23,8 +22,10 @@ import useAuth from '../../hooks/useAuth'
 import Auth from '../Auth'
 import QuestionPermission from '../../enum/question/QuestionPermission'
 import H3 from '../typography/H3'
+import AddCategory from '../category/AddCategory'
+import getCategoriesForSelect from '../../api/category/getCategoriesForSelect'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   category?: Category
   question?: Question
   onSubmit?: (question: Question) => void
@@ -47,14 +48,18 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
   const [ error, setError ] = useState<string>('')
   const { authenticationToken, checkAuthorization } = useAuth()
 
+  const refreshCategories = () => apiQuery(
+    getCategoriesForSelect(),
+    (data: { categories: Category[] }) => setCategories(data.categories),
+    // getOwnCategoriesForSelect(),
+    // (data: { ownCategories: Category[] }) => setCategories(data.ownCategories),
+    setError,
+    setLoading,
+  )
+
   useEffect(() => {
     if (!category && !question) {
-      apiQuery(
-        getCategoriesForSelect(),
-        (data: { categories: Category[] }) => setCategories(data.categories),
-        setError,
-        setLoading,
-      )
+      refreshCategories()
     }
   }, [])
 
@@ -187,6 +192,7 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
                     name="categoryId"
                     label="Category"
                     options={ categories.map(category => ({ value: category.id, label: category.name })) }
+                    append={ <AddCategory onSubmit={ refreshCategories }/> }
                   />
                 )) }
 

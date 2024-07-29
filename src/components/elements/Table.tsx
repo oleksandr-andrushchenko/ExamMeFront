@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { ButtonGroup, Input, Option, Select, Tab, Tabs, TabsHeader, Typography } from '@material-tailwind/react'
-import { memo, useEffect, useState } from 'react'
+import { ComponentProps, memo, useEffect, useState } from 'react'
 import Paginated from '../../schema/pagination/Paginated'
 import IconButton from './IconButton'
 import urlSearchParamsToPlainObject from '../../utils/urlSearchParamsToPlainObject'
@@ -14,7 +14,7 @@ import {
 } from '@heroicons/react/24/solid'
 import Button from './Button'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   key2: string | number | undefined
   buttons: object
   tabs: object

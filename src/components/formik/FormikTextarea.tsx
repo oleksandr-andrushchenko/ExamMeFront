@@ -1,8 +1,15 @@
 import { useField } from 'formik'
 import Error from '../Error'
 import { Textarea } from '@material-tailwind/react'
+import { ComponentProps } from 'react'
 
-export default function FormikTextarea({ name, label, children }) {
+interface Props extends ComponentProps<'textarea'> {
+  name: string
+  label?: string
+  children?: any
+}
+
+export default function FormikTextarea({ name, label, children }: Props) {
   const [ input, meta ] = useField(name)
   const { touched, error } = meta
 

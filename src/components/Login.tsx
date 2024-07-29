@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-tailwind/react'
-import { memo, ReactNode, useState } from 'react'
+import { ComponentProps, memo, ReactNode, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import { apiMutate } from '../api/apolloClient'
 import Error from './Error'
@@ -9,7 +9,7 @@ import FormikInput from './formik/FormikInput'
 import Token from '../schema/auth/Token'
 import createAuthenticationToken from '../api/authenticate/createAuthenticationToken'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   onSubmit?: () => void
   buttons?: ReactNode
   onRegisterClick?: () => void

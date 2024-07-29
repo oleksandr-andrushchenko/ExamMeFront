@@ -1,8 +1,15 @@
 import { useField } from 'formik'
 import Error from '../Error'
 import { Checkbox, Typography } from '@material-tailwind/react'
+import { ComponentProps } from 'react'
 
-export default function FormikCheckbox({ name, label, children }) {
+interface Props extends ComponentProps<any> {
+  name: string
+  label?: string
+  children?: any
+}
+
+export default function FormikCheckbox({ name, label, children }: Props) {
   const [ input, meta ] = useField(name)
   const { touched, error } = meta
 

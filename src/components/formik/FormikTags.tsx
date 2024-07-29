@@ -3,8 +3,9 @@ import Error from '../Error'
 import Button from '../elements/Button'
 import { CreateIcon, DeleteIcon } from '../../registry/icons'
 import FormikSelect from './FormikSelect'
+import { ComponentProps } from 'react'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   name: string
   label: string
   whitelist: string[]

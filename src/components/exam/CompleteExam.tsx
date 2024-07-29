@@ -1,10 +1,10 @@
 import { CheckIcon } from '@heroicons/react/24/solid'
-import { memo } from 'react'
+import { ComponentProps, memo } from 'react'
 import Exam from '../../schema/exam/Exam'
 import createExamCompletion from '../../api/exam/createExamCompletion'
 import ConfirmDialog from '../dialogs/ConfirmDialog'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   exam: Exam
   onSubmit?: Function
   iconButton?: boolean

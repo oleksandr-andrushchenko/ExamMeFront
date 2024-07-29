@@ -1,6 +1,6 @@
 import { Card, CardBody, Dialog, Tab, TabPanel, Tabs, TabsBody, TabsHeader } from '@material-tailwind/react'
 import { ArrowRightEndOnRectangleIcon, UserPlusIcon } from '@heroicons/react/24/solid'
-import { memo, ReactNode, useState } from 'react'
+import { ComponentProps, memo, ReactNode, useState } from 'react'
 import Register from './Register'
 import Login from './Login'
 import { useNavigate } from 'react-router-dom'
@@ -8,7 +8,7 @@ import Button from './elements/Button'
 import Text from './typography/Text'
 import IconButton from './elements/IconButton'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   button?: {
     icon?: any
     label?: any
@@ -29,7 +29,7 @@ const Auth = ({ button, dialog, register, onSubmit }: Props) => {
   const navigate = useNavigate()
 
   const [ activeTab, setActiveTab ] = useState<string>(register ? 'register' : 'login')
-  const buttons = [ <Button label="Cancel" type="reset" onClick={ handleOpen }/> ]
+  const buttons = [ <Button key="cancel" label="Cancel" type="reset" onClick={ handleOpen }/> ]
   const _onSubmit = onSubmit || (() => navigate(0))
   const tabs = [
     {
@@ -52,7 +52,8 @@ const Auth = ({ button, dialog, register, onSubmit }: Props) => {
 
   const buildButton = (props = {}) => {
     if (iconOnly) {
-      return <IconButton icon={ icon } tooltip={ label } size={ size } color={ color } onClick={ handleOpen } { ...props }/>
+      return <IconButton icon={ icon } tooltip={ label } size={ size } color={ color }
+                         onClick={ handleOpen } { ...props }/>
     }
 
     return <Button icon={ icon } label={ label } size={ size } color={ color } onClick={ handleOpen } { ...props }/>

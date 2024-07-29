@@ -1,5 +1,5 @@
 import { PlayIcon } from '@heroicons/react/24/solid'
-import { memo, useEffect, useState } from 'react'
+import { ComponentProps, memo, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
@@ -15,7 +15,7 @@ import Button from '../elements/Button'
 import Auth from '../Auth'
 import getCurrentExams from '../../api/exam/getCurrentExams'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   category: Category
   exam?: Exam
   iconButton?: boolean

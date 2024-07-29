@@ -1,5 +1,5 @@
 import { Card, CardBody, CardFooter, Dialog, Typography } from '@material-tailwind/react'
-import { memo, ReactNode, useState } from 'react'
+import { ComponentProps, memo, ReactNode, useState } from 'react'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
 import IconButton from '../elements/IconButton'
@@ -7,7 +7,7 @@ import Button from '../elements/Button'
 import H3 from '../typography/H3'
 import { Icon } from 'react-bootstrap-icons'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   mutateOptionsFn: Function
   iconFn: Function | ReactNode | string | Icon
   labelFn: Function | ReactNode | string

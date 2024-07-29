@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { ComponentProps, memo, useState } from 'react'
 import Question from '../../schema/question/Question'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
 import toggleQuestionApprove from '../../api/question/toggleQuestionApprove'
@@ -8,7 +8,7 @@ import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   question: Question
   onSubmit?: Function
   iconButton?: boolean

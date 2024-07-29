@@ -1,5 +1,5 @@
 import { Card, CardBody, Dialog } from '@material-tailwind/react'
-import { memo, useState } from 'react'
+import { ComponentProps, memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { apiMutate } from '../../api/apolloClient'
 import updateCategory from '../../api/category/updateCategory'
@@ -17,7 +17,7 @@ import Auth from '../Auth'
 import CategoryPermission from '../../enum/category/CategoryPermission'
 import H3 from '../typography/H3'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   category?: Category
   onSubmit?: (question: Category) => void
   iconButton?: boolean

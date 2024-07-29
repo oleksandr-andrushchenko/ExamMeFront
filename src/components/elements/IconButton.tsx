@@ -1,5 +1,18 @@
 import { IconButton as MlIconButton, Tooltip } from '@material-tailwind/react'
-import React, { memo } from 'react'
+import { ComponentProps, createElement, memo } from 'react'
+
+interface Props extends ComponentProps<'button'> {
+  icon?: any
+  tooltip?: any
+  size?: any
+  className?: string
+  onClick: Function
+  disabled?: boolean
+  type?: any
+  variant?: any
+  color?: any
+  key?: any
+}
 
 const IconButton = (
   {
@@ -13,7 +26,7 @@ const IconButton = (
     variant,
     color,
     ...props
-  },
+  }: Props,
 ) => {
   const button = (
     <MlIconButton
@@ -26,7 +39,7 @@ const IconButton = (
       onClick={ onClick }
       disabled={ disabled }
     >
-      { React.createElement(icon, { className: 'h-4 w-4 align-top' }) }
+      { createElement(icon, { className: 'h-4 w-4 align-top' }) }
     </MlIconButton>
   )
 

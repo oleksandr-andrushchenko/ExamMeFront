@@ -21,7 +21,7 @@ import isCategoryApproved from '../services/categories/isCategoryApproved'
 import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
-import canAddExam from '../services/categories/canAddExam'
+import canAddExam from '../services/exams/canAddExam'
 import apolloClient from '../api/apolloClient'
 import getCurrentExams from '../api/exam/getCurrentExams'
 import Exam from '../schema/exam/Exam'
@@ -49,6 +49,10 @@ const Categories = () => {
     const categoryIds = queryData.data
       .filter(({ category }: { category: Category }) => canAddExam(category))
       .map(({ category }: { category: Category }) => category.id!)
+
+    if (categoryIds.length === 0) {
+      return queryData
+    }
 
     setLoading(true)
 

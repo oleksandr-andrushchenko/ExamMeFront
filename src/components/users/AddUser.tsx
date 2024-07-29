@@ -1,5 +1,5 @@
 import { Card, CardBody, Dialog } from '@material-tailwind/react'
-import { memo, useState } from 'react'
+import { ComponentProps, memo, useState } from 'react'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
 import { Form, Formik, FormikHelpers } from 'formik'
@@ -15,7 +15,7 @@ import Button from '../elements/Button'
 import createUser from '../../api/users/createUser'
 import H3 from '../typography/H3'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   user?: User
   onSubmit?: (user: User) => void
   iconButton?: boolean

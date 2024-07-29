@@ -1,8 +1,17 @@
 import { useField } from 'formik'
 import Error from '../Error'
 import { Input } from '@material-tailwind/react'
+import { ComponentProps } from 'react'
 
-export default function FormikInput({ name, type = 'text', size = 'lg', label, children }) {
+interface Props extends ComponentProps<'input'> {
+  name: string
+  type?: any
+  size?: any
+  label?: string
+  children?: any
+}
+
+export default function FormikInput({ name, type = 'text', size = 'lg', label, children }: Props) {
   const [ input, meta ] = useField(name)
   const { touched, error } = meta
 

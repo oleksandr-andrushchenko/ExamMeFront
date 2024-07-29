@@ -1,10 +1,10 @@
-import { memo } from 'react'
+import { ComponentProps, memo } from 'react'
 import Category from '../../schema/category/Category'
 import deleteCategory from '../../api/category/deleteCategory'
 import { DeleteIcon } from '../../registry/icons'
 import ConfirmDialog from '../dialogs/ConfirmDialog'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   category: Category
   onSubmit?: Function
   iconButton?: boolean

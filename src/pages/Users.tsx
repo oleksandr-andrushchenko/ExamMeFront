@@ -44,7 +44,7 @@ const Users = () => {
       mapper={ (user: User, index: number) => [
         user.id,
         index + 1,
-        <Link label={ user.name } tooltip={ user.name } to={ Route.Users.replace(':userId', user.id!) }/>,
+        user.name,
         user.email,
         user.permissions?.map(permission => (
           <Chip

@@ -1,10 +1,10 @@
-import { memo } from 'react'
+import { ComponentProps, memo } from 'react'
 import Question from '../../schema/question/Question'
 import deleteQuestion from '../../api/question/deleteQuestion'
 import { DeleteIcon } from '../../registry/icons'
 import ConfirmDialog from '../dialogs/ConfirmDialog'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   question: Question
   onSubmit?: Function
   iconButton?: boolean

@@ -1,8 +1,16 @@
 import { useField } from 'formik'
 import Error from '../Error'
 import { Option, Select } from '@material-tailwind/react'
+import { ComponentProps } from 'react'
 
-export default function FormikSelect({ name, label, options }) {
+interface Props extends ComponentProps<'select'> {
+  name: string
+  label?: string
+  options: any[]
+  append?: any
+}
+
+export default function FormikSelect({ name, label, options, append }: Props) {
   const [ input, meta, helper ] = useField(name)
   const { touched, value, error } = meta
   const { setTouched, setValue } = helper
@@ -33,6 +41,8 @@ export default function FormikSelect({ name, label, options }) {
       </Select>
 
       { touched && error && <Error text={ error }/> }
+
+      { append }
     </div>
   )
 };

@@ -3,6 +3,7 @@ enum CategoryPermission {
   Update = 'updateCategory',
   Delete = 'deleteCategory',
   Approve = 'approveCategory',
+  AddQuestion = 'addCategoryQuestion',
 }
 
 export default CategoryPermission

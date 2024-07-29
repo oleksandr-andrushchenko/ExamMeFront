@@ -3,8 +3,9 @@ import useAuth from '../hooks/useAuth'
 import Spinner from './Spinner'
 import Unauthorized from '../pages/Unauthorized'
 import Unauthenticated from '../pages/Unauthenticated'
+import { ComponentProps } from 'react'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   permission?: any
 }
 

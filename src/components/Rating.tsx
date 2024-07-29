@@ -1,8 +1,8 @@
-import { memo, useState } from 'react'
+import { ComponentProps, memo, useState } from 'react'
 import { Rating as MlRating, Typography } from '@material-tailwind/react'
 import { Star as UnratedIcon, StarFill as RatedIcon } from 'react-bootstrap-icons'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   value: number
   number?: boolean
   total?: number

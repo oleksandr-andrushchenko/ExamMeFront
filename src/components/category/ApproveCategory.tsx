@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { ComponentProps, memo, useState } from 'react'
 import Category from '../../schema/category/Category'
 import { DisabledIcon, EnabledIcon } from '../../registry/icons'
 import toggleCategoryApprove from '../../api/category/toggleCategoryApprove'
@@ -8,7 +8,7 @@ import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   category: Category
   onSubmit?: Function
   iconButton?: boolean

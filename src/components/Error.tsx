@@ -1,9 +1,9 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import { Typography } from '@material-tailwind/react'
-import { memo } from 'react'
+import { ComponentProps, memo } from 'react'
 import Text from './typography/Text'
 
-interface Props {
+interface Props extends ComponentProps<any> {
   text: string
   simple?: boolean
 }
