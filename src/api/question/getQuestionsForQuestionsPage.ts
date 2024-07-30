@@ -2,10 +2,6 @@ import { gql } from '@apollo/client'
 import GetQuestions from '../../schema/question/GetQuestions'
 
 export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}): any {
-  if ('size' in filter) {
-    filter.size = +filter.size
-  }
-
   return {
     query: gql`
         query GetQuestionsForQuestionsPage(

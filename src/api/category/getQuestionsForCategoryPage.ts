@@ -4,10 +4,6 @@ import GetQuestions from '../../schema/question/GetQuestions'
 export default function getQuestionsForCategoryPage(categoryId: string, filter: GetQuestions = {}): any {
   filter.category = categoryId
 
-  if ('size' in filter) {
-    filter.size = +filter.size
-  }
-
   return {
     query: gql`
         query GetQuestionsForCategoryPage(

@@ -2,10 +2,6 @@ import { gql } from '@apollo/client'
 import GetUsers from '../../schema/users/GetUsers'
 
 export default function getUsersForUsersPage(filter: GetUsers = {}): any {
-  if ('size' in filter) {
-    filter.size = +filter.size
-  }
-
   return {
     query: gql`
         query GetUsersForUsersPage($prevCursor: String, $nextCursor: String, $cursor: String, $size: Int, $order: String, $search: String) {

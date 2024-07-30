@@ -71,8 +71,14 @@ const Table = (
   const showClear = (): boolean => searchParams.toString() !== ''
 
   useEffect(() => {
+    const filter = { ...defaultSearchParams, ...urlSearchParamsToPlainObject(searchParams) }
+
+    if ('size' in filter) {
+      filter.size = +filter.size
+    }
+
     apiQuery(
-      queryOptions(urlSearchParamsToPlainObject(searchParams)),
+      queryOptions(filter),
       async (data) => setItems(await queryData(data, { setError, setLoading })),
       setError,
       setLoading,

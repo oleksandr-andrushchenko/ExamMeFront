@@ -2,10 +2,6 @@ import { gql } from '@apollo/client'
 import GetCategories from '../../schema/category/GetCategories'
 
 export default function getCategoriesForCategoriesPage(filter: GetCategories = {}): any {
-  if ('size' in filter) {
-    filter.size = +filter.size
-  }
-
   return {
     query: gql`
         query GetCategoriesForCategoriesPage(
