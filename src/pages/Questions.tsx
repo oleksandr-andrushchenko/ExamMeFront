@@ -38,6 +38,7 @@ const Questions = () => {
 
   useEffect(() => {
     apiQuery(
+      // todo: search box instead of whole categories list (or categories of page questions - add GetCategories.categoryIds support)
       getCategoriesForSelect(),
       (data: { categories: Category[] }) => setCategories(data.categories),
       setError,
