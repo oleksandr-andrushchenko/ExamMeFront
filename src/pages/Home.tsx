@@ -4,6 +4,7 @@ import Route from '../enum/Route'
 import { memo, useEffect } from 'react'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
+import LatestActivities from '../components/activity/LatestActivities'
 
 const Home = () => {
   useEffect(() => {
@@ -16,6 +17,8 @@ const Home = () => {
     </Breadcrumbs>
 
     <H1 label="Home" sub="Latest activities"/>
+
+    <LatestActivities/>
   </>
 }
 
