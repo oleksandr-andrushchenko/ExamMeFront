@@ -101,9 +101,9 @@ const Categories = () => {
           onSubmit={ (category: Category) => navigate(Route.Category.replace(':categoryId', category.id!)) }/>,
       } }
       tabs={ {
-        subscription: Object.values(YesNoEnum),
+        // subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
-        creator: authenticationToken ? Object.values(Creator) : '',
+        // creator: authenticationToken ? Object.values(Creator) : '',
       } }
       columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }

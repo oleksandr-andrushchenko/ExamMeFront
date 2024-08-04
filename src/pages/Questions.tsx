@@ -72,9 +72,9 @@ const Questions = () => {
         create: <AddQuestion onSubmit={ refresh }/>,
       } }
       tabs={ {
-        subscription: Object.values(YesNoEnum),
+        // subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
-        creator: authenticationToken ? Object.values(Creator) : '',
+        // creator: authenticationToken ? Object.values(Creator) : '',
       } }
       filters={ {
         category: createListFromObjects(categories || [], 'id', 'name'),

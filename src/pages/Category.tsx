@@ -112,9 +112,9 @@ const Category = () => {
         exam: !category ? <Spinner type="button"/> : canAddExam(category) && <AddExam category={ category }/>,
       } }
       tabs={ {
-        subscription: Object.values(YesNoEnum),
+        // subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
-        creator: authenticationToken ? Object.values(Creator) : '',
+        // creator: authenticationToken ? Object.values(Creator) : '',
       } }
       filters={ {
         difficulty: createListFromEnum(QuestionDifficulty),
