@@ -26,7 +26,6 @@ import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import { default as YesNoEnum } from '../enum/YesNo'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import Creator from '../enum/Creator'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -99,7 +98,7 @@ const Questions = () => {
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ question.isApproved }/>,
-        <Rating readonly/>,
+        <Rating rating={ question.rating }/>,
         // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&

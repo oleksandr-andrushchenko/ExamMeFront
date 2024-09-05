@@ -23,6 +23,7 @@ export default function toggleQuestionApprove(questionId: string): any {
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,

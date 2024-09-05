@@ -21,11 +21,13 @@ import YesNo from '../components/elements/YesNo'
 import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
-import apolloClient from '../api/apolloClient'
+import apolloClient, { apiMutate, apiQuery } from '../api/apolloClient'
 import getCurrentExams from '../api/exam/getCurrentExams'
 import Exam from '../schema/exam/Exam'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import Creator from '../enum/Creator'
+import rateCategory from '../api/category/rateCategory'
+import getCategoryForCategoryPage from '../api/category/getCategoryForCategoryPage'
+import getCategoryForCategoriesPage from '../api/category/getCategoryForCategoriesPage'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -122,7 +124,21 @@ const Categories = () => {
         checkAuthorization(CategoryPermission.Approve)
           ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ category.isApproved }/>,
-        <Rating readonly/>,
+        <Rating rating={ category.rating }
+          onChange={ (mark: number, callback: Function, setLoading: Function) => apiMutate(
+            rateCategory(category.id!, mark),
+            (data: { rateCategory: Category }) => {
+              apiQuery(
+                getCategoryForCategoriesPage(data.rateCategory.id!),
+                (data: { category: Category }) => callback(data.category.rating),
+                () => {},
+                setLoading
+              )
+            },
+            () => {},
+            setLoading
+          ) }
+        />,
         {
           addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,
 

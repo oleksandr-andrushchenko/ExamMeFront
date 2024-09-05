@@ -1,6 +1,22 @@
 import { gql } from '@apollo/client'
 import GetCategories from '../../schema/category/GetCategories'
 
+export const categoryQuery = gql`{
+    id
+    name
+    questionCount
+    approvedQuestionCount
+    requiredScore
+    isApproved
+    isOwner
+    isCreator
+    rating {
+        markCount
+        averageMark
+        mark
+    }
+}`
+
 export default function getCategoriesForCategoriesPage(filter: GetCategories = {}): any {
   return {
     query: gql`
@@ -27,16 +43,7 @@ export default function getCategoriesForCategoriesPage(filter: GetCategories = {
                 creator: $creator,
                 search: $search
             ) {
-                data {
-                    id
-                    name
-                    questionCount
-                    approvedQuestionCount
-                    requiredScore
-                    isApproved
-                    isOwner
-                    isCreator
-                }
+                data ${categoryQuery}
                 meta {
                     nextCursor
                     prevCursor

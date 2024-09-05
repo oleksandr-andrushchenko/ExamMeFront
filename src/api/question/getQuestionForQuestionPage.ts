@@ -21,6 +21,7 @@ export default function getQuestionForQuestionPage(questionId: string): any {
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,

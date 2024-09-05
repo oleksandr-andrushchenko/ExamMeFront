@@ -46,6 +46,7 @@ export default function getQuestionsForQuestionsPage(filter: GetQuestions = {}):
                     isApproved
                     isOwner
                     isCreator
+                    rating {averageMark markCount mark}
                 }
                 meta {
                     nextCursor

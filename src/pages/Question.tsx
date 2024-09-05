@@ -60,7 +60,7 @@ const Question = () => {
       sub="Question info"
     />
 
-    <Rating/>
+    <Rating rating={ question?.rating }/>
 
     { error && <Error text={ error }/> }
 
@@ -75,7 +75,7 @@ const Question = () => {
           <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
         )) : 'N/A',
         question.difficulty,
-        <Rating readonly/>,
+        <Rating rating={ question.rating }/>,
         <YesNo yes={ question.isApproved }/>,
       ] }
     />

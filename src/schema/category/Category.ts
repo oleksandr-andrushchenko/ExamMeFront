@@ -1,4 +1,4 @@
-import Rating from '../Rating'
+import Rating from '../rating/Rating'
 
 export default interface Category {
   id?: string

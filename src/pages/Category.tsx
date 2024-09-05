@@ -32,7 +32,6 @@ import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import Creator from '../enum/Creator'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -79,7 +78,7 @@ const Category = () => {
       sub="Category info"
     />
 
-    <Rating/>
+    <Rating rating={ category?.rating }/>
 
     { error && <Error text={ error }/> }
 
@@ -91,7 +90,7 @@ const Category = () => {
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         <YesNo yes={ category.isApproved }/>,
-        <Rating readonly/>,
+        <Rating rating={ category.rating }/>,
       ] }
     />
 
@@ -136,7 +135,7 @@ const Category = () => {
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ question.isApproved }/>,
-        <Rating readonly/>,
+        <Rating rating={ category?.rating }/>,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,

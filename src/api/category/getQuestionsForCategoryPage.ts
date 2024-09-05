@@ -48,6 +48,7 @@ export default function getQuestionsForCategoryPage(categoryId: string, filter: 
                     isApproved
                     isOwner
                     isCreator
+                    rating {averageMark markCount mark}
                 }
                 meta {
                     nextCursor

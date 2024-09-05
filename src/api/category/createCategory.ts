@@ -11,6 +11,7 @@ export default function createCategory(createCategory: CreateCategory): any {
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,

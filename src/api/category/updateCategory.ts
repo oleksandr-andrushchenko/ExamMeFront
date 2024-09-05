@@ -13,6 +13,7 @@ export default function updateCategory(categoryId: string, updateCategory: Updat
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,

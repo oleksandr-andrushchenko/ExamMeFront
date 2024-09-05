@@ -1,11 +1,14 @@
 import { gql } from '@apollo/client'
 
-export default function getCategoryForCategoryPage(categoryId: string): any {
+export default function rateCategory(categoryId: string, mark: number): any {
   return {
-    query: gql`
-        query GetCategoryForCategoryPage($categoryId: ID!) {
-            category(categoryId: $categoryId) {
+    mutation: gql`
+        mutation RateCategory($categoryId: ID!, $mark: Int!) {
+            rateCategory(categoryId: $categoryId, mark: $mark) {
                 id
+                ownerId
+                createdAt
+                updatedAt
                 name
                 questionCount
                 approvedQuestionCount
@@ -14,13 +17,16 @@ export default function getCategoryForCategoryPage(categoryId: string): any {
                 isOwner
                 isCreator
                 rating {
-                    averageMark
                     markCount
+                    averageMark
                     mark
                 }
             }
         }
     `,
-    variables: { categoryId },
+    variables: {
+      categoryId,
+      mark,
+    },
   }
 }

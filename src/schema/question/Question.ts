@@ -1,6 +1,6 @@
 import { QuestionChoice, QuestionDifficulty, QuestionType } from './CreateQuestion'
 import Category from '../category/Category'
-import Rating from '../Rating'
+import Rating from '../rating/Rating'
 
 export default interface Question {
   id?: string

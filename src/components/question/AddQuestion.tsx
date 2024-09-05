@@ -51,8 +51,6 @@ const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
   const refreshCategories = () => apiQuery(
     getCategoriesForSelect(),
     (data: { categories: Category[] }) => setCategories(data.categories),
-    // getOwnCategoriesForSelect(),
-    // (data: { ownCategories: Category[] }) => setCategories(data.ownCategories),
     setError,
     setLoading,
   )

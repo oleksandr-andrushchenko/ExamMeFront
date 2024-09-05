@@ -11,6 +11,7 @@ export default function createQuestion(createQuestion: CreateQuestion): any {
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,

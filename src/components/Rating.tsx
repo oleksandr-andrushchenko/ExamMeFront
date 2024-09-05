@@ -1,29 +1,54 @@
 import { ComponentProps, memo, useState } from 'react'
 import { Rating as MlRating, Typography } from '@material-tailwind/react'
 import { Star as UnratedIcon, StarFill as RatedIcon } from 'react-bootstrap-icons'
+import { default as RatingValue } from '../schema/rating/Rating'
+import Spinner from './Spinner'
 
 interface Props extends ComponentProps<any> {
-  value: number
-  number?: boolean
-  total?: number
-  onChange?: () => void
+  rating: RatingValue | null
+  showAverageMark?: boolean
+  showMarkCount?: boolean
+  onChange: (mark: number, callback: Function, setLoading: Function) => void
   readonly?: boolean
 }
 
-const Rating = ({ value = Math.ceil(Math.random() * 5), number = false, total, readonly = false }: Props) => {
-  const [ rated, setRated ] = useState(value)
+const Rating = (
+  {
+    rating = {},
+    showAverageMark = false,
+    showMarkCount = false,
+    onChange = () => {
+    },
+    readonly = false,
+  }: Props,
+) => {
+  const [ _rating, setRating ] = useState(rating)
+  const [ isLoading, setLoading ] = useState(false)
+  const { averageMark = 0, markCount = 0, mark } = _rating ?? {}
+  const marked = mark !== null && mark !== undefined
+
+  if (isLoading) {
+    return (
+      <Spinner/>
+    )
+  }
 
   return (
     <div className="flex items-center gap-2">
-      { number && <Typography type="small">{ rated }.7</Typography> }
+      { showAverageMark && (averageMark > 0) && <Typography type="small">{ averageMark }</Typography> }
+
       <MlRating
-        value={ value }
-        onChange={ (value) => setRated(value) }
+        value={ Math.floor(averageMark) }
+        count={ 5 }
+        onChange={ (mark: number) => onChange(mark, (rating: RatingValue) => setRating(rating), setLoading) }
         ratedIcon={ <RatedIcon className="h-5 w-5"/> }
         unratedIcon={ <UnratedIcon className="h-5 w-5"/> }
-        readonly={ readonly }
+        ratedColor={ marked ? 'yellow' : 'gray' }
+        unratedColor={ marked ? 'yellow' : 'gray' }
+        readonly={ readonly || marked }
       />
-      { (total > 0) && <Typography type="small">Based on { total } Reviews</Typography> }
+
+      { showMarkCount && (markCount > 0) && <Typography type="small">Based on { markCount } Reviews</Typography> }
     </div>
   )
 }

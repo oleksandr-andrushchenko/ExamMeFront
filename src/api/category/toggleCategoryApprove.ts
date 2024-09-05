@@ -14,6 +14,7 @@ export default function toggleCategoryApprove(categoryId: string): any {
                 isApproved
                 isOwner
                 isCreator
+                rating {averageMark markCount mark}
             }
         }
     `,
