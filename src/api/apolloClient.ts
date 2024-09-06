@@ -1,8 +1,9 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import type { DefaultContext, OperationVariables } from '@apollo/client/core/types'
+import type { ApolloQueryResult, DefaultContext, OperationVariables } from '@apollo/client/core/types'
 import type { MutationOptions, QueryOptions } from '@apollo/client/core/watchQueryOptions'
 import type { ApolloCache } from '@apollo/client/cache'
+import type { FetchResult } from '@apollo/client/link/core'
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_API_BASE_URL,
@@ -38,16 +39,18 @@ export default apolloClient
 export function apiQuery<T = any, TVariables extends OperationVariables = OperationVariables>(
   options: QueryOptions<TVariables, T>,
   setData: (data: T) => void,
-  setError: (message: string) => void,
-  setLoading: (loading: boolean) => void,
-) {
+  setError: (message: string) => void = () => {
+  },
+  setLoading: (loading: boolean) => void = () => {
+  },
+): Promise<ApolloQueryResult<T>> {
   setLoading(true)
   options = {
     errorPolicy: 'all',
     fetchPolicy: 'network-only',
     ...options,
   }
-  apolloClient.query<T>(options)
+  return apolloClient.query<T>(options)
     .then(({ data, errors }) => {
       if (errors) {
         const error = errors
@@ -55,15 +58,15 @@ export function apiQuery<T = any, TVariables extends OperationVariables = Operat
           .map(error => error.message).join('\n')
 
         if (error) {
-          setError(error)
+          setError && setError(error)
           return
         }
       }
 
       setData(data)
     })
-    .catch(err => setError(err.message))
-    .finally(() => setLoading(false))
+    .catch(err => setError && setError(err.message))
+    .finally(() => setLoading && setLoading(false))
 }
 
 export function apiMutate<
@@ -74,16 +77,18 @@ export function apiMutate<
 >(
   options: MutationOptions<TData, TVariables, TContext>,
   setData: (data: TData) => void,
-  setError: (message: string) => void,
-  setLoading: (loading: boolean) => void,
-) {
+  setError: (message: string) => void = () => {
+  },
+  setLoading: (loading: boolean) => void = () => {
+  },
+): Promise<FetchResult<TData>> {
   setLoading(true)
   options = {
     errorPolicy: 'all',
     fetchPolicy: 'network-only',
     ...options,
   }
-  apolloClient.mutate<TData, TVariables, TContext, TCache>(options)
+  return apolloClient.mutate<TData, TVariables, TContext, TCache>(options)
     .then(({ data, errors }) => {
       if (errors) {
         const error = errors
@@ -91,13 +96,13 @@ export function apiMutate<
           .map(error => error.message).join('\n')
 
         if (error) {
-          setError(error)
+          setError && setError(error)
           return
         }
       }
 
       setData(data)
     })
-    .catch(err => setError(err.message))
+    .catch(err => setError && setError(err.message))
     .finally(() => setLoading && setLoading(false))
 }
