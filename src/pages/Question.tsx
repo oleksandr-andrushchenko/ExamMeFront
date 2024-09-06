@@ -9,7 +9,6 @@ import Question from '../schema/question/Question'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionChoice, QuestionType } from '../schema/question/CreateQuestion'
 import AddQuestion from '../components/question/AddQuestion'
-import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import getQuestionForQuestionPage from '../api/question/getQuestionForQuestionPage'
 import Error from '../components/Error'
@@ -20,6 +19,7 @@ import InfoTable from '../components/elements/InfoTable'
 import YesNo from '../components/elements/YesNo'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import CreatorBadge from '../components/badges/CreatorBadge'
+import QuestionRating from '../components/question/QuestionRating'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -60,7 +60,7 @@ const Question = () => {
       sub="Question info"
     />
 
-    <Rating rating={ question?.rating }/>
+    { question ? <QuestionRating question={ question } showAverageMark showMarkCount/> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
@@ -75,7 +75,7 @@ const Question = () => {
           <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
         )) : 'N/A',
         question.difficulty,
-        <Rating rating={ question.rating }/>,
+        <QuestionRating question={ question }/>,
         <YesNo yes={ question.isApproved }/>,
       ] }
     />

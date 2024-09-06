@@ -9,7 +9,6 @@ import AddQuestion from '../components/question/AddQuestion'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import Paginated from '../schema/pagination/Paginated'
 import Category from '../schema/category/Category'
-import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import getQuestionsForQuestionsPage from '../api/question/getQuestionsForQuestionsPage'
 import QuestionPermission from '../enum/question/QuestionPermission'
@@ -26,6 +25,7 @@ import createListFromEnum from '../utils/createListFromEnum'
 import ApproveQuestion from '../components/question/ApproveQuestion'
 import { default as YesNoEnum } from '../enum/YesNo'
 import CreatorBadge from '../components/badges/CreatorBadge'
+import QuestionRating from '../components/question/QuestionRating'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -98,7 +98,7 @@ const Questions = () => {
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ question.isApproved }/>,
-        <Rating rating={ question.rating }/>,
+        <QuestionRating question={ question }/>,
         // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&

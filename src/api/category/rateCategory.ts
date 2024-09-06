@@ -6,21 +6,6 @@ export default function rateCategory(categoryId: string, mark: number): any {
         mutation RateCategory($categoryId: ID!, $mark: Int!) {
             rateCategory(categoryId: $categoryId, mark: $mark) {
                 id
-                ownerId
-                createdAt
-                updatedAt
-                name
-                questionCount
-                approvedQuestionCount
-                requiredScore
-                isApproved
-                isOwner
-                isCreator
-                rating {
-                    markCount
-                    averageMark
-                    mark
-                }
             }
         }
     `,

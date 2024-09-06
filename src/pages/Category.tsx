@@ -13,7 +13,6 @@ import AddCategory from '../components/category/AddCategory'
 import DeleteQuestion from '../components/question/DeleteQuestion'
 import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import AddExam from '../components/exam/AddExam'
-import Rating from '../components/Rating'
 import { apiQuery } from '../api/apolloClient'
 import getCategoryForCategoryPage from '../api/category/getCategoryForCategoryPage'
 import Error from '../components/Error'
@@ -32,6 +31,7 @@ import ApproveCategory from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
 import CreatorBadge from '../components/badges/CreatorBadge'
+import CategoryRating from '../components/category/CategoryRating'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -78,7 +78,7 @@ const Category = () => {
       sub="Category info"
     />
 
-    <Rating rating={ category?.rating }/>
+    { category ? <CategoryRating category={ category } showAverageMark showMarkCount/> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
@@ -90,7 +90,7 @@ const Category = () => {
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         <YesNo yes={ category.isApproved }/>,
-        <Rating rating={ category.rating }/>,
+        <CategoryRating category={ category }/>,
       ] }
     />
 
@@ -135,7 +135,7 @@ const Category = () => {
         checkAuthorization(QuestionPermission.Approve)
           ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
           : <YesNo yes={ question.isApproved }/>,
-        <Rating rating={ category?.rating }/>,
+        <CategoryRating category={ category }/>,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
