@@ -10,30 +10,36 @@ import YesNo from '../elements/YesNo'
 
 interface Props extends ComponentProps<any> {
   question: Question
-  onSubmit?: Function
+  onChange?: Function
   iconButton?: boolean
   readonly?: boolean
 }
 
-const _ApproveQuestion = ({ question, onSubmit, iconButton = false, readonly = false }: Props) => {
+const _ApproveQuestion = ({ question, onChange, iconButton = false, readonly = false }: Props) => {
+  const [ isApproved, setApproved ] = useState<boolean>(question.isApproved!)
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
 
   if (readonly) {
     return (
-      <YesNo yes={ question.isApproved }/>
+      <YesNo yes={ isApproved }/>
     )
   }
 
-  const icon = question.isApproved ? EnabledIcon : DisabledIcon
-  const label = question.isApproved
+  const icon = isApproved ? EnabledIcon : DisabledIcon
+  const label = isApproved
     ? (isSubmitting ? 'Un-approving Question...' : 'Un-approve Question')
     : (isSubmitting ? 'Approving Question...' : 'Approve Question')
 
   const onClick = () => {
     apiMutate(
+      // todo: change depending on onChange is defined or not
       toggleQuestionApprove(question.id!),
-      (data: { toggleQuestionApprove: Question }) => onSubmit && onSubmit(data.toggleQuestionApprove),
+      (data: { toggleQuestionApprove: Question }) => {
+        const updatedQuestion = data.toggleQuestionApprove
+        setApproved(updatedQuestion.isApproved!)
+        onChange && onChange(updatedQuestion)
+      },
       setError,
       setSubmitting,
     )

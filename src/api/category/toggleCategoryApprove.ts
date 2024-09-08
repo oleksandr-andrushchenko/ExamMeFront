@@ -10,6 +10,7 @@ export default function toggleCategoryApprove(categoryId: string): any {
                 id
                 name
                 questionCount
+                approvedQuestionCount
                 requiredScore
                 isApproved
                 isOwner

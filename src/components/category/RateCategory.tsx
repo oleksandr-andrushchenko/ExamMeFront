@@ -10,7 +10,7 @@ interface Props extends ComponentProps<any> {
   category: Category,
   showAverageMark?: boolean
   showMarkCount?: boolean
-  readonly: boolean
+  readonly?: boolean
 }
 
 const _RateCategory = (

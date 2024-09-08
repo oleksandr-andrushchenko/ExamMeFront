@@ -79,7 +79,9 @@ const Category = () => {
       sub="Category info"
     />
 
-    { category ? <CategoryRating category={ category } showAverageMark showMarkCount/> : <Spinner type="text"/> }
+    { category ?
+      <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) } showAverageMark
+                    showMarkCount/> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
@@ -91,7 +93,7 @@ const Category = () => {
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         <YesNo yes={ category.isApproved }/>,
-        <RateCategory category={ category }/>,
+        <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) }/>,
       ] }
     />
 
@@ -101,7 +103,7 @@ const Category = () => {
         create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
 
         approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve) &&
-          <ApproveCategory category={ category } onSubmit={ onApprove }/>),
+          <ApproveCategory category={ category } onChange={ onApprove }/>),
 
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
           <AddCategory category={ category } onSubmit={ onUpdate }/>),
@@ -133,8 +135,8 @@ const Category = () => {
         />,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        <ApproveQuestion question={ question } onSubmit={ refresh } iconButton
-                         readonly={ !checkAuthorization(QuestionPermission.Approve) }/>,
+        <ApproveQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Approve) }
+                         onChange={ refresh } iconButton/>,
         <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&

@@ -117,8 +117,8 @@ const Categories = () => {
         />,
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
-        <ApproveCategory category={ category } onSubmit={ refresh } iconButton
-                         readonly={ !checkAuthorization(CategoryPermission.Approve) }/>,
+        <ApproveCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Approve) }
+                         iconButton/>,
         <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) }/>,
         {
           addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,

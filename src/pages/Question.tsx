@@ -82,7 +82,7 @@ const Question = () => {
 
     <div className="flex gap-1 items-center mt-4">
       { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Approve) &&
-        <ApproveQuestion question={ question } onSubmit={ onApprove }/>) }
+        <ApproveQuestion question={ question } onChange={ onApprove }/>) }
 
       { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Update, question) &&
         <AddQuestion question={ question } onSubmit={ onUpdate }/>) }

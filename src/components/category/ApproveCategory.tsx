@@ -10,30 +10,36 @@ import YesNo from '../elements/YesNo'
 
 interface Props extends ComponentProps<any> {
   category: Category
-  onSubmit?: Function
+  onChange?: Function
   iconButton?: boolean
   readonly?: boolean
 }
 
-const _ApproveCategory = ({ category, onSubmit, iconButton = false, readonly = false }: Props) => {
+const _ApproveCategory = ({ category, onChange, iconButton = false, readonly = false }: Props) => {
+  const [ isApproved, setApproved ] = useState<boolean>(category.isApproved!)
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
 
   if (readonly) {
     return (
-      <YesNo yes={ category.isApproved }/>
+      <YesNo yes={ isApproved }/>
     )
   }
 
-  const icon = category.isApproved ? EnabledIcon : DisabledIcon
-  const label = category.isApproved
+  const icon = isApproved ? EnabledIcon : DisabledIcon
+  const label = isApproved
     ? (isSubmitting ? 'Un-approving Category...' : 'Un-approve Category')
     : (isSubmitting ? 'Approving Category...' : 'Approve Category')
 
   const onClick = () => {
     apiMutate(
+      // todo: change depending on onChange is defined or not
       toggleCategoryApprove(category.id!),
-      (data: { toggleCategoryApprove: Category }) => onSubmit && onSubmit(data.toggleCategoryApprove),
+      (data: { toggleCategoryApprove: Category }) => {
+        const updatedCategory = data.toggleCategoryApprove
+        setApproved(updatedCategory.isApproved!)
+        onChange && onChange(updatedCategory)
+      },
       setError,
       setSubmitting,
     )
