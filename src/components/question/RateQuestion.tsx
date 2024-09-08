@@ -32,7 +32,7 @@ const _RateQuestion = (
           apiMutate(
             rateQuestion(question.id!, mark),
             async (data: { rateQuestion: Question }) => {
-              await sleep(1000)
+              await sleep(100)
               apiQuery(
                 getQuestionRating(data.rateQuestion.id!),
                 (data: { question: Question }) => setRating(data.question.rating),

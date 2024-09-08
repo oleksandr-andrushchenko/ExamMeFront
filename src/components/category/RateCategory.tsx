@@ -32,7 +32,7 @@ const _RateCategory = (
           apiMutate(
             rateCategory(category.id!, mark),
             async (data: { rateCategory: Category }) => {
-              await sleep(1000)
+              await sleep(100)
               apiQuery(
                 getCategoryRating(data.rateCategory.id!),
                 (data: { category: Category }) => setRating(data.category.rating),
