@@ -16,15 +16,14 @@ import H1 from '../components/typography/H1'
 import { ListIcon } from '../registry/icons'
 import Table from '../components/elements/Table'
 import Link from '../components/elements/Link'
-import YesNo from '../components/elements/YesNo'
-import ApproveCategory from '../components/category/ApproveCategory'
+import { ApproveCategory } from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
 import apolloClient from '../api/apolloClient'
 import getCurrentExams from '../api/exam/getCurrentExams'
 import Exam from '../schema/exam/Exam'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import CategoryRating from '../components/category/CategoryRating'
+import { RateCategory } from '../components/category/RateCategory'
 
 const Categories = () => {
   const [ tableKey, setTableKey ] = useState<number>(0)
@@ -118,10 +117,9 @@ const Categories = () => {
         />,
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
-        checkAuthorization(CategoryPermission.Approve)
-          ? <ApproveCategory category={ category } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ category.isApproved }/>,
-        <CategoryRating category={ category }/>,
+        <ApproveCategory category={ category } onSubmit={ refresh } iconButton
+                         readonly={ !checkAuthorization(CategoryPermission.Approve) }/>,
+        <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) }/>,
         {
           addQuestion: <AddQuestion category={ category } onSubmit={ refresh } iconButton/>,
 

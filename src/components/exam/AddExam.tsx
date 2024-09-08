@@ -21,7 +21,7 @@ interface Props extends ComponentProps<any> {
   iconButton?: boolean
 }
 
-const AddExam = ({ category, exam, iconButton }: Props) => {
+const AddExam = ({ category, exam, iconButton = false }: Props) => {
   const { authenticationToken } = useAuth()
   const [ _exam, setExam ] = useState<Exam | undefined | null>(exam)
   const [ processing, setProcessing ] = useState<boolean>(false)

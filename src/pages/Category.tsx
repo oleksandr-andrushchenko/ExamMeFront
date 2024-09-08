@@ -26,12 +26,13 @@ import H1 from '../components/typography/H1'
 import InfoTable from '../components/elements/InfoTable'
 import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
-import ApproveQuestion from '../components/question/ApproveQuestion'
-import ApproveCategory from '../components/category/ApproveCategory'
+import { ApproveQuestion } from '../components/question/ApproveQuestion'
+import { ApproveCategory } from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import CategoryRating from '../components/category/CategoryRating'
+import { RateQuestion } from '../components/question/RateQuestion'
+import { RateCategory } from '../components/category/RateCategory'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
@@ -90,7 +91,7 @@ const Category = () => {
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
         <YesNo yes={ category.isApproved }/>,
-        <CategoryRating category={ category }/>,
+        <RateCategory category={ category }/>,
       ] }
     />
 
@@ -132,10 +133,9 @@ const Category = () => {
         />,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        checkAuthorization(QuestionPermission.Approve)
-          ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ question.isApproved }/>,
-        <CategoryRating category={ category }/>,
+        <ApproveQuestion question={ question } onSubmit={ refresh } iconButton
+                         readonly={ !checkAuthorization(QuestionPermission.Approve) }/>,
+        <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&
             <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,

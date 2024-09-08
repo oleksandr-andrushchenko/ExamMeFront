@@ -17,9 +17,9 @@ import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
 import InfoTable from '../components/elements/InfoTable'
 import YesNo from '../components/elements/YesNo'
-import ApproveQuestion from '../components/question/ApproveQuestion'
+import { ApproveQuestion } from '../components/question/ApproveQuestion'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import QuestionRating from '../components/question/QuestionRating'
+import { RateQuestion } from '../components/question/RateQuestion'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
@@ -60,7 +60,7 @@ const Question = () => {
       sub="Question info"
     />
 
-    { question ? <QuestionRating question={ question } showAverageMark showMarkCount/> : <Spinner type="text"/> }
+    { question ? <RateQuestion question={ question } showAverageMark showMarkCount/> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
@@ -75,7 +75,7 @@ const Question = () => {
           <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
         )) : 'N/A',
         question.difficulty,
-        <QuestionRating question={ question }/>,
+        <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
         <YesNo yes={ question.isApproved }/>,
       ] }
     />

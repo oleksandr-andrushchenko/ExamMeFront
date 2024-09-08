@@ -13,7 +13,7 @@ interface Props extends ComponentProps<any> {
   readonly?: boolean
 }
 
-const QuestionRating = (
+const _RateQuestion = (
   {
     question,
     showAverageMark = false,
@@ -48,4 +48,4 @@ const QuestionRating = (
   )
 }
 
-export default memo(QuestionRating)
+export const RateQuestion = memo(_RateQuestion)

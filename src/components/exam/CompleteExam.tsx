@@ -10,7 +10,7 @@ interface Props extends ComponentProps<any> {
   iconButton?: boolean
 }
 
-const CompleteExam = ({ exam, onSubmit, iconButton }: Props) => {
+const CompleteExam = ({ exam, onSubmit, iconButton = false }: Props) => {
   return (
     <ConfirmDialog
       mutateOptionsFn={ () => createExamCompletion(exam.id!) }

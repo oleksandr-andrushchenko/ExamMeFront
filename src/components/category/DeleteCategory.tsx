@@ -10,7 +10,7 @@ interface Props extends ComponentProps<any> {
   iconButton?: boolean
 }
 
-const DeleteCategory = ({ category, onSubmit, iconButton }: Props) => {
+const DeleteCategory = ({ category, onSubmit, iconButton = false }: Props) => {
   return (
     <ConfirmDialog
       mutateOptionsFn={ () => deleteCategory(category.id!) }

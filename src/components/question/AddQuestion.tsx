@@ -40,7 +40,7 @@ interface Form {
   choices: QuestionChoice[]
 }
 
-const AddQuestion = ({ category, question, onSubmit, iconButton }: Props) => {
+const AddQuestion = ({ category, question, onSubmit, iconButton = false }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const [ categories, setCategories ] = useState<Category[]>()
   const handleOpen = () => setOpen(!open)

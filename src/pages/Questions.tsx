@@ -19,13 +19,12 @@ import Error from '../components/Error'
 import { QuestionDifficulty, QuestionType } from '../schema/question/CreateQuestion'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
-import YesNo from '../components/elements/YesNo'
 import createListFromObjects from '../utils/createListFromObjects'
 import createListFromEnum from '../utils/createListFromEnum'
-import ApproveQuestion from '../components/question/ApproveQuestion'
+import { ApproveQuestion } from '../components/question/ApproveQuestion'
 import { default as YesNoEnum } from '../enum/YesNo'
 import CreatorBadge from '../components/badges/CreatorBadge'
-import QuestionRating from '../components/question/QuestionRating'
+import { RateQuestion } from '../components/question/RateQuestion'
 
 const Questions = () => {
   const [ tableKey, setTableKey ] = useState<number>(2)
@@ -95,10 +94,9 @@ const Questions = () => {
           content={ getCategory(question.categoryId!).name }>{ getCategory(question.categoryId!).name }</Tooltip>,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        checkAuthorization(QuestionPermission.Approve)
-          ? <ApproveQuestion question={ question } onSubmit={ refresh } iconButton/>
-          : <YesNo yes={ question.isApproved }/>,
-        <QuestionRating question={ question }/>,
+        <ApproveQuestion question={ question } onSubmit={ refresh } iconButton
+                         readonly={ !checkAuthorization(QuestionPermission.Approve) }/>,
+        <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
         // todo: include table items loading in submission request (instead of refresh call should be smth like: data => table.setItems(data.questions))
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&

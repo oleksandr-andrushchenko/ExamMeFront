@@ -10,10 +10,10 @@ interface Props extends ComponentProps<any> {
   category: Category,
   showAverageMark?: boolean
   showMarkCount?: boolean
-  readonly?: boolean
+  readonly: boolean
 }
 
-const CategoryRating = (
+const _RateCategory = (
   {
     category,
     showAverageMark = false,
@@ -48,4 +48,4 @@ const CategoryRating = (
   )
 }
 
-export default memo(CategoryRating)
+export const RateCategory = memo(_RateCategory)

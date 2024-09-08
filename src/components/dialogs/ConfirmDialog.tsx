@@ -17,7 +17,7 @@ interface Props extends ComponentProps<any> {
   iconButton?: boolean
 }
 
-const ConfirmDialog = ({ mutateOptionsFn, iconFn, labelFn, title, body, onSubmit, iconButton }: Props) => {
+const ConfirmDialog = ({ mutateOptionsFn, iconFn, labelFn, title, body, onSubmit, iconButton = false }: Props) => {
   const [ isOpened, setOpened ] = useState<boolean>(false)
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const handleOpen = () => setOpened(!isOpened)

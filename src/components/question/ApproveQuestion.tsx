@@ -6,16 +6,24 @@ import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import { apiMutate } from '../../api/apolloClient'
 import Error from '../Error'
+import YesNo from '../elements/YesNo'
 
 interface Props extends ComponentProps<any> {
   question: Question
   onSubmit?: Function
   iconButton?: boolean
+  readonly?: boolean
 }
 
-const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
+const _ApproveQuestion = ({ question, onSubmit, iconButton = false, readonly = false }: Props) => {
   const [ isSubmitting, setSubmitting ] = useState<boolean>(false)
   const [ error, setError ] = useState<string>('')
+
+  if (readonly) {
+    return (
+      <YesNo yes={ question.isApproved }/>
+    )
+  }
 
   const icon = question.isApproved ? EnabledIcon : DisabledIcon
   const label = question.isApproved
@@ -41,4 +49,4 @@ const ApproveQuestion = ({ question, onSubmit, iconButton }: Props) => {
   )
 }
 
-export default memo(ApproveQuestion)
+export const ApproveQuestion = memo(_ApproveQuestion)

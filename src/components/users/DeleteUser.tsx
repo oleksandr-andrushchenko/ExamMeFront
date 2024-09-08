@@ -10,7 +10,7 @@ interface Props extends ComponentProps<any> {
   iconButton?: boolean
 }
 
-const DeleteUser = ({ user, onSubmit, iconButton }: Props) => {
+const DeleteUser = ({ user, onSubmit, iconButton = false }: Props) => {
   return (
     <ConfirmDialog
       mutateOptionsFn={ () => deleteUser(user.id!) }

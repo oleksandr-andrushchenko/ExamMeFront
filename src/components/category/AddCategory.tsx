@@ -28,7 +28,7 @@ interface Form {
   requiredScore: number
 }
 
-const AddCategory = ({ category, onSubmit, iconButton }: Props) => {
+const AddCategory = ({ category, onSubmit, iconButton = false }: Props) => {
   const [ open, setOpen ] = useState<boolean>(false)
   const handleOpen = () => setOpen(!open)
   const [ error, setError ] = useState<string>('')
