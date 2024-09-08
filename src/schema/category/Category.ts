@@ -11,6 +11,7 @@ export default interface Category {
   isApproved?: boolean
   isOwner?: boolean
   isCreator?: boolean
+  examId?: string
   createdAt?: number
   updatedAt?: number
 }

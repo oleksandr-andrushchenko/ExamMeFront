@@ -18,6 +18,7 @@ export default function getCategoryForCategoryPage(categoryId: string): any {
                     markCount
                     mark
                 }
+                examId
             }
         }
     `,

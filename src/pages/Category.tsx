@@ -24,7 +24,6 @@ import getQuestionsForCategoryPage from '../api/category/getQuestionsForCategory
 import Link from '../components/elements/Link'
 import H1 from '../components/typography/H1'
 import InfoTable from '../components/elements/InfoTable'
-import YesNo from '../components/elements/YesNo'
 import createListFromEnum from '../utils/createListFromEnum'
 import { ApproveQuestion } from '../components/question/ApproveQuestion'
 import { ApproveCategory } from '../components/category/ApproveCategory'
@@ -43,8 +42,7 @@ const Category = () => {
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  const onApprove = (category: Category) => setCategory(category)
-  const onUpdate = (category: Category) => setCategory(category)
+  const refreshCategory = (category: Category) => setCategory(category)
   const onDelete = () => navigate(Route.Categories, { replace: true })
 
   const refresh = () => {
@@ -79,21 +77,26 @@ const Category = () => {
       sub="Category info"
     />
 
-    { category ?
-      <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) } showAverageMark
-                    showMarkCount/> : <Spinner type="text"/> }
+    { category
+      ? <RateCategory
+        category={ category }
+        onChange={ refreshCategory }
+        readonly={ !checkAuthorization(CategoryPermission.Rate) }
+        showAverageMark
+        showMarkCount
+      /> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
     <InfoTable
       source={ category }
-      columns={ [ 'Name', 'Questions', 'Required score', 'Approved', 'Rating' ] }
+      columns={ [ 'Name', 'Questions', 'Required score', 'Rating', 'Approved' ] }
       mapper={ (category: Category) => [
         category.name,
         `${ category.approvedQuestionCount ?? 0 }/${ category.questionCount ?? 0 }`,
         category.requiredScore ?? 0,
-        <YesNo yes={ category.isApproved }/>,
-        <RateCategory category={ category } readonly={ !checkAuthorization(CategoryPermission.Rate) }/>,
+        <RateCategory category={ category } readonly/>,
+        <ApproveCategory category={ category } readonly/>,
       ] }
     />
 
@@ -103,10 +106,10 @@ const Category = () => {
         create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
 
         approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve) &&
-          <ApproveCategory category={ category } onChange={ onApprove }/>),
+          <ApproveCategory category={ category } onChange={ refreshCategory }/>),
 
         update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
-          <AddCategory category={ category } onSubmit={ onUpdate }/>),
+          <AddCategory category={ category } onSubmit={ refreshCategory }/>),
 
         delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
           <DeleteCategory category={ category } onSubmit={ onDelete }/>),

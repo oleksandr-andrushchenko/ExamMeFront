@@ -5,41 +5,25 @@ import Route from '../../enum/Route'
 import Category from '../../schema/category/Category'
 import Exam from '../../schema/exam/Exam'
 import useAuth from '../../hooks/useAuth'
-import Spinner from '../Spinner'
-import { apiMutate, apiQuery } from '../../api/apolloClient'
+import { apiMutate } from '../../api/apolloClient'
 import createExam from '../../api/exam/createExam'
 import Error from '../Error'
 import Link from '../elements/Link'
 import IconButton from '../elements/IconButton'
 import Button from '../elements/Button'
 import Auth from '../Auth'
-import getCurrentExams from '../../api/exam/getCurrentExams'
 
 interface Props extends ComponentProps<any> {
   category: Category
-  exam?: Exam
   iconButton?: boolean
 }
 
-const AddExam = ({ category, exam, iconButton = false }: Props) => {
+const AddExam = ({ category, iconButton = false }: Props) => {
   const { authenticationToken } = useAuth()
-  const [ _exam, setExam ] = useState<Exam | undefined | null>(exam)
   const [ processing, setProcessing ] = useState<boolean>(false)
   const [ create, setCreate ] = useState<boolean>(false)
-  const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
-
-  useEffect(() => {
-    if (authenticationToken && _exam === undefined) {
-      apiQuery<{ currentExams: Exam[] }>(
-        getCurrentExams([ category.id! ]),
-        data => setExam(data.currentExams[0] || null),
-        setError,
-        setLoading,
-      )
-    }
-  }, [ authenticationToken, _exam ])
 
   useEffect(() => {
     if (create) {
@@ -62,18 +46,14 @@ const AddExam = ({ category, exam, iconButton = false }: Props) => {
 
   if (!authenticationToken) {
     return <Auth
-      button={ { icon, label, size: 'sm', iconOnly: iconButton, color } }
+      button={ { icon, label, size: 'sm', iconOnly: iconButton!, color } }
       dialog={ { label: 'You need to be authenticated' } }
       onSubmit={ onClick }
     />
   }
 
-  if (_exam === undefined) {
-    return <Spinner type={ iconButton ? 'icon-button' : 'button' }/>
-  }
-
-  if (_exam) {
-    const url = Route.Exam.replace(':categoryId', _exam.categoryId!).replace(':examId', _exam.id!)
+  if (category.examId) {
+    const url = Route.Exam.replace(':categoryId', category.id!).replace(':examId', category.examId)
     const label = 'Continue exam'
     const color = 'blue'
 

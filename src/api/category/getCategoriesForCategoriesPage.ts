@@ -15,6 +15,7 @@ export const categoryQuery = gql`{
         averageMark
         mark
     }
+    examId
 }`
 
 export default function getCategoriesForCategoriesPage(filter: GetCategories = {}): any {

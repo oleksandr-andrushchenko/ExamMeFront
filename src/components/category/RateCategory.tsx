@@ -3,19 +3,21 @@ import { apiMutate, apiQuery } from '../../api/apolloClient'
 import rateCategory from '../../api/category/rateCategory'
 import Category from '../../schema/category/Category'
 import sleep from '../../utils/sleep'
-import getCategoryRating from '../../api/category/getCategoryRating'
 import Rating from '../Rating'
+import getCategory from '../../api/category/getCategory'
 
 interface Props extends ComponentProps<any> {
   category: Category,
   showAverageMark?: boolean
   showMarkCount?: boolean
+  onChange?: Function
   readonly?: boolean
 }
 
 const _RateCategory = (
   {
     category,
+    onChange,
     showAverageMark = false,
     showMarkCount = false,
     readonly = false,
@@ -34,8 +36,11 @@ const _RateCategory = (
             async (data: { rateCategory: Category }) => {
               await sleep(100)
               apiQuery(
-                getCategoryRating(data.rateCategory.id!),
-                (data: { category: Category }) => setRating(data.category.rating),
+                getCategory(data.rateCategory.id!),
+                (data: { category: Category }) => {
+                  setRating(data.category.rating)
+                  onChange && onChange(data.category)
+                },
                 setError,
               ).finally(() => setLoading(false))
             },

@@ -4,18 +4,20 @@ import Question from '../../schema/question/Question'
 import sleep from '../../utils/sleep'
 import Rating from '../Rating'
 import rateQuestion from '../../api/question/rateQuestion'
-import getQuestionRating from '../../api/question/getQuestionRating'
+import getQuestion from '../../api/question/getQuestion'
 
 interface Props extends ComponentProps<any> {
   question: Question,
   showAverageMark?: boolean
   showMarkCount?: boolean
+  onChange?: Function
   readonly?: boolean
 }
 
 const _RateQuestion = (
   {
     question,
+    onChange,
     showAverageMark = false,
     showMarkCount = false,
     readonly = false,
@@ -34,8 +36,11 @@ const _RateQuestion = (
             async (data: { rateQuestion: Question }) => {
               await sleep(100)
               apiQuery(
-                getQuestionRating(data.rateQuestion.id!),
-                (data: { question: Question }) => setRating(data.question.rating),
+                getQuestion(data.rateQuestion.id!),
+                (data: { question: Question }) => {
+                  setRating(data.question.rating)
+                  onChange && onChange(data.question)
+                },
                 setError,
               ).finally(() => setLoading(false))
             },

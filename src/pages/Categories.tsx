@@ -19,9 +19,6 @@ import Link from '../components/elements/Link'
 import { ApproveCategory } from '../components/category/ApproveCategory'
 import { default as YesNoEnum } from '../enum/YesNo'
 import canAddExam from '../services/exams/canAddExam'
-import apolloClient from '../api/apolloClient'
-import getCurrentExams from '../api/exam/getCurrentExams'
-import Exam from '../schema/exam/Exam'
 import CreatorBadge from '../components/badges/CreatorBadge'
 import { RateCategory } from '../components/category/RateCategory'
 
@@ -38,51 +35,6 @@ const Categories = () => {
   useEffect(() => {
     document.title = 'Categories'
   }, [])
-
-  const queryData = async (data: { paginatedCategories: Paginated<Category> }, { setError, setLoading }) => {
-    const queryData = {
-      ...data.paginatedCategories,
-      ...{ data: data.paginatedCategories.data.map((category: Category) => ({ category })) },
-    }
-
-    if (!authenticationToken) {
-      return queryData
-    }
-
-    const categoryIds = queryData.data
-      .filter(({ category }: { category: Category }) => canAddExam(category))
-      .map(({ category }: { category: Category }) => category.id!)
-
-    if (categoryIds.length === 0) {
-      return queryData
-    }
-
-    setLoading(true)
-
-    try {
-      const examsRes = await apolloClient.query<{ currentExams: Exam[] }>({
-        errorPolicy: 'all',
-        fetchPolicy: 'network-only',
-        ...getCurrentExams(categoryIds),
-      })
-
-      queryData.data = queryData.data.map(({ category }: { category: Category }) => {
-        for (const exam of examsRes.data.currentExams) {
-          if (exam.categoryId === category.id) {
-            return { category, exam }
-          }
-        }
-
-        return { category, exam: null }
-      })
-    } catch (error) {
-      setError(error)
-    } finally {
-      setLoading(false)
-    }
-
-    return queryData
-  }
 
   return <>
     <Breadcrumbs>
@@ -105,8 +57,8 @@ const Categories = () => {
       } }
       columns={ [ '#', 'Name', 'Questions', 'Required score', 'Approved', 'Rating', '' ] }
       queryOptions={ (filter) => getCategoriesForCategoriesPage(filter) }
-      queryData={ queryData }
-      mapper={ ({ category, exam }: { category: Category, exam: Exam }, index: number) => [
+      queryData={ (data: { paginatedCategories: Paginated<Category> }) => data.paginatedCategories }
+      mapper={ (category: Category, index: number) => [
         category.id,
         index + 1,
         <Link
@@ -129,7 +81,7 @@ const Categories = () => {
           delete: checkAuthorization(CategoryPermission.Delete, category) &&
             <DeleteCategory category={ category } onSubmit={ refresh } iconButton/>,
 
-          exam: canAddExam(category) && <AddExam category={ category } exam={ exam } iconButton/>,
+          exam: canAddExam(category) && <AddExam category={ category } iconButton/>,
         },
       ] }
     />

@@ -16,7 +16,6 @@ import QuestionPermission from '../enum/question/QuestionPermission'
 import H1 from '../components/typography/H1'
 import Link from '../components/elements/Link'
 import InfoTable from '../components/elements/InfoTable'
-import YesNo from '../components/elements/YesNo'
 import { ApproveQuestion } from '../components/question/ApproveQuestion'
 import CreatorBadge from '../components/badges/CreatorBadge'
 import { RateQuestion } from '../components/question/RateQuestion'
@@ -29,8 +28,7 @@ const Question = () => {
   const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
-  const onApprove = (question: Question) => setQuestion(question)
-  const onUpdate = (question: Question) => setQuestion(question)
+  const refreshQuestion = (question: Question) => setQuestion(question)
   const onDelete = () => navigate(Route.Category.replace(':categoryId', question!.categoryId!), { replace: true })
 
   useEffect(() => {
@@ -60,7 +58,14 @@ const Question = () => {
       sub="Question info"
     />
 
-    { question ? <RateQuestion question={ question } showAverageMark showMarkCount/> : <Spinner type="text"/> }
+    { question ?
+      <RateQuestion
+        question={ question }
+        onChange={ refreshQuestion }
+        readonly={ !checkAuthorization(QuestionPermission.Rate) }
+        showAverageMark
+        showMarkCount
+      /> : <Spinner type="text"/> }
 
     { error && <Error text={ error }/> }
 
@@ -75,17 +80,17 @@ const Question = () => {
           <Checkbox key={ `${ question.id }-${ index }` } name="choice" label={ choice.title } disabled={ true }/>
         )) : 'N/A',
         question.difficulty,
-        <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
-        <YesNo yes={ question.isApproved }/>,
+        <RateQuestion question={ question } readonly/>,
+        <ApproveQuestion question={ question } readonly/>,
       ] }
     />
 
     <div className="flex gap-1 items-center mt-4">
       { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Approve) &&
-        <ApproveQuestion question={ question } onChange={ onApprove }/>) }
+        <ApproveQuestion question={ question } onChange={ refreshQuestion }/>) }
 
       { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Update, question) &&
-        <AddQuestion question={ question } onSubmit={ onUpdate }/>) }
+        <AddQuestion question={ question } onSubmit={ refreshQuestion }/>) }
 
       { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Delete, question) &&
         <DeleteQuestion question={ question } onSubmit={ onDelete }/>) }

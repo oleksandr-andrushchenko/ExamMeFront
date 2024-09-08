@@ -14,6 +14,7 @@ export default function updateCategory(categoryId: string, updateCategory: Updat
                 isOwner
                 isCreator
                 rating {averageMark markCount mark}
+                examId
             }
         }
     `,
