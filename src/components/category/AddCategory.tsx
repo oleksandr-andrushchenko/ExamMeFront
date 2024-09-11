@@ -82,6 +82,8 @@ const AddCategory = ({ category, onSubmit, iconButton = false }: Props) => {
                 .optional(),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+              setError('')
+
               const transfer = {
                 name: values.name,
                 requiredScore: values.requiredScore,

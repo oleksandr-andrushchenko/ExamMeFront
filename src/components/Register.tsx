@@ -52,6 +52,8 @@ const Register = ({ buttons, onSubmit }: Props) => {
           .oneOf([ true ], 'Terms must be accepted'),
       }) }
       onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>): any => {
+        setError('')
+
         const transfer = {
           email: values.email,
           password: values.password,

@@ -68,6 +68,8 @@ const AddUser = ({ user, onSubmit, iconButton }: Props) => {
                 .required('At least one permission is required'),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+              setError('')
+
               const transfer: any = {
                 name: values.name,
                 email: values.email,

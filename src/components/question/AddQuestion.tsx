@@ -148,6 +148,8 @@ const AddQuestion = ({ category, question, onSubmit, iconButton = false }: Props
               }),
             }) }
             onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+              setError('')
+
               const transfer = {
                 categoryId: category?.id || question?.categoryId || values.categoryId || '',
                 title: values.title,

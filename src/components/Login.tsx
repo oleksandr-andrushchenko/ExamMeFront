@@ -41,6 +41,8 @@ const Login = ({ onSubmit, buttons, onRegisterClick }: Props) => {
           .required('Password is required'),
       }) }
       onSubmit={ (values, { setSubmitting }: FormikHelpers<Form>) => {
+        setError('')
+
         const transfer = {
           email: values.email,
           password: values.password,
