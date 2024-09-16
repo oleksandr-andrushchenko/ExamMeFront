@@ -7,6 +7,7 @@ import Rating from '../Rating'
 import getCategory from '../../api/category/getCategory'
 
 interface Props extends ComponentProps<any> {
+  className?: string
   category: Category,
   showAverageMark?: boolean
   showMarkCount?: boolean
@@ -16,6 +17,7 @@ interface Props extends ComponentProps<any> {
 
 const _RateCategory = (
   {
+    className = '',
     category,
     onChange,
     showAverageMark = false,
@@ -25,7 +27,8 @@ const _RateCategory = (
 ) => {
   return (
     <Rating
-      rating={ category.rating }
+      className={ className }
+      rating={ category.rating! }
       showAverageMark={ showAverageMark }
       showMarkCount={ showMarkCount }
       onChange={

@@ -6,6 +6,7 @@ import Spinner from './Spinner'
 import Error from './Error'
 
 interface Props extends ComponentProps<any> {
+  className?: string
   rating: RatingValue | null
   showAverageMark?: boolean
   showMarkCount?: boolean
@@ -20,6 +21,7 @@ interface Props extends ComponentProps<any> {
 
 const Rating = (
   {
+    className = '',
     rating = {},
     showAverageMark = false,
     showMarkCount = false,
@@ -49,7 +51,7 @@ const Rating = (
   const setRating = (rating: RatingValue) => _setRating(rating)
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={ `flex items-center gap-2 ${ className }` }>
       { showAverageMark && (averageMark > 0) && <Typography type="small">{ averageMark }</Typography> }
 
       <MlRating

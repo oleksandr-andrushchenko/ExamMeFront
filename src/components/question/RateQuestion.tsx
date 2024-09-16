@@ -7,6 +7,7 @@ import rateQuestion from '../../api/question/rateQuestion'
 import getQuestion from '../../api/question/getQuestion'
 
 interface Props extends ComponentProps<any> {
+  className?: string
   question: Question,
   showAverageMark?: boolean
   showMarkCount?: boolean
@@ -16,6 +17,7 @@ interface Props extends ComponentProps<any> {
 
 const _RateQuestion = (
   {
+    className = '',
     question,
     onChange,
     showAverageMark = false,
@@ -25,7 +27,8 @@ const _RateQuestion = (
 ) => {
   return (
     <Rating
-      rating={ question.rating }
+      className={ className }
+      rating={ question.rating! }
       showAverageMark={ showAverageMark }
       showMarkCount={ showMarkCount }
       onChange={

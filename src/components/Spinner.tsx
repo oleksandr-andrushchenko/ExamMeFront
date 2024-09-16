@@ -3,8 +3,8 @@ import { ComponentProps, memo, ReactNode } from 'react'
 
 interface Props extends ComponentProps<any> {
   type?: 'button' | 'icon-button' | 'text'
-  height?: number
-  width?: number
+  height?: string
+  width?: string
   children?: ReactNode
 }
 

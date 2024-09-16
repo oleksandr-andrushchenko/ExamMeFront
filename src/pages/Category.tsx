@@ -32,31 +32,46 @@ import canAddExam from '../services/exams/canAddExam'
 import CreatorBadge from '../components/badges/CreatorBadge'
 import { RateQuestion } from '../components/question/RateQuestion'
 import { RateCategory } from '../components/category/RateCategory'
+import { Params } from '@remix-run/router/utils'
+import GetQuestions from '../schema/question/GetQuestions'
+import Buttons from '../components/elements/Buttons'
 
 const Category = () => {
   const [ tableKey, setTableKey ] = useState<number>(1)
+  const [ infoTableKey, setInfoTableKey ] = useState<number>(1)
   const { authenticationToken, checkAuthorization } = useAuth()
-  const { categoryId }: { categoryId: string } = useParams()
+  const { categoryId } = useParams<Params>() as { categoryId: string }
   const [ category, setCategory ] = useState<Category>()
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const navigate = useNavigate()
 
-  const refreshCategory = (category: Category) => setCategory(category)
+  const updateCategory = (category: Category) => setCategory(category)
+  const refreshCategory = () => apiQuery(
+    getCategoryForCategoryPage(categoryId),
+    (data: { category: Category }) => setCategory(data.category),
+    setError,
+    setLoading,
+  )
+  const refreshTable = () => {
+    setTableKey(Math.random())
+  }
+  const refreshInfoTable = () => {
+    setInfoTableKey(Math.random())
+  }
+  const updateCategoryAndRefreshInfoTable = (category: Category) => {
+    updateCategory(category)
+    refreshInfoTable()
+  }
   const onDelete = () => navigate(Route.Categories, { replace: true })
 
-  const refresh = () => {
-    apiQuery(
-      getCategoryForCategoryPage(categoryId),
-      (data: { category: Category }) => setCategory(data.category),
-      setError,
-      setLoading,
-    )
-    setTableKey(Math.random())
+  const refreshCategoryAndTable = () => {
+    refreshCategory()
+    refreshTable()
   }
 
   useEffect(() => {
-    refresh()
+    refreshCategoryAndTable()
   }, [ authenticationToken ])
 
   useEffect(() => {
@@ -74,13 +89,12 @@ const Category = () => {
     <H1
       label={ category?.name ?? <Spinner type="text"/> }
       sup={ category?.isCreator ? <CreatorBadge/> : '' }
-      sub="Category info"
     />
 
     { category
       ? <RateCategory
         category={ category }
-        onChange={ refreshCategory }
+        onChange={ updateCategory }
         readonly={ !checkAuthorization(CategoryPermission.Rate) }
         showAverageMark
         showMarkCount
@@ -88,7 +102,29 @@ const Category = () => {
 
     { error && <Error text={ error }/> }
 
+    <Buttons
+      className="mt-2"
+      buttons={ {
+        create: !category ? <Spinner type="button"/> :
+          <AddQuestion category={ category } onSubmit={ refreshCategoryAndTable }/>,
+
+        approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve) &&
+          <ApproveCategory category={ category } onChange={ updateCategoryAndRefreshInfoTable }/>),
+
+        update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
+          <AddCategory category={ category } onSubmit={ updateCategory }/>),
+
+        delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
+          <DeleteCategory category={ category } onSubmit={ onDelete }/>),
+
+        exam: !category ? <Spinner type="button"/> : canAddExam(category) && <AddExam category={ category }/>,
+      } }
+    />
+
     <InfoTable
+      className="mt-4"
+      title="Category info"
+      key2={ infoTableKey }
       source={ category }
       columns={ [ 'Name', 'Questions', 'Required score', 'Rating', 'Approved' ] }
       mapper={ (category: Category) => [
@@ -102,20 +138,6 @@ const Category = () => {
 
     <Table
       key2={ tableKey }
-      buttons={ {
-        create: !category ? <Spinner type="button"/> : <AddQuestion category={ category } onSubmit={ refresh }/>,
-
-        approve: !category ? <Spinner type="button"/> : (checkAuthorization(CategoryPermission.Approve) &&
-          <ApproveCategory category={ category } onChange={ refreshCategory }/>),
-
-        update: checkAuthorization(CategoryPermission.Update, category) && (!category ? <Spinner type="button"/> :
-          <AddCategory category={ category } onSubmit={ refreshCategory }/>),
-
-        delete: checkAuthorization(CategoryPermission.Delete, category) && (!category ? <Spinner type="button"/> :
-          <DeleteCategory category={ category } onSubmit={ onDelete }/>),
-
-        exam: !category ? <Spinner type="button"/> : canAddExam(category) && <AddExam category={ category }/>,
-      } }
       tabs={ {
         // subscription: Object.values(YesNoEnum),
         approved: Object.values(YesNoEnum),
@@ -125,7 +147,7 @@ const Category = () => {
         difficulty: createListFromEnum(QuestionDifficulty),
       } }
       columns={ [ '#', 'Title', 'Choices', 'Difficulty', 'Approved', 'Rating', '' ] }
-      queryOptions={ (filter) => getQuestionsForCategoryPage(categoryId, filter) }
+      queryOptions={ (filter: GetQuestions) => getQuestionsForCategoryPage(categoryId, filter) }
       queryData={ (data: { paginatedQuestions: Paginated<Question> }) => data.paginatedQuestions }
       mapper={ (question: Question, index: number) => [
         question.id,
@@ -138,15 +160,22 @@ const Category = () => {
         />,
         question.type === QuestionType.CHOICE ? (question.choices || []).length : 'N/A',
         question.difficulty,
-        <ApproveQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Approve) }
-                         onChange={ refresh } iconButton/>,
-        <RateQuestion question={ question } readonly={ !checkAuthorization(QuestionPermission.Rate) }/>,
+        <ApproveQuestion
+          question={ question }
+          readonly={ !checkAuthorization(QuestionPermission.Approve) }
+          onChange={ refreshCategory }
+          iconButton
+        />,
+        <RateQuestion
+          question={ question }
+          readonly={ !checkAuthorization(QuestionPermission.Rate) }
+        />,
         {
           update: checkAuthorization(QuestionPermission.Update, question) &&
-            <AddQuestion question={ question } onSubmit={ refresh } iconButton/>,
+            <AddQuestion question={ question } onSubmit={ refreshCategoryAndTable } iconButton/>,
 
           delete: checkAuthorization(QuestionPermission.Delete, question) &&
-            <DeleteQuestion question={ question } onSubmit={ refresh } iconButton/>,
+            <DeleteQuestion question={ question } onSubmit={ refreshCategoryAndTable } iconButton/>,
         },
       ] }
     />

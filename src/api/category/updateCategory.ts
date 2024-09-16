@@ -9,11 +9,16 @@ export default function updateCategory(categoryId: string, updateCategory: Updat
                 id
                 name
                 questionCount
+                approvedQuestionCount
                 requiredScore
                 isApproved
                 isOwner
                 isCreator
-                rating {averageMark markCount mark}
+                rating {
+                    averageMark
+                    markCount
+                    mark
+                }
                 examId
             }
         }

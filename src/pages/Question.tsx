@@ -19,27 +19,36 @@ import InfoTable from '../components/elements/InfoTable'
 import { ApproveQuestion } from '../components/question/ApproveQuestion'
 import CreatorBadge from '../components/badges/CreatorBadge'
 import { RateQuestion } from '../components/question/RateQuestion'
+import Buttons from '../components/elements/Buttons'
 
 const Question = () => {
   const { questionId } = useParams<Params>() as { questionId: string }
   const [ question, setQuestion ] = useState<Question>()
+  const [ infoTableKey, setInfoTableKey ] = useState<number>(1)
   const [ _, setLoading ] = useState<boolean>(true)
   const [ error, setError ] = useState<string>('')
   const { checkAuthorization } = useAuth()
   const navigate = useNavigate()
 
-  const refreshQuestion = (question: Question) => setQuestion(question)
+  const updateQuestion = (question: Question) => setQuestion(question)
+  const refreshQuestion = () => apiQuery(
+    getQuestionForQuestionPage(questionId),
+    (data: { question: Question }) => setQuestion(data.question),
+    setError,
+    setLoading,
+  )
+  const refreshInfoTable = () => {
+    setInfoTableKey(Math.random())
+  }
+  const updateQuestionAndRefreshInfoTable = (question: Question) => {
+    updateQuestion(question)
+    refreshInfoTable()
+  }
   const onDelete = () => navigate(Route.Category.replace(':categoryId', question!.categoryId!), { replace: true })
 
   useEffect(() => {
     document.title = question?.title || 'ExamMe'
-
-    apiQuery<{ question: Question }>(
-      getQuestionForQuestionPage(questionId),
-      data => setQuestion(data.question),
-      setError,
-      setLoading,
-    )
+    refreshQuestion()
   }, [])
 
   return <>
@@ -55,13 +64,12 @@ const Question = () => {
     <H1
       label={ question?.title ?? <Spinner type="text"/> }
       sup={ question?.isCreator ? <CreatorBadge/> : '' }
-      sub="Question info"
     />
 
     { question ?
       <RateQuestion
         question={ question }
-        onChange={ refreshQuestion }
+        onChange={ updateQuestion }
         readonly={ !checkAuthorization(QuestionPermission.Rate) }
         showAverageMark
         showMarkCount
@@ -69,7 +77,24 @@ const Question = () => {
 
     { error && <Error text={ error }/> }
 
+    <Buttons
+      className="mt-2"
+      buttons={ {
+        approve: !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Approve) &&
+          <ApproveQuestion question={ question } onChange={ updateQuestionAndRefreshInfoTable }/>),
+
+        update: !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Update, question) &&
+          <AddQuestion question={ question } onSubmit={ updateQuestion }/>),
+
+        delete: !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Delete, question) &&
+          <DeleteQuestion question={ question } onSubmit={ onDelete }/>),
+      } }
+    />
+
     <InfoTable
+      className="mt-4"
+      title="Question info"
+      key2={ infoTableKey }
       columns={ [ 'Title', 'Category', 'Type', 'Choices', 'Difficulty', 'Rating', 'Approved' ] }
       source={ question }
       mapper={ (question: Question) => [
@@ -84,17 +109,6 @@ const Question = () => {
         <ApproveQuestion question={ question } readonly/>,
       ] }
     />
-
-    <div className="flex gap-1 items-center mt-4">
-      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Approve) &&
-        <ApproveQuestion question={ question } onChange={ refreshQuestion }/>) }
-
-      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Update, question) &&
-        <AddQuestion question={ question } onSubmit={ refreshQuestion }/>) }
-
-      { !question ? <Spinner type="button"/> : (checkAuthorization(QuestionPermission.Delete, question) &&
-        <DeleteQuestion question={ question } onSubmit={ onDelete }/>) }
-    </div>
   </>
 }
 

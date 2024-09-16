@@ -22,7 +22,11 @@ export default function updateQuestion(questionId: string, updateQuestion: Updat
                 isApproved
                 isOwner
                 isCreator
-                rating {averageMark markCount mark}
+                rating {
+                    averageMark
+                    markCount
+                    mark
+                }
             }
         }
     `,

@@ -13,13 +13,15 @@ import {
   MagnifyingGlassIcon as SearchIcon,
 } from '@heroicons/react/24/solid'
 import Button from './Button'
+import Buttons from './Buttons'
 
 interface Props extends ComponentProps<any> {
+  className?: string
   key2: string | number | undefined
-  buttons: object
-  tabs: object
-  filters?: object
-  defaultSearchParams: object
+  buttons?: Record<string, any>
+  tabs: Record<string, any>
+  filters?: Record<string, any>
+  defaultSearchParams?: Record<string, any>
   queryOptions: Function
   queryData: Function
   mapper: Function
@@ -28,6 +30,7 @@ interface Props extends ComponentProps<any> {
 
 const Table = (
   {
+    className = '',
     key2,
     defaultSearchParams = { size: '20' },
     queryOptions,
@@ -40,11 +43,11 @@ const Table = (
   }: Props,
 ) => {
   const [ isLoading, setLoading ] = useState<boolean>(true)
-  const [ searchParams, setSearchParams ] = useSearchParams<URLSearchParams>()
-  const [ items, setItems ] = useState<Paginated>()
+  const [ searchParams, setSearchParams ] = useSearchParams()
+  const [ items, setItems ] = useState<Paginated<any>>()
   const [ error, setError ] = useState<string>('')
 
-  const applySearchParams = (partialQueryParams = {}) => {
+  const applySearchParams = (partialQueryParams: Record<string, any>) => {
     setItems(undefined)
 
     searchParams.delete('prevCursor')
@@ -85,13 +88,10 @@ const Table = (
     )
   }, [ searchParams, key2 ])
 
-  return <>
+  return <div className={ className }>
     { error && <Error text={ error }/> }
 
-    <div className="flex gap-1 items-center mt-4">
-      { Object.entries(buttons).filter(([ _, button ]) => !!button)
-        .map(([ key, button ]) => <span key={ key }>{ button }</span>) }
-    </div>
+    { (Object.values(buttons).filter((button: any) => !!button).length > 0) && <Buttons buttons={ buttons }/> }
 
     { (Object.keys(tabs).length > 0) && (
       <div className="flex gap-5 items-center mt-4">
@@ -153,7 +153,7 @@ const Table = (
 
       <Select
         label="Size"
-        onChange={ (size: string) => applySearchParams({ size: size === defaultSearchParams['size'] ? undefined : size }) }
+        onChange={ (size?: string) => applySearchParams({ size: size === defaultSearchParams['size'] ? undefined : size }) }
         value={ searchParams.get('size') || defaultSearchParams['size'] }
         className="capitalize"
       >
@@ -214,7 +214,7 @@ const Table = (
       }) }
       </tbody>
     </table>
-  </>
+  </div>
 }
 
 export default memo(Table)
